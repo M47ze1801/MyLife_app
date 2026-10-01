@@ -449,8 +449,8 @@ function renderBanner(){
   var d=getKidData();if(!d)return;
   var b=document.getElementById('euroBanner'),allDone=d.tasks.length>0;
   for(var i=0;i<d.tasks.length;i++)if(!d.tasks[i].done){allDone=false;break}
-  if(allDone){b.className='euro-banner earned';b.innerHTML='GESCHAFFT - 5\u20ac F\u00dcR MORGEN VERDIENT!'}
-  else{b.className='euro-banner';b.innerHTML='ALLE AUFGABEN = 5\u20ac F\u00dcR MORGEN'}
+  if(allDone){b.className='euro-banner earned';b.innerHTML='GESCHAFFT - 5\u20ac FÜR MORGEN VERDIENT!'}
+  else{b.className='euro-banner';b.innerHTML='ALLE AUFGABEN = 5\u20ac FÜR MORGEN'}
 }
 
 function renderContent(){
@@ -460,8 +460,8 @@ function renderContent(){
     if(d.tasks.length===0){el.innerHTML='<div class="empty">Heute keine Aufgaben!</div>';return}
     var html='',daily=[],others=[];
     for(var i=0;i<d.tasks.length;i++){if(d.tasks[i].important)daily.push(d.tasks[i]);else others.push(d.tasks[i])}
-    if(daily.length){html+='<div class="section-title">Taeglich</div>';for(var i=0;i<daily.length;i++)html+=renderTask(daily[i])}
-    if(others.length){html+='<div class="section-title">Heute zusaetzlich</div>';for(var i=0;i<others.length;i++)html+=renderTask(others[i])}
+    if(daily.length){html+='<div class="section-title">Täglich</div>';for(var i=0;i<daily.length;i++)html+=renderTask(daily[i])}
+    if(others.length){html+='<div class="section-title">Heute zusätzlich</div>';for(var i=0;i<others.length;i++)html+=renderTask(others[i])}
     el.innerHTML=html;
     bindTaskClicks();
   }else if(currentTab==='money'){
