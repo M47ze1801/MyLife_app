@@ -88,9 +88,10 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .fab-menu button{padding:12px 20px;border-radius:14px;border:2px solid rgba(0,245,255,.4);background:var(--card);color:var(--cyan);font-weight:800;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;box-shadow:0 0 15px rgba(0,245,255,.2);white-space:nowrap}
 .fab-menu button:active{transform:scale(.97)}
 .fab-menu button.danger{border-color:rgba(255,68,102,.5);color:#ff4466}
+.fab-menu button.gold{border-color:rgba(255,234,0,.5);color:var(--yellow);box-shadow:0 0 15px rgba(255,234,0,.2)}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:800;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.show{display:flex}
-.modal{width:100%;max-width:400px;max-height:85vh;background:var(--card);border-radius:24px;border:1px solid rgba(0,245,255,.25);box-shadow:0 0 60px rgba(176,38,255,.4);padding:22px 18px;display:flex;flex-direction:column}
+.modal{width:100%;max-width:420px;max-height:88vh;background:var(--card);border-radius:24px;border:1px solid rgba(0,245,255,.25);box-shadow:0 0 60px rgba(176,38,255,.4);padding:22px 18px;display:flex;flex-direction:column;overflow:hidden}
 .modal h3{font-size:1rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);text-align:center;margin-bottom:8px}
 .modal-hint{font-size:.7rem;color:var(--dim);text-align:center;margin-bottom:14px}
 .kid-list{overflow-y:auto;margin-bottom:14px;flex:1;max-height:40vh}
@@ -109,6 +110,28 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .add-row button:disabled{opacity:.4;cursor:not-allowed}
 .modal-close{width:100%;padding:12px;border-radius:14px;background:transparent;border:2px solid rgba(136,136,170,.4);color:var(--dim);font-weight:800;font-size:.8rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
 .modal-close:active{transform:scale(.97)}
+/* PIN + Task-Editor */
+.pin-input{width:100%;padding:14px 16px;background:var(--card2);border:1px solid rgba(0,245,255,.25);border-radius:12px;color:var(--text);font-size:1.1rem;letter-spacing:8px;text-align:center;margin-bottom:10px;outline:none;font-family:inherit}
+.pin-input:focus{border-color:var(--cyan);box-shadow:0 0 15px rgba(0,245,255,.3)}
+.task-edit-list{overflow-y:auto;flex:1;max-height:42vh;margin-bottom:10px;padding-right:4px}
+.task-edit{background:var(--card2);border-radius:12px;padding:10px;margin-bottom:8px;border:1px solid rgba(0,245,255,.12)}
+.task-edit .row{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.task-edit .row input{flex:1;padding:8px 10px;background:rgba(0,0,0,.3);border:1px solid rgba(0,245,255,.18);border-radius:8px;color:var(--text);font-size:.82rem;outline:none;font-family:inherit;min-width:0}
+.task-edit .row input:focus{border-color:var(--cyan)}
+.task-edit .row .del{width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,68,102,.5);background:transparent;color:#ff4466;font-weight:900;cursor:pointer;flex-shrink:0;line-height:1;font-size:.8rem}
+.task-edit .row label{display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--dim);white-space:nowrap;cursor:pointer}
+.task-edit .row label input{accent-color:var(--cyan);width:auto;flex:0;padding:0}
+.task-edit .days{display:flex;gap:3px}
+.day-toggle{flex:1;padding:6px 2px;border-radius:8px;background:rgba(0,0,0,.3);border:1px solid rgba(136,136,170,.25);color:var(--dim);font-size:.65rem;font-weight:700;cursor:pointer;text-transform:uppercase;transition:all .15s}
+.day-toggle.on{background:rgba(0,245,255,.15);border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 8px rgba(0,245,255,.3)}
+.add-task-form{background:rgba(0,0,0,.2);border-radius:12px;padding:10px;margin-bottom:10px;border:1px dashed rgba(0,245,255,.25)}
+.add-task-form input{width:100%;padding:9px 12px;background:var(--card2);border:1px solid rgba(0,245,255,.2);border-radius:8px;color:var(--text);font-size:.82rem;outline:none;font-family:inherit;margin-bottom:6px}
+.add-task-form input:focus{border-color:var(--cyan)}
+.add-task-form button{width:100%;padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-weight:900;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
+.add-task-form button:active{transform:scale(.97)}
+.pin-links{display:flex;gap:8px;margin-top:10px}
+.pin-links button{flex:1;padding:10px;border-radius:12px;background:transparent;border:2px solid rgba(136,136,170,.4);color:var(--dim);font-weight:800;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
+.pin-links button:active{transform:scale(.97)}
 </style>
 </head>
 <body>
@@ -150,11 +173,13 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 <div class="content" id="content"></div>
 <div class="fab-dots" id="fabDots"><span></span><span></span><span></span></div>
 <div class="fab-menu" id="fabMenu">
+<button id="parentBtn" class="gold">Eltern-Bereich</button>
 <button id="manageKidsBtn">Kinder verwalten</button>
 <button id="logoutBtn" class="danger">Abmelden</button>
 </div>
 </div>
 
+<!-- Kinder-Modal -->
 <div class="modal-overlay" id="kidModal">
 <div class="modal">
 <h3>Kinder verwalten</h3>
@@ -165,6 +190,49 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 <button id="addKidBtn">+</button>
 </div>
 <button class="modal-close" id="closeKidModal">Schließen</button>
+</div>
+</div>
+
+<!-- Eltern-Modal (PIN + Aufgaben-Editor) -->
+<div class="modal-overlay" id="parentModal">
+<div class="modal">
+<h3 id="parentTitle">Eltern-Bereich</h3>
+
+<div id="pinSetup">
+<div class="modal-hint" id="pinSetupHint">6-stellige PIN festlegen</div>
+<input type="password" class="pin-input" id="pinNew1" inputmode="numeric" maxlength="6" placeholder="••••••">
+<input type="password" class="pin-input" id="pinNew2" inputmode="numeric" maxlength="6" placeholder="••••••">
+<div class="login-msg" id="pinSetupMsg"></div>
+<button class="btn" id="pinSaveBtn" style="margin-top:10px">PIN speichern</button>
+<div class="pin-links">
+<button id="pinSetupCancel">Abbrechen</button>
+</div>
+</div>
+
+<div id="pinEntry" style="display:none">
+<div class="modal-hint">PIN eingeben</div>
+<input type="password" class="pin-input" id="pinInput" inputmode="numeric" maxlength="6" placeholder="••••••">
+<div class="login-msg" id="pinEntryMsg"></div>
+<button class="btn" id="pinCheckBtn" style="margin-top:10px">Entsperren</button>
+<div class="pin-links">
+<button id="pinEntryCancel">Abbrechen</button>
+</div>
+</div>
+
+<div id="parentPanel" style="display:none;flex:1;display:none;flex-direction:column;overflow:hidden">
+<div class="modal-hint">Aufgaben anpassen – gilt für alle Kinder</div>
+<div class="task-edit-list" id="taskEditList"></div>
+<div class="add-task-form">
+<input type="text" id="newTaskTitle" placeholder="Neue Aufgabe" maxlength="40">
+<input type="text" id="newTaskCat" placeholder="Kategorie (z.B. Küche)" maxlength="20">
+<button id="addTaskBtn">+ Aufgabe hinzufügen</button>
+</div>
+<div class="pin-links">
+<button id="changePinBtn">PIN ändern</button>
+<button id="parentCloseBtn">Fertig</button>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -189,7 +257,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-var TASK_TEMPLATES=[
+var DEFAULT_TEMPLATES=[
 {id:'zähne',title:'Zähne putzen',cat:'Hygiene',days:[0,1,2,3,4,5,6],important:true},
 {id:'gesicht',title:'Gesicht waschen',cat:'Hygiene',days:[0,1,2,3,4,5,6],important:true},
 {id:'bett',title:'Bett machen',cat:'Routine',days:[0,1,2,3,4,5,6],important:true},
@@ -200,23 +268,39 @@ var TASK_TEMPLATES=[
 ];
 var DAILY_REWARD_EUR=5,POINTS_PER_TASK=10,LEVEL_BASE=20,MAX_KIDS=5;
 var KID_EMOJIS=['🧒','👦','👧','🧑','👶'];
+var DAY_LABELS=['So','Mo','Di','Mi','Do','Fr','Sa'];
+var DAY_ORDER=[1,2,3,4,5,6,0];
 
 var accountData=null,currentUser=null,currentTab='tasks',unsubscribeRef=null;
 
 function todayKey(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
 function currentWeekday(){return new Date().getDay()}
-function buildTodayTasks(){var wd=currentWeekday(),r=[];for(var i=0;i<TASK_TEMPLATES.length;i++){var t=TASK_TEMPLATES[i];if(t.days.indexOf(wd)!==-1){r.push({id:t.id,title:t.title,cat:t.cat,important:!!t.important,done:false})}}return r}
-function defaultKidState(){return{tasks:buildTodayTasks(),today:todayKey(),points:0,totalPoints:0,level:1,earned:0,history:[],pointsToday:0}}
-function calcLevel(tp){if(!tp||tp<LEVEL_BASE)return 1;return Math.floor(tp/LEVEL_BASE)}
+function clone(o){return JSON.parse(JSON.stringify(o))}
 function genKidId(){return 'kid_'+Date.now()+'_'+Math.floor(Math.random()*100000)}
-function getKid(){if(!accountData||!accountData.activeKid||!accountData.kids)return null;return accountData.kids[accountData.activeKid]||null}
-function getKidData(){var k=getKid();return k?k.data:null}
+function calcLevel(tp){if(!tp||tp<LEVEL_BASE)return 1;return Math.floor(tp/LEVEL_BASE)}
+
+function buildKidData(templates){
+  var wd=currentWeekday(),tasks=[];
+  for(var i=0;i<templates.length;i++){
+    var t=templates[i];
+    if(t.days.indexOf(wd)!==-1){
+      tasks.push({id:t.id,title:t.title,cat:t.cat,important:!!t.important,done:false});
+    }
+  }
+  return {tasks:tasks,today:todayKey(),points:0,totalPoints:0,level:1,earned:0,history:[],pointsToday:0};
+}
 
 function defaultAccount(){
-  var id=genKidId(),kids={};
-  kids[id]={name:'Kind 1',emoji:'🧒',data:defaultKidState()};
-  return {kids:kids,kidOrder:[id],activeKid:id};
+  var id=genKidId();
+  var templates=clone(DEFAULT_TEMPLATES);
+  var kids={};
+  kids[id]={name:'Kind 1',emoji:'🧒',data:buildKidData(templates)};
+  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates};
 }
+
+function getKid(){if(!accountData||!accountData.activeKid||!accountData.kids)return null;return accountData.kids[accountData.activeKid]||null}
+function getKidData(){var k=getKid();return k?k.data:null}
+function getTemplates(){return (accountData&&accountData.taskTemplates&&accountData.taskTemplates.length)?accountData.taskTemplates:clone(DEFAULT_TEMPLATES)}
 
 function isNewFormat(d){
   return d && typeof d==='object' && d.kids && d.kidOrder && Array.isArray(d.kidOrder) && d.activeKid && d.kids[d.activeKid];
@@ -234,7 +318,7 @@ function processKidDay(kid){
       d.history=d.history||[];
       d.history.unshift({date:d.today,amount:DAILY_REWARD_EUR});
     }
-    d.tasks=buildTodayTasks();
+    d.tasks=buildKidData(getTemplates()).tasks;
     d.today=todayKey();
     d.pointsToday=0;
   }
@@ -243,36 +327,43 @@ function processKidDay(kid){
   if(typeof d.points!=='number')d.points=0;
   if(typeof d.earned!=='number')d.earned=0;
   if(!d.history||!Array.isArray(d.history))d.history=[];
-  if(!d.tasks||!d.tasks.length)d.tasks=buildTodayTasks();
+  if(!d.tasks||!d.tasks.length)d.tasks=buildKidData(getTemplates()).tasks;
   d.level=calcLevel(d.totalPoints);
 }
 
 function migrate(data){
   if(isNewFormat(data)){
+    if(!data.taskTemplates||!Array.isArray(data.taskTemplates)||!data.taskTemplates.length){
+      data.taskTemplates=clone(DEFAULT_TEMPLATES);
+    }
+    if(typeof data.pinSet!=='boolean')data.pinSet=false;
+    if(typeof data.pin!=='string')data.pin='';
     for(var i=0;i<data.kidOrder.length;i++){
       var kid=data.kids[data.kidOrder[i]];
       if(kid){
         if(!kid.name)kid.name='Kind '+(i+1);
         if(!kid.emoji)kid.emoji=KID_EMOJIS[i%KID_EMOJIS.length];
-        if(!kid.data)kid.data=defaultKidState();
+        if(!kid.data)kid.data=buildKidData(data.taskTemplates);
       }
     }
     return data;
   }
   var id=genKidId();
-  var oldData={
-    tasks:(data&&data.tasks&&data.tasks.length)?data.tasks:buildTodayTasks(),
-    today:(data&&data.today)?data.today:todayKey(),
-    points:(data&&data.points)||0,
-    totalPoints:(data&&data.totalPoints)||0,
-    level:(data&&data.level)||1,
-    earned:(data&&data.earned)||0,
-    history:(data&&data.history&&Array.isArray(data.history))?data.history:[],
-    pointsToday:(data&&data.pointsToday)||0
-  };
+  var templates=clone(DEFAULT_TEMPLATES);
+  var oldData=buildKidData(templates);
+  if(data){
+    oldData.today=data.today||todayKey();
+    oldData.points=data.points||0;
+    oldData.totalPoints=data.totalPoints||0;
+    oldData.level=data.level||1;
+    oldData.earned=data.earned||0;
+    oldData.history=(data.history&&Array.isArray(data.history))?data.history:[];
+    oldData.pointsToday=data.pointsToday||0;
+    if(data.tasks&&data.tasks.length)oldData.tasks=data.tasks;
+  }
   var kids={};
   kids[id]={name:'Kind 1',emoji:'🧒',data:oldData};
-  return {kids:kids,kidOrder:[id],activeKid:id};
+  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates};
 }
 
 function startListener(uid){
@@ -302,6 +393,27 @@ function saveToFirebase(){
   set(ref(db,'users/'+currentUser.uid),accountData);
 }
 
+// Rebuild current tasks for all kids based on templates (preserves done-status)
+function applyTemplateChanges(){
+  if(!accountData)return;
+  var wd=currentWeekday();
+  for(var i=0;i<accountData.kidOrder.length;i++){
+    var kid=accountData.kids[accountData.kidOrder[i]];
+    if(!kid||!kid.data)continue;
+    var doneMap={};
+    if(kid.data.tasks)for(var j=0;j<kid.data.tasks.length;j++)doneMap[kid.data.tasks[j].id]=kid.data.tasks[j].done;
+    var newTasks=[];
+    for(var j=0;j<accountData.taskTemplates.length;j++){
+      var t=accountData.taskTemplates[j];
+      if(t.days.indexOf(wd)!==-1){
+        newTasks.push({id:t.id,title:t.title,cat:t.cat,important:!!t.important,done:!!doneMap[t.id]});
+      }
+    }
+    kid.data.tasks=newTasks;
+  }
+}
+
+// ---------- Auth ----------
 document.getElementById('loginBtn').addEventListener('click',function(){
   var email=document.getElementById('loginEmail').value.trim();
   var pw=document.getElementById('loginPassword').value;
@@ -309,7 +421,6 @@ document.getElementById('loginBtn').addEventListener('click',function(){
   showLoginMsg('Anmelden...',false);
   signInWithEmailAndPassword(auth,email,pw).catch(function(err){showLoginMsg('Fehler: '+err.message,true)});
 });
-
 document.getElementById('signupBtn').addEventListener('click',function(){
   var email=document.getElementById('loginEmail').value.trim();
   var pw=document.getElementById('loginPassword').value;
@@ -319,11 +430,13 @@ document.getElementById('signupBtn').addEventListener('click',function(){
   createUserWithEmailAndPassword(auth,email,pw).catch(function(err){showLoginMsg('Fehler: '+err.message,true)});
 });
 
+// ---------- FAB Menu ----------
 var fabDots=document.getElementById('fabDots'),fabMenu=document.getElementById('fabMenu');
 fabDots.addEventListener('click',function(ev){ev.stopPropagation();fabMenu.classList.toggle('show')});
-document.addEventListener('click',function(ev){if(!fabMenu.contains(ev.target) && ev.target!==fabDots)fabMenu.classList.remove('show')});
+document.addEventListener('click',function(ev){if(!fabMenu.contains(ev.target)&&ev.target!==fabDots)fabMenu.classList.remove('show')});
 document.getElementById('logoutBtn').addEventListener('click',function(){fabMenu.classList.remove('show');signOut(auth)});
 
+// ---------- Kinder Modal ----------
 var kidModal=document.getElementById('kidModal');
 function openKidModal(){renderKidList();kidModal.classList.add('show')}
 function closeKidModal(){kidModal.classList.remove('show')}
@@ -345,28 +458,18 @@ function renderKidList(){
   }
   list.innerHTML=html;
   var items=list.querySelectorAll('.kid-item');
-  for(var i=0;i<items.length;i++){
-    items[i].addEventListener('click',function(ev){
-      if(ev.target.getAttribute('data-del'))return;
-      switchKid(this.getAttribute('data-id'));
-    });
-  }
+  for(var i=0;i<items.length;i++)items[i].addEventListener('click',function(ev){if(ev.target.getAttribute('data-del'))return;switchKid(this.getAttribute('data-id'))});
   var dels=list.querySelectorAll('.del');
-  for(var i=0;i<dels.length;i++){
-    dels[i].addEventListener('click',function(ev){ev.stopPropagation();deleteKid(this.getAttribute('data-del'))});
-  }
+  for(var i=0;i<dels.length;i++)dels[i].addEventListener('click',function(ev){ev.stopPropagation();deleteKid(this.getAttribute('data-del'))});
   document.getElementById('addKidBtn').disabled=(accountData.kidOrder.length>=MAX_KIDS);
 }
 
 function switchKid(id){
   if(!accountData.kids[id])return;
   accountData.activeKid=id;
-  saveToFirebase();
-  render();
-  closeKidModal();
+  saveToFirebase();render();closeKidModal();
   showToast('GEWECHSELT ZU '+(accountData.kids[id].name||'').toUpperCase());
 }
-
 function deleteKid(id){
   if(!accountData.kids[id])return;
   if(accountData.kidOrder.length<=1){showToast('MINDESTENS 1 KIND');return}
@@ -376,30 +479,177 @@ function deleteKid(id){
   var idx=accountData.kidOrder.indexOf(id);
   if(idx>-1)accountData.kidOrder.splice(idx,1);
   if(accountData.activeKid===id)accountData.activeKid=accountData.kidOrder[0];
-  saveToFirebase();
-  renderKidList();
-  render();
+  saveToFirebase();renderKidList();render();
   showToast('GELÖSCHT: '+name.toUpperCase());
 }
-
 document.getElementById('addKidBtn').addEventListener('click',function(){
   if(!accountData)return;
   if(accountData.kidOrder.length>=MAX_KIDS){showToast('MAX '+MAX_KIDS+' KINDER');return}
   var input=document.getElementById('newKidName'),name=input.value.trim();
   if(!name){showToast('NAME EINGEBEN');return}
   var id=genKidId(),emoji=KID_EMOJIS[accountData.kidOrder.length%KID_EMOJIS.length];
-  accountData.kids[id]={name:name,emoji:emoji,data:defaultKidState()};
+  accountData.kids[id]={name:name,emoji:emoji,data:buildKidData(getTemplates())};
   accountData.kidOrder.push(id);
   input.value='';
-  saveToFirebase();
-  renderKidList();
+  saveToFirebase();renderKidList();
   showToast('HINZUGEFÜGT: '+name.toUpperCase());
 });
+document.getElementById('newKidName').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('addKidBtn').click()}});
 
-document.getElementById('newKidName').addEventListener('keydown',function(ev){
-  if(ev.key==='Enter'){ev.preventDefault();document.getElementById('addKidBtn').click()}
+// ---------- Eltern-Modal ----------
+var parentModal=document.getElementById('parentModal');
+var pinSetupEl=document.getElementById('pinSetup');
+var pinEntryEl=document.getElementById('pinEntry');
+var parentPanelEl=document.getElementById('parentPanel');
+var parentTitleEl=document.getElementById('parentTitle');
+
+function openParentFlow(){
+  fabMenu.classList.remove('show');
+  if(!accountData)return;
+  parentModal.classList.add('show');
+  if(!accountData.pinSet){showPinSetup(false)}
+  else{showPinEntry()}
+}
+function closeParentFlow(){
+  parentModal.classList.remove('show');
+  pinSetupEl.style.display='none';
+  pinEntryEl.style.display='none';
+  parentPanelEl.style.display='none';
+}
+document.getElementById('parentBtn').addEventListener('click',openParentFlow);
+parentModal.addEventListener('click',function(ev){if(ev.target===parentModal)closeParentFlow()});
+
+function showPinSetup(changeMode){
+  pinSetupEl.style.display='block';
+  pinEntryEl.style.display='none';
+  parentPanelEl.style.display='none';
+  parentTitleEl.textContent=changeMode?'PIN ändern':'Eltern-Bereich';
+  document.getElementById('pinSetupHint').textContent=changeMode?'Neue 6-stellige PIN festlegen':'6-stellige PIN festlegen';
+  document.getElementById('pinSetupMsg').textContent='';
+  document.getElementById('pinSetupMsg').className='login-msg';
+  document.getElementById('pinNew1').value='';
+  document.getElementById('pinNew2').value='';
+  setTimeout(function(){document.getElementById('pinNew1').focus()},100);
+}
+function showPinEntry(){
+  pinSetupEl.style.display='none';
+  pinEntryEl.style.display='block';
+  parentPanelEl.style.display='none';
+  parentTitleEl.textContent='Eltern-Bereich';
+  document.getElementById('pinEntryMsg').textContent='';
+  document.getElementById('pinEntryMsg').className='login-msg';
+  document.getElementById('pinInput').value='';
+  setTimeout(function(){document.getElementById('pinInput').focus()},100);
+}
+function showParentPanel(){
+  pinSetupEl.style.display='none';
+  pinEntryEl.style.display='none';
+  parentPanelEl.style.display='flex';
+  parentTitleEl.textContent='Aufgaben verwalten';
+  renderTaskEditor();
+}
+
+// PIN Setup
+document.getElementById('pinSaveBtn').addEventListener('click',function(){
+  var p1=document.getElementById('pinNew1').value.trim();
+  var p2=document.getElementById('pinNew2').value.trim();
+  var msg=document.getElementById('pinSetupMsg');
+  if(!/^\d{6}$/.test(p1)){msg.textContent='PIN muss genau 6 Ziffern haben.';msg.className='login-msg error';return}
+  if(p1!==p2){msg.textContent='PINs stimmen nicht überein.';msg.className='login-msg error';return}
+  accountData.pin=p1;accountData.pinSet=true;
+  saveToFirebase();
+  showToast('PIN GESPEICHERT');
+  showParentPanel();
+});
+document.getElementById('pinSetupCancel').addEventListener('click',closeParentFlow);
+['pinNew1','pinNew2'].forEach(function(id){
+  document.getElementById(id).addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('pinSaveBtn').click()}});
 });
 
+// PIN Entry
+document.getElementById('pinCheckBtn').addEventListener('click',function(){
+  var p=document.getElementById('pinInput').value.trim();
+  var msg=document.getElementById('pinEntryMsg');
+  if(p!==accountData.pin){msg.textContent='Falsche PIN.';msg.className='login-msg error';document.getElementById('pinInput').value='';return}
+  showParentPanel();
+});
+document.getElementById('pinEntryCancel').addEventListener('click',closeParentFlow);
+document.getElementById('pinInput').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('pinCheckBtn').click()}});
+
+// Parent Panel Buttons
+document.getElementById('parentCloseBtn').addEventListener('click',closeParentFlow);
+document.getElementById('changePinBtn').addEventListener('click',function(){showPinSetup(true)});
+
+// Task Editor
+function renderTaskEditor(){
+  var list=document.getElementById('taskEditList');
+  if(!accountData){list.innerHTML='';return}
+  var html='';
+  for(var i=0;i<accountData.taskTemplates.length;i++){
+    var t=accountData.taskTemplates[i];
+    html+='<div class="task-edit" data-id="'+t.id+'">';
+    html+='<div class="row"><input type="text" class="edit-title" value="'+escapeHtml(t.title)+'" maxlength="40" placeholder="Aufgabe"><button class="del" data-del="'+t.id+'" title="Löschen">✕</button></div>';
+    html+='<div class="row"><input type="text" class="edit-cat" value="'+escapeHtml(t.cat)+'" maxlength="20" placeholder="Kategorie" style="max-width:110px"><label><input type="checkbox" class="edit-imp" '+(t.important?'checked':'')+'> Wichtig</label></div>';
+    html+='<div class="days">';
+    for(var k=0;k<DAY_ORDER.length;k++){
+      var d=DAY_ORDER[k];
+      var on=t.days.indexOf(d)!==-1;
+      html+='<button class="day-toggle'+(on?' on':'')+'" data-day="'+d+'">'+DAY_LABELS[d]+'</button>';
+    }
+    html+='</div></div>';
+  }
+  list.innerHTML=html;
+
+  var edits=list.querySelectorAll('.task-edit');
+  for(var i=0;i<edits.length;i++){(function(el){
+    var id=el.getAttribute('data-id');
+    var tmpl=null;
+    for(var x=0;x<accountData.taskTemplates.length;x++)if(accountData.taskTemplates[x].id===id){tmpl=accountData.taskTemplates[x];break}
+    if(!tmpl)return;
+    el.querySelector('.edit-title').addEventListener('change',function(){
+      var v=this.value.trim();if(!v){this.value=tmpl.title;return}
+      tmpl.title=v;applyTemplateChanges();saveToFirebase();render();
+    });
+    el.querySelector('.edit-cat').addEventListener('change',function(){
+      var v=this.value.trim();if(!v){this.value=tmpl.cat;return}
+      tmpl.cat=v;applyTemplateChanges();saveToFirebase();render();
+    });
+    el.querySelector('.edit-imp').addEventListener('change',function(){
+      tmpl.important=this.checked;applyTemplateChanges();saveToFirebase();render();
+    });
+    var dayBtns=el.querySelectorAll('.day-toggle');
+    for(var j=0;j<dayBtns.length;j++)dayBtns[j].addEventListener('click',function(){
+      var d=parseInt(this.getAttribute('data-day'),10);
+      var idx=tmpl.days.indexOf(d);
+      if(idx>-1){tmpl.days.splice(idx,1);this.classList.remove('on')}
+      else{tmpl.days.push(d);this.classList.add('on')}
+      applyTemplateChanges();saveToFirebase();render();
+    });
+    el.querySelector('.del').addEventListener('click',function(){
+      if(!confirm('Aufgabe "'+tmpl.title+'" löschen?'))return;
+      var idx=accountData.taskTemplates.indexOf(tmpl);
+      if(idx>-1)accountData.taskTemplates.splice(idx,1);
+      applyTemplateChanges();saveToFirebase();render();renderTaskEditor();
+      showToast('GELÖSCHT');
+    });
+  })(edits[i])}
+}
+
+document.getElementById('addTaskBtn').addEventListener('click',function(){
+  if(!accountData)return;
+  var title=document.getElementById('newTaskTitle').value.trim();
+  var cat=document.getElementById('newTaskCat').value.trim()||'Sonstiges';
+  if(!title){showToast('TITEL EINGEBEN');return}
+  var id='custom_'+Date.now()+'_'+Math.floor(Math.random()*1000);
+  accountData.taskTemplates.push({id:id,title:title,cat:cat,days:[1,2,3,4,5],important:false,custom:true});
+  document.getElementById('newTaskTitle').value='';
+  document.getElementById('newTaskCat').value='';
+  applyTemplateChanges();saveToFirebase();render();renderTaskEditor();
+  showToast('HINZUGEFÜGT');
+});
+document.getElementById('newTaskTitle').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('addTaskBtn').click()}});
+
+// ---------- Auth State ----------
 onAuthStateChanged(auth,function(user){
   if(user){
     currentUser=user;
@@ -411,6 +661,7 @@ onAuthStateChanged(auth,function(user){
     if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
     fabMenu.classList.remove('show');
     kidModal.classList.remove('show');
+    closeParentFlow();
     document.getElementById('loginScreen').style.display='flex';
     document.getElementById('app').style.display='none';
     document.getElementById('loginEmail').value='';
@@ -425,6 +676,7 @@ function showLoginMsg(msg,isError){
   el.className='login-msg'+(isError?' error':' success');
 }
 
+// ---------- Render ----------
 function renderHeader(){
   var d=new Date();
   var wd=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'][d.getDay()];
@@ -449,10 +701,9 @@ function renderBanner(){
   var d=getKidData();if(!d)return;
   var b=document.getElementById('euroBanner'),allDone=d.tasks.length>0;
   for(var i=0;i<d.tasks.length;i++)if(!d.tasks[i].done){allDone=false;break}
-  if(allDone){b.className='euro-banner earned';b.innerHTML='GESCHAFFT - 5\u20ac FÜR MORGEN VERDIENT!'}
-  else{b.className='euro-banner';b.innerHTML='ALLE AUFGABEN = 5\u20ac FÜR MORGEN'}
+  if(allDone){b.className='euro-banner earned';b.innerHTML='GESCHAFFT - 5\u20ac F\u00dcR MORGEN VERDIENT!'}
+  else{b.className='euro-banner';b.innerHTML='ALLE AUFGABEN = 5\u20ac F\u00dcR MORGEN'}
 }
-
 function renderContent(){
   var d=getKidData();if(!d)return;
   var el=document.getElementById('content');
@@ -472,34 +723,30 @@ function renderContent(){
   }else if(currentTab==='week'){
     var today=currentWeekday();
     var wd=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
-    var order=[1,2,3,4,5,6,0],out='';
-    for(var k=0;k<order.length;k++){
-      var i=order[k],tasks=[];
-      for(var j=0;j<TASK_TEMPLATES.length;j++)if(TASK_TEMPLATES[j].days.indexOf(i)!==-1)tasks.push(TASK_TEMPLATES[j]);
+    var out='';
+    for(var k=0;k<DAY_ORDER.length;k++){
+      var i=DAY_ORDER[k],tasks=[];
+      for(var j=0;j<accountData.taskTemplates.length;j++)if(accountData.taskTemplates[j].days.indexOf(i)!==-1)tasks.push(accountData.taskTemplates[j]);
       var lines='';
-      if(tasks.length){for(var j=0;j<tasks.length;j++)lines+='<div class="task-line">'+tasks[j].title+'</div>'}
+      if(tasks.length){for(var j=0;j<tasks.length;j++)lines+='<div class="task-line">'+escapeHtml(tasks[j].title)+'</div>'}
       else{lines='<div class="task-line" style="opacity:.5">Freier Tag</div>'}
       out+='<div class="week-day'+(i===today?' today':'')+'"><div class="day-title">'+wd[i]+(i===today?' - HEUTE':'')+'</div>'+lines+'</div>';
     }
     el.innerHTML=out;
   }
 }
-
-function renderTask(t){return '<div class="task'+(t.done?' done':'')+'" data-id="'+t.id+'"><div class="task-check">&#10003;</div><div class="task-info"><div class="task-title">'+escapeHtml(t.title)+'</div><div class="task-meta">'+t.cat+'</div></div></div>'}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function renderTask(t){return '<div class="task'+(t.done?' done':'')+'" data-id="'+t.id+'"><div class="task-check">&#10003;</div><div class="task-info"><div class="task-title">'+escapeHtml(t.title)+'</div><div class="task-meta">'+escapeHtml(t.cat)+'</div></div></div>'}
+function escapeHtml(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function formatDate(key){var p=(key||'').split('-');return (p[2]||'')+'.'+(p[1]||'')+'.'+(p[0]||'')}
-
 function bindTaskClicks(){
   var tasks=document.querySelectorAll('.task');
   for(var i=0;i<tasks.length;i++)tasks[i].addEventListener('click',function(ev){ev.preventDefault();toggleTask(this.getAttribute('data-id'))});
 }
-
 function refreshLevel(d){
   var nl=calcLevel(d.totalPoints);
   if(nl>d.level){d.level=nl;showToast('LEVEL '+d.level+' ERREICHT!');fireConfetti()}
   else{d.level=nl}
 }
-
 function toggleTask(id){
   var d=getKidData();if(!d)return;
   var task=null;
@@ -518,10 +765,8 @@ function toggleTask(id){
   var allDone=true;
   for(var i=0;i<d.tasks.length;i++)if(!d.tasks[i].done){allDone=false;break}
   if(allDone&&!wasAll)setTimeout(function(){showToast('ALLE GESCHAFFT - 5\u20ac!',true);fireConfetti(30)},400);
-  saveToFirebase();
-  render();
+  saveToFirebase();render();
 }
-
 function render(){
   if(!accountData)return;
   renderHeader();renderStats();renderProgress();renderBanner();renderContent();
@@ -545,7 +790,6 @@ function showToast(msg,isMoney){
   clearTimeout(toastTimer);
   toastTimer=setTimeout(function(){t.classList.remove('show')},2200);
 }
-
 function fireConfetti(count){
   count=count||40;
   var colors=['#00f5ff','#ff00e5','#b026ff','#00ff88','#ffea00','#ff6b00'];
