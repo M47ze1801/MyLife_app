@@ -14,7 +14,7 @@ header{background:linear-gradient(135deg,#1a0033,#000033);padding:20px;text-alig
 header::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent 0deg,rgba(0,245,255,.15) 90deg,transparent 180deg,rgba(255,0,229,.15) 270deg,transparent 360deg);animation:rot 12s linear infinite;pointer-events:none}
 @keyframes rot{to{transform:rotate(360deg)}}
 header>*{position:relative;z-index:1}
-header h1{font-size:1.6rem;font-weight:900;letter-spacing:4px;background:linear-gradient(90deg,var(--cyan),var(--pink),var(--purple));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shine 3s linear infinite}
+header h1{font-size:1.6rem;font-weight:900;letter-spacing:4px;background-image:linear-gradient(90deg,var(--cyan),var(--pink),var(--purple));background-size:200% auto;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite}
 @keyframes shine{to{background-position:200% center}}
 header p{opacity:.7;font-size:.75rem;margin-top:4px;color:var(--cyan)}
 header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-spacing:1px;text-transform:uppercase}
@@ -54,7 +54,7 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .btn:active{transform:scale(.97)}
 .btn-reset{background:transparent;border:2px solid rgba(255,0,229,.5);color:var(--pink);box-shadow:0 0 15px rgba(255,0,229,.2)}
 .money-card{background:linear-gradient(135deg,rgba(0,255,136,.08),rgba(0,245,255,.05));border:1px solid rgba(0,255,136,.3);border-radius:18px;padding:24px 20px;margin-bottom:16px;text-align:center}
-.money-total{font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:8px 0}
+.money-total{font-size:2.8rem;font-weight:900;background-image:linear-gradient(135deg,var(--green),var(--cyan));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:8px 0}
 .money-sub{font-size:.7rem;color:var(--dim);letter-spacing:1px;text-transform:uppercase}
 .history-item{background:var(--card2);border-radius:14px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;font-size:.82rem;border-left:3px solid var(--green)}
 .history-item .date{color:var(--dim);font-size:.72rem}
@@ -72,14 +72,14 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 @keyframes fall{to{transform:translateY(100vh) rotate(720deg);opacity:0}}
 .login-screen{position:fixed;inset:0;background:var(--bg);background-image:radial-gradient(circle at 20% 10%,rgba(176,38,255,.15) 0%,transparent 40%),radial-gradient(circle at 80% 90%,rgba(0,245,255,.12) 0%,transparent 40%);display:flex;align-items:center;justify-content:center;padding:20px;z-index:500}
 .login-box{width:100%;max-width:380px;background:var(--card);border-radius:28px;border:1px solid rgba(0,245,255,.15);box-shadow:0 0 60px rgba(176,38,255,.25);padding:32px 24px}
-.login-box h2{font-size:1.4rem;font-weight:900;text-align:center;letter-spacing:3px;background:linear-gradient(90deg,var(--cyan),var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:24px}
+.login-box h2{font-size:1.4rem;font-weight:900;text-align:center;letter-spacing:3px;background-image:linear-gradient(90deg,var(--cyan),var(--pink),var(--purple));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:24px}
 .login-box input{width:100%;padding:14px 16px;background:var(--card2);border:1px solid rgba(0,245,255,.2);border-radius:12px;color:var(--text);font-size:.9rem;margin-bottom:12px;outline:none;font-family:inherit}
 .login-box input:focus{border-color:var(--cyan);box-shadow:0 0 15px rgba(0,245,255,.3)}
 .login-msg{font-size:.78rem;text-align:center;margin-top:12px;color:var(--dim);min-height:18px}
 .login-msg.error{color:#ff4466}
 .login-msg.success{color:var(--green)}
 .powered{text-align:center;margin-top:20px;font-size:.68rem;letter-spacing:2px;color:var(--dim);text-transform:uppercase}
-.powered b{background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900}
+.powered b{background-image:linear-gradient(90deg,var(--cyan),var(--pink));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900}
 .fab-dots{position:absolute;bottom:16px;right:16px;width:44px;height:44px;border-radius:50%;background:var(--card2);border:1px solid rgba(0,245,255,.25);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:100;box-shadow:0 0 20px rgba(0,245,255,.2);transition:all .2s}
 .fab-dots:active{transform:scale(.9)}
 .fab-dots span{display:block;width:4px;height:4px;border-radius:50%;background:var(--cyan);margin:0 2px;box-shadow:0 0 8px var(--cyan)}
@@ -110,7 +110,6 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .add-row button:disabled{opacity:.4;cursor:not-allowed}
 .modal-close{width:100%;padding:12px;border-radius:14px;background:transparent;border:2px solid rgba(136,136,170,.4);color:var(--dim);font-weight:800;font-size:.8rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
 .modal-close:active{transform:scale(.97)}
-/* PIN + Task-Editor */
 .pin-input{width:100%;padding:14px 16px;background:var(--card2);border:1px solid rgba(0,245,255,.25);border-radius:12px;color:var(--text);font-size:1.1rem;letter-spacing:8px;text-align:center;margin-bottom:10px;outline:none;font-family:inherit}
 .pin-input:focus{border-color:var(--cyan);box-shadow:0 0 15px rgba(0,245,255,.3)}
 .task-edit-list{overflow-y:auto;flex:1;max-height:42vh;margin-bottom:10px;padding-right:4px}
@@ -132,6 +131,71 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .pin-links{display:flex;gap:8px;margin-top:10px}
 .pin-links button{flex:1;padding:10px;border-radius:12px;background:transparent;border:2px solid rgba(136,136,170,.4);color:var(--dim);font-weight:800;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
 .pin-links button:active{transform:scale(.97)}
+
+/* === LIGHT / PEARL THEME === */
+body.light{--cyan:#0099b8;--pink:#d6009c;--purple:#8a1fd6;--green:#00a05a;--yellow:#b08000;--bg:#f5f0e8;--card:#fdfbf7;--card2:#f0ebe3;--text:#1a1a2e;--dim:#6a6a80;background-color:#f5f0e8;background-image:radial-gradient(circle at 15% 10%,rgba(210,180,255,.45) 0%,transparent 45%),radial-gradient(circle at 85% 15%,rgba(180,235,255,.45) 0%,transparent 45%),radial-gradient(circle at 50% 85%,rgba(255,200,235,.40) 0%,transparent 50%),radial-gradient(circle at 10% 95%,rgba(200,255,225,.35) 0%,transparent 45%),radial-gradient(circle at 90% 70%,rgba(255,235,180,.30) 0%,transparent 45%),linear-gradient(135deg,#faf7f2 0%,#f2ece3 50%,#faf7f2 100%);color:#1a1a2e}
+body.light .app{background:#fdfbf7;border-color:rgba(180,160,255,.35);box-shadow:0 0 60px rgba(180,140,255,.2),0 0 120px rgba(140,220,255,.15)}
+body.light header{background:linear-gradient(135deg,#efe6ff,#e6f5ff);border-bottom-color:rgba(140,120,220,.25)}
+body.light header::before{background:conic-gradient(from 0deg,transparent 0deg,rgba(200,160,255,.25) 90deg,transparent 180deg,rgba(140,220,255,.25) 270deg,transparent 360deg)}
+body.light header h1{background-image:linear-gradient(90deg,#0088a8,#c40088,#7a1fc4);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+body.light header p{color:#0088a8}
+body.light header .date{color:#7a7a90}
+body.light .stats,body.light .day-progress{background:#f5f0e8;border-bottom-color:rgba(140,120,220,.15)}
+body.light .stat .value{text-shadow:none}
+body.light .stat:nth-child(1) .value{color:#8a1fd6}
+body.light .stat:nth-child(2) .value{color:#0088a8}
+body.light .stat:nth-child(3) .value{color:#00a05a}
+body.light .day-progress .bar{background:rgba(255,255,255,.75);border-color:rgba(140,120,220,.25)}
+body.light .day-progress .fill{box-shadow:0 0 12px rgba(0,180,220,.5)}
+body.light .euro-banner{background:linear-gradient(135deg,rgba(255,190,90,.30),rgba(255,225,120,.25));border-bottom-color:rgba(220,150,20,.4);color:#8a5a00;text-shadow:none}
+body.light .euro-banner.earned{background:linear-gradient(135deg,rgba(140,255,190,.40),rgba(150,235,255,.35));border-color:rgba(0,180,120,.5);color:#005533;text-shadow:none}
+body.light .tabs{background:#f5f0e8;border-bottom-color:rgba(140,120,220,.15)}
+body.light .tab.active{color:#0088a8;background:rgba(0,180,220,.12);box-shadow:0 0 20px rgba(0,180,220,.15);text-shadow:none}
+body.light .task{background:#ffffff;border-color:rgba(140,120,220,.18);box-shadow:0 2px 10px rgba(140,120,220,.06)}
+body.light .task::before{box-shadow:0 0 10px rgba(0,180,220,.55)}
+body.light .task.done{opacity:.6;border-color:rgba(0,180,120,.35)}
+body.light .task.done::before{box-shadow:0 0 10px rgba(0,180,120,.55)}
+body.light .task-check{background:rgba(0,180,220,.08);border-color:rgba(0,180,220,.45)}
+body.light .section-title{color:#c40088;text-shadow:none}
+body.light .kid-badge{background:rgba(0,180,220,.12);border-color:rgba(0,180,220,.45);color:#0088a8}
+body.light .money-card{background:linear-gradient(135deg,rgba(140,255,190,.18),rgba(150,235,255,.15));border-color:rgba(0,180,120,.4)}
+body.light .money-total{background-image:linear-gradient(135deg,#00a05a,#0088a8);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+body.light .history-item{background:#ffffff;border-left-color:#00a05a;box-shadow:0 2px 8px rgba(140,120,220,.05)}
+body.light .history-item .amount{color:#00a05a;text-shadow:none}
+body.light .week-day{background:#ffffff;border-color:rgba(140,120,220,.18);box-shadow:0 2px 8px rgba(140,120,220,.05)}
+body.light .week-day.today{border-color:#0088a8;box-shadow:0 0 25px rgba(0,180,220,.25)}
+body.light .week-day.today .day-title{color:#0088a8;text-shadow:none}
+body.light .login-screen{background-color:#f5f0e8;background-image:radial-gradient(circle at 15% 10%,rgba(210,180,255,.45) 0%,transparent 45%),radial-gradient(circle at 85% 15%,rgba(180,235,255,.45) 0%,transparent 45%),radial-gradient(circle at 50% 85%,rgba(255,200,235,.40) 0%,transparent 50%),linear-gradient(135deg,#faf7f2 0%,#f2ece3 50%,#faf7f2 100%)}
+body.light .login-box{background:#fdfbf7;border-color:rgba(140,120,220,.3);box-shadow:0 0 60px rgba(180,140,255,.22)}
+body.light .login-box h2{background-image:linear-gradient(90deg,#0088a8,#c40088,#7a1fc4);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+body.light .login-box input{background:#f5f0e8;border-color:rgba(140,120,220,.25);color:#1a1a2e}
+body.light .btn{box-shadow:0 0 20px rgba(140,80,220,.25)}
+body.light .btn-reset{border-color:rgba(200,0,140,.5);color:#c40088;box-shadow:none}
+body.light .fab-dots{background:#ffffff;border-color:rgba(140,120,220,.35);box-shadow:0 4px 20px rgba(140,120,220,.2)}
+body.light .fab-dots span{background:#0088a8;box-shadow:0 0 6px rgba(0,180,220,.7)}
+body.light .fab-menu button{background:#ffffff;border-color:rgba(140,120,220,.45);color:#0088a8;box-shadow:0 4px 15px rgba(140,120,220,.15)}
+body.light .fab-menu button.danger{border-color:rgba(220,60,90,.55);color:#c4304f;box-shadow:none}
+body.light .fab-menu button.gold{border-color:rgba(180,140,0,.55);color:#8a6800;box-shadow:none}
+body.light .modal{background:#fdfbf7;border-color:rgba(140,120,220,.3);box-shadow:0 0 60px rgba(180,140,255,.3)}
+body.light .modal h3{color:#0088a8;text-shadow:none}
+body.light .kid-item{background:#f5f0e8;border-color:rgba(140,120,220,.15)}
+body.light .kid-item.active{background:rgba(0,180,220,.10);border-color:#0088a8;box-shadow:0 0 20px rgba(0,180,220,.2)}
+body.light .kid-item.active .name{color:#0088a8;text-shadow:none}
+body.light .add-row input{background:#f5f0e8;border-color:rgba(140,120,220,.25);color:#1a1a2e}
+body.light .modal-close{border-color:rgba(120,120,140,.4);color:#6a6a80}
+body.light .pin-input{background:#f5f0e8;border-color:rgba(140,120,220,.3);color:#1a1a2e}
+body.light .task-edit{background:#f5f0e8;border-color:rgba(140,120,220,.15)}
+body.light .task-edit .row input{background:#ffffff;border-color:rgba(140,120,220,.2);color:#1a1a2e}
+body.light .day-toggle{background:#ffffff;border-color:rgba(120,120,140,.3);color:#6a6a80}
+body.light .day-toggle.on{background:rgba(0,180,220,.15);border-color:#0088a8;color:#0088a8;box-shadow:0 0 8px rgba(0,180,220,.25)}
+body.light .add-task-form{background:rgba(255,255,255,.6);border-color:rgba(0,180,220,.35)}
+body.light .add-task-form input{background:#f5f0e8;border-color:rgba(140,120,220,.25);color:#1a1a2e}
+body.light .pin-links button{border-color:rgba(120,120,140,.4);color:#6a6a80}
+body.light .toast{background:#fdfbf7;color:#0088a8;border-color:#0088a8;box-shadow:0 0 30px rgba(0,180,220,.35)}
+body.light .toast.money{color:#00a05a;border-color:#00a05a}
+body.light .empty{color:#6a6a80}
+body.light .stat .label,body.light .day-progress .text,body.light .task-meta,body.light .week-day .task-line,body.light .modal-hint,body.light .history-item .date,body.light .money-sub{color:#6a6a80}
+body.light .powered b{background-image:linear-gradient(90deg,#0088a8,#c40088);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 </style>
 </head>
 <body>
@@ -175,11 +239,11 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 <div class="fab-menu" id="fabMenu">
 <button id="parentBtn" class="gold">Eltern-Bereich</button>
 <button id="manageKidsBtn">Kinder verwalten</button>
+<button id="themeBtn">☀️ Hell</button>
 <button id="logoutBtn" class="danger">Abmelden</button>
 </div>
 </div>
 
-<!-- Kinder-Modal -->
 <div class="modal-overlay" id="kidModal">
 <div class="modal">
 <h3>Kinder verwalten</h3>
@@ -193,7 +257,6 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 </div>
 </div>
 
-<!-- Eltern-Modal (PIN + Aufgaben-Editor) -->
 <div class="modal-overlay" id="parentModal">
 <div class="modal">
 <h3 id="parentTitle">Eltern-Bereich</h3>
@@ -204,9 +267,7 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 <input type="password" class="pin-input" id="pinNew2" inputmode="numeric" maxlength="6" placeholder="••••••">
 <div class="login-msg" id="pinSetupMsg"></div>
 <button class="btn" id="pinSaveBtn" style="margin-top:10px">PIN speichern</button>
-<div class="pin-links">
-<button id="pinSetupCancel">Abbrechen</button>
-</div>
+<div class="pin-links"><button id="pinSetupCancel">Abbrechen</button></div>
 </div>
 
 <div id="pinEntry" style="display:none">
@@ -214,12 +275,10 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 <input type="password" class="pin-input" id="pinInput" inputmode="numeric" maxlength="6" placeholder="••••••">
 <div class="login-msg" id="pinEntryMsg"></div>
 <button class="btn" id="pinCheckBtn" style="margin-top:10px">Entsperren</button>
-<div class="pin-links">
-<button id="pinEntryCancel">Abbrechen</button>
-</div>
+<div class="pin-links"><button id="pinEntryCancel">Abbrechen</button></div>
 </div>
 
-<div id="parentPanel" style="display:none;flex:1;display:none;flex-direction:column;overflow:hidden">
+<div id="parentPanel" style="display:none;flex:1;flex-direction:column;overflow:hidden">
 <div class="modal-hint">Aufgaben anpassen – gilt für alle Kinder</div>
 <div class="task-edit-list" id="taskEditList"></div>
 <div class="add-task-form">
@@ -283,28 +342,22 @@ function buildKidData(templates){
   var wd=currentWeekday(),tasks=[];
   for(var i=0;i<templates.length;i++){
     var t=templates[i];
-    if(t.days.indexOf(wd)!==-1){
-      tasks.push({id:t.id,title:t.title,cat:t.cat,important:!!t.important,done:false});
-    }
+    if(t.days.indexOf(wd)!==-1)tasks.push({id:t.id,title:t.title,cat:t.cat,important:!!t.important,done:false});
   }
   return {tasks:tasks,today:todayKey(),points:0,totalPoints:0,level:1,earned:0,history:[],pointsToday:0};
 }
 
 function defaultAccount(){
-  var id=genKidId();
-  var templates=clone(DEFAULT_TEMPLATES);
-  var kids={};
+  var id=genKidId(),templates=clone(DEFAULT_TEMPLATES),kids={};
   kids[id]={name:'Kind 1',emoji:'🧒',data:buildKidData(templates)};
-  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates};
+  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark'};
 }
 
 function getKid(){if(!accountData||!accountData.activeKid||!accountData.kids)return null;return accountData.kids[accountData.activeKid]||null}
 function getKidData(){var k=getKid();return k?k.data:null}
 function getTemplates(){return (accountData&&accountData.taskTemplates&&accountData.taskTemplates.length)?accountData.taskTemplates:clone(DEFAULT_TEMPLATES)}
 
-function isNewFormat(d){
-  return d && typeof d==='object' && d.kids && d.kidOrder && Array.isArray(d.kidOrder) && d.activeKid && d.kids[d.activeKid];
-}
+function isNewFormat(d){return d && typeof d==='object' && d.kids && d.kidOrder && Array.isArray(d.kidOrder) && d.activeKid && d.kids[d.activeKid]}
 
 function processKidDay(kid){
   if(!kid||!kid.data)return;
@@ -319,8 +372,7 @@ function processKidDay(kid){
       d.history.unshift({date:d.today,amount:DAILY_REWARD_EUR});
     }
     d.tasks=buildKidData(getTemplates()).tasks;
-    d.today=todayKey();
-    d.pointsToday=0;
+    d.today=todayKey();d.pointsToday=0;
   }
   if(typeof d.pointsToday!=='number')d.pointsToday=0;
   if(typeof d.totalPoints!=='number')d.totalPoints=0;
@@ -333,11 +385,10 @@ function processKidDay(kid){
 
 function migrate(data){
   if(isNewFormat(data)){
-    if(!data.taskTemplates||!Array.isArray(data.taskTemplates)||!data.taskTemplates.length){
-      data.taskTemplates=clone(DEFAULT_TEMPLATES);
-    }
+    if(!data.taskTemplates||!Array.isArray(data.taskTemplates)||!data.taskTemplates.length)data.taskTemplates=clone(DEFAULT_TEMPLATES);
     if(typeof data.pinSet!=='boolean')data.pinSet=false;
     if(typeof data.pin!=='string')data.pin='';
+    if(typeof data.theme!=='string')data.theme='dark';
     for(var i=0;i<data.kidOrder.length;i++){
       var kid=data.kids[data.kidOrder[i]];
       if(kid){
@@ -348,8 +399,7 @@ function migrate(data){
     }
     return data;
   }
-  var id=genKidId();
-  var templates=clone(DEFAULT_TEMPLATES);
+  var id=genKidId(),templates=clone(DEFAULT_TEMPLATES);
   var oldData=buildKidData(templates);
   if(data){
     oldData.today=data.today||todayKey();
@@ -363,7 +413,7 @@ function migrate(data){
   }
   var kids={};
   kids[id]={name:'Kind 1',emoji:'🧒',data:oldData};
-  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates};
+  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark'};
 }
 
 function startListener(uid){
@@ -384,6 +434,7 @@ function startListener(uid){
     if(!acc.kids[acc.activeKid])acc.activeKid=acc.kidOrder[0];
     accountData=acc;
     if(isOld)set(userRef,acc);
+    applyTheme(accountData.theme||getSavedTheme());
     render();
   });
 }
@@ -393,7 +444,6 @@ function saveToFirebase(){
   set(ref(db,'users/'+currentUser.uid),accountData);
 }
 
-// Rebuild current tasks for all kids based on templates (preserves done-status)
 function applyTemplateChanges(){
   if(!accountData)return;
   var wd=currentWeekday();
@@ -405,15 +455,30 @@ function applyTemplateChanges(){
     var newTasks=[];
     for(var j=0;j<accountData.taskTemplates.length;j++){
       var t=accountData.taskTemplates[j];
-      if(t.days.indexOf(wd)!==-1){
-        newTasks.push({id:t.id,title:t.title,cat:t.cat,important:!!t.important,done:!!doneMap[t.id]});
-      }
+      if(t.days.indexOf(wd)!==-1)newTasks.push({id:t.id,title:t.title,cat:t.cat,important:!!t.important,done:!!doneMap[t.id]});
     }
     kid.data.tasks=newTasks;
   }
 }
 
-// ---------- Auth ----------
+function applyTheme(theme){
+  if(theme==='light')document.body.classList.add('light');
+  else document.body.classList.remove('light');
+  var btn=document.getElementById('themeBtn');
+  if(btn)btn.textContent=(theme==='light')?'🌙 Dunkel':'☀️ Hell';
+}
+function getSavedTheme(){try{return localStorage.getItem('mylife_theme')||'dark'}catch(e){return 'dark'}}
+function setSavedTheme(t){try{localStorage.setItem('mylife_theme',t)}catch(e){}}
+applyTheme(getSavedTheme());
+
+document.getElementById('themeBtn').addEventListener('click',function(){
+  fabMenu.classList.remove('show');
+  var cur=getSavedTheme(),next=(cur==='light')?'dark':'light';
+  setSavedTheme(next);applyTheme(next);
+  if(accountData){accountData.theme=next;saveToFirebase()}
+  showToast(next==='light'?'PERLMUTT-DESIGN':'DUNKLES DESIGN');
+});
+
 document.getElementById('loginBtn').addEventListener('click',function(){
   var email=document.getElementById('loginEmail').value.trim();
   var pw=document.getElementById('loginPassword').value;
@@ -430,13 +495,11 @@ document.getElementById('signupBtn').addEventListener('click',function(){
   createUserWithEmailAndPassword(auth,email,pw).catch(function(err){showLoginMsg('Fehler: '+err.message,true)});
 });
 
-// ---------- FAB Menu ----------
 var fabDots=document.getElementById('fabDots'),fabMenu=document.getElementById('fabMenu');
 fabDots.addEventListener('click',function(ev){ev.stopPropagation();fabMenu.classList.toggle('show')});
 document.addEventListener('click',function(ev){if(!fabMenu.contains(ev.target)&&ev.target!==fabDots)fabMenu.classList.remove('show')});
 document.getElementById('logoutBtn').addEventListener('click',function(){fabMenu.classList.remove('show');signOut(auth)});
 
-// ---------- Kinder Modal ----------
 var kidModal=document.getElementById('kidModal');
 function openKidModal(){renderKidList();kidModal.classList.add('show')}
 function closeKidModal(){kidModal.classList.remove('show')}
@@ -463,11 +526,9 @@ function renderKidList(){
   for(var i=0;i<dels.length;i++)dels[i].addEventListener('click',function(ev){ev.stopPropagation();deleteKid(this.getAttribute('data-del'))});
   document.getElementById('addKidBtn').disabled=(accountData.kidOrder.length>=MAX_KIDS);
 }
-
 function switchKid(id){
   if(!accountData.kids[id])return;
-  accountData.activeKid=id;
-  saveToFirebase();render();closeKidModal();
+  accountData.activeKid=id;saveToFirebase();render();closeKidModal();
   showToast('GEWECHSELT ZU '+(accountData.kids[id].name||'').toUpperCase());
 }
 function deleteKid(id){
@@ -489,84 +550,62 @@ document.getElementById('addKidBtn').addEventListener('click',function(){
   if(!name){showToast('NAME EINGEBEN');return}
   var id=genKidId(),emoji=KID_EMOJIS[accountData.kidOrder.length%KID_EMOJIS.length];
   accountData.kids[id]={name:name,emoji:emoji,data:buildKidData(getTemplates())};
-  accountData.kidOrder.push(id);
-  input.value='';
-  saveToFirebase();renderKidList();
+  accountData.kidOrder.push(id);input.value='';
+  saveToFirebase();renderKidList();render();
   showToast('HINZUGEFÜGT: '+name.toUpperCase());
 });
 document.getElementById('newKidName').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('addKidBtn').click()}});
 
-// ---------- Eltern-Modal ----------
 var parentModal=document.getElementById('parentModal');
-var pinSetupEl=document.getElementById('pinSetup');
-var pinEntryEl=document.getElementById('pinEntry');
-var parentPanelEl=document.getElementById('parentPanel');
-var parentTitleEl=document.getElementById('parentTitle');
+var pinSetupEl=document.getElementById('pinSetup'),pinEntryEl=document.getElementById('pinEntry'),parentPanelEl=document.getElementById('parentPanel'),parentTitleEl=document.getElementById('parentTitle');
 
 function openParentFlow(){
   fabMenu.classList.remove('show');
   if(!accountData)return;
   parentModal.classList.add('show');
-  if(!accountData.pinSet){showPinSetup(false)}
-  else{showPinEntry()}
+  if(!accountData.pinSet)showPinSetup(false);
+  else showPinEntry();
 }
 function closeParentFlow(){
   parentModal.classList.remove('show');
-  pinSetupEl.style.display='none';
-  pinEntryEl.style.display='none';
-  parentPanelEl.style.display='none';
+  pinSetupEl.style.display='none';pinEntryEl.style.display='none';parentPanelEl.style.display='none';
 }
 document.getElementById('parentBtn').addEventListener('click',openParentFlow);
 parentModal.addEventListener('click',function(ev){if(ev.target===parentModal)closeParentFlow()});
 
 function showPinSetup(changeMode){
-  pinSetupEl.style.display='block';
-  pinEntryEl.style.display='none';
-  parentPanelEl.style.display='none';
+  pinSetupEl.style.display='block';pinEntryEl.style.display='none';parentPanelEl.style.display='none';
   parentTitleEl.textContent=changeMode?'PIN ändern':'Eltern-Bereich';
   document.getElementById('pinSetupHint').textContent=changeMode?'Neue 6-stellige PIN festlegen':'6-stellige PIN festlegen';
-  document.getElementById('pinSetupMsg').textContent='';
-  document.getElementById('pinSetupMsg').className='login-msg';
-  document.getElementById('pinNew1').value='';
-  document.getElementById('pinNew2').value='';
+  document.getElementById('pinSetupMsg').textContent='';document.getElementById('pinSetupMsg').className='login-msg';
+  document.getElementById('pinNew1').value='';document.getElementById('pinNew2').value='';
   setTimeout(function(){document.getElementById('pinNew1').focus()},100);
 }
 function showPinEntry(){
-  pinSetupEl.style.display='none';
-  pinEntryEl.style.display='block';
-  parentPanelEl.style.display='none';
+  pinSetupEl.style.display='none';pinEntryEl.style.display='block';parentPanelEl.style.display='none';
   parentTitleEl.textContent='Eltern-Bereich';
-  document.getElementById('pinEntryMsg').textContent='';
-  document.getElementById('pinEntryMsg').className='login-msg';
+  document.getElementById('pinEntryMsg').textContent='';document.getElementById('pinEntryMsg').className='login-msg';
   document.getElementById('pinInput').value='';
   setTimeout(function(){document.getElementById('pinInput').focus()},100);
 }
 function showParentPanel(){
-  pinSetupEl.style.display='none';
-  pinEntryEl.style.display='none';
-  parentPanelEl.style.display='flex';
+  pinSetupEl.style.display='none';pinEntryEl.style.display='none';parentPanelEl.style.display='flex';
   parentTitleEl.textContent='Aufgaben verwalten';
   renderTaskEditor();
 }
 
-// PIN Setup
 document.getElementById('pinSaveBtn').addEventListener('click',function(){
   var p1=document.getElementById('pinNew1').value.trim();
   var p2=document.getElementById('pinNew2').value.trim();
   var msg=document.getElementById('pinSetupMsg');
   if(!/^\d{6}$/.test(p1)){msg.textContent='PIN muss genau 6 Ziffern haben.';msg.className='login-msg error';return}
   if(p1!==p2){msg.textContent='PINs stimmen nicht überein.';msg.className='login-msg error';return}
-  accountData.pin=p1;accountData.pinSet=true;
-  saveToFirebase();
-  showToast('PIN GESPEICHERT');
-  showParentPanel();
+  accountData.pin=p1;accountData.pinSet=true;saveToFirebase();
+  showToast('PIN GESPEICHERT');showParentPanel();
 });
 document.getElementById('pinSetupCancel').addEventListener('click',closeParentFlow);
-['pinNew1','pinNew2'].forEach(function(id){
-  document.getElementById(id).addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('pinSaveBtn').click()}});
-});
+['pinNew1','pinNew2'].forEach(function(id){document.getElementById(id).addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('pinSaveBtn').click()}})});
 
-// PIN Entry
 document.getElementById('pinCheckBtn').addEventListener('click',function(){
   var p=document.getElementById('pinInput').value.trim();
   var msg=document.getElementById('pinEntryMsg');
@@ -576,11 +615,9 @@ document.getElementById('pinCheckBtn').addEventListener('click',function(){
 document.getElementById('pinEntryCancel').addEventListener('click',closeParentFlow);
 document.getElementById('pinInput').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('pinCheckBtn').click()}});
 
-// Parent Panel Buttons
 document.getElementById('parentCloseBtn').addEventListener('click',closeParentFlow);
 document.getElementById('changePinBtn').addEventListener('click',function(){showPinSetup(true)});
 
-// Task Editor
 function renderTaskEditor(){
   var list=document.getElementById('taskEditList');
   if(!accountData){list.innerHTML='';return}
@@ -588,39 +625,27 @@ function renderTaskEditor(){
   for(var i=0;i<accountData.taskTemplates.length;i++){
     var t=accountData.taskTemplates[i];
     html+='<div class="task-edit" data-id="'+t.id+'">';
-    html+='<div class="row"><input type="text" class="edit-title" value="'+escapeHtml(t.title)+'" maxlength="40" placeholder="Aufgabe"><button class="del" data-del="'+t.id+'" title="Löschen">✕</button></div>';
+    html+='<div class="row"><input type="text" class="edit-title" value="'+escapeHtml(t.title)+'" maxlength="40" placeholder="Aufgabe"><button class="del" data-del="'+t.id+'">✕</button></div>';
     html+='<div class="row"><input type="text" class="edit-cat" value="'+escapeHtml(t.cat)+'" maxlength="20" placeholder="Kategorie" style="max-width:110px"><label><input type="checkbox" class="edit-imp" '+(t.important?'checked':'')+'> Wichtig</label></div>';
     html+='<div class="days">';
     for(var k=0;k<DAY_ORDER.length;k++){
-      var d=DAY_ORDER[k];
-      var on=t.days.indexOf(d)!==-1;
+      var d=DAY_ORDER[k],on=t.days.indexOf(d)!==-1;
       html+='<button class="day-toggle'+(on?' on':'')+'" data-day="'+d+'">'+DAY_LABELS[d]+'</button>';
     }
     html+='</div></div>';
   }
   list.innerHTML=html;
-
   var edits=list.querySelectorAll('.task-edit');
   for(var i=0;i<edits.length;i++){(function(el){
-    var id=el.getAttribute('data-id');
-    var tmpl=null;
+    var id=el.getAttribute('data-id'),tmpl=null;
     for(var x=0;x<accountData.taskTemplates.length;x++)if(accountData.taskTemplates[x].id===id){tmpl=accountData.taskTemplates[x];break}
     if(!tmpl)return;
-    el.querySelector('.edit-title').addEventListener('change',function(){
-      var v=this.value.trim();if(!v){this.value=tmpl.title;return}
-      tmpl.title=v;applyTemplateChanges();saveToFirebase();render();
-    });
-    el.querySelector('.edit-cat').addEventListener('change',function(){
-      var v=this.value.trim();if(!v){this.value=tmpl.cat;return}
-      tmpl.cat=v;applyTemplateChanges();saveToFirebase();render();
-    });
-    el.querySelector('.edit-imp').addEventListener('change',function(){
-      tmpl.important=this.checked;applyTemplateChanges();saveToFirebase();render();
-    });
+    el.querySelector('.edit-title').addEventListener('change',function(){var v=this.value.trim();if(!v){this.value=tmpl.title;return}tmpl.title=v;applyTemplateChanges();saveToFirebase();render()});
+    el.querySelector('.edit-cat').addEventListener('change',function(){var v=this.value.trim();if(!v){this.value=tmpl.cat;return}tmpl.cat=v;applyTemplateChanges();saveToFirebase();render()});
+    el.querySelector('.edit-imp').addEventListener('change',function(){tmpl.important=this.checked;applyTemplateChanges();saveToFirebase();render()});
     var dayBtns=el.querySelectorAll('.day-toggle');
     for(var j=0;j<dayBtns.length;j++)dayBtns[j].addEventListener('click',function(){
-      var d=parseInt(this.getAttribute('data-day'),10);
-      var idx=tmpl.days.indexOf(d);
+      var d=parseInt(this.getAttribute('data-day'),10),idx=tmpl.days.indexOf(d);
       if(idx>-1){tmpl.days.splice(idx,1);this.classList.remove('on')}
       else{tmpl.days.push(d);this.classList.add('on')}
       applyTemplateChanges();saveToFirebase();render();
@@ -642,14 +667,12 @@ document.getElementById('addTaskBtn').addEventListener('click',function(){
   if(!title){showToast('TITEL EINGEBEN');return}
   var id='custom_'+Date.now()+'_'+Math.floor(Math.random()*1000);
   accountData.taskTemplates.push({id:id,title:title,cat:cat,days:[1,2,3,4,5],important:false,custom:true});
-  document.getElementById('newTaskTitle').value='';
-  document.getElementById('newTaskCat').value='';
+  document.getElementById('newTaskTitle').value='';document.getElementById('newTaskCat').value='';
   applyTemplateChanges();saveToFirebase();render();renderTaskEditor();
   showToast('HINZUGEFÜGT');
 });
 document.getElementById('newTaskTitle').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('addTaskBtn').click()}});
 
-// ---------- Auth State ----------
 onAuthStateChanged(auth,function(user){
   if(user){
     currentUser=user;
@@ -659,24 +682,19 @@ onAuthStateChanged(auth,function(user){
   }else{
     currentUser=null;accountData=null;
     if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
-    fabMenu.classList.remove('show');
-    kidModal.classList.remove('show');
-    closeParentFlow();
+    fabMenu.classList.remove('show');kidModal.classList.remove('show');closeParentFlow();
     document.getElementById('loginScreen').style.display='flex';
     document.getElementById('app').style.display='none';
-    document.getElementById('loginEmail').value='';
-    document.getElementById('loginPassword').value='';
+    document.getElementById('loginEmail').value='';document.getElementById('loginPassword').value='';
     showLoginMsg('',false);
   }
 });
 
 function showLoginMsg(msg,isError){
   var el=document.getElementById('loginMsg');
-  el.textContent=msg;
-  el.className='login-msg'+(isError?' error':' success');
+  el.textContent=msg;el.className='login-msg'+(isError?' error':' success');
 }
 
-// ---------- Render ----------
 function renderHeader(){
   var d=new Date();
   var wd=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'][d.getDay()];
@@ -713,8 +731,7 @@ function renderContent(){
     for(var i=0;i<d.tasks.length;i++){if(d.tasks[i].important)daily.push(d.tasks[i]);else others.push(d.tasks[i])}
     if(daily.length){html+='<div class="section-title">Täglich</div>';for(var i=0;i<daily.length;i++)html+=renderTask(daily[i])}
     if(others.length){html+='<div class="section-title">Heute zusätzlich</div>';for(var i=0;i<others.length;i++)html+=renderTask(others[i])}
-    el.innerHTML=html;
-    bindTaskClicks();
+    el.innerHTML=html;bindTaskClicks();
   }else if(currentTab==='money'){
     var h='';
     if(d.history&&d.history.length){for(var i=0;i<d.history.length;i++){var it=d.history[i];h+='<div class="history-item"><span class="date">'+formatDate(it.date)+'</span><span class="amount">+'+it.amount+'\u20ac</span></div>'}}
@@ -797,8 +814,7 @@ function fireConfetti(count){
     (function(){
       var el=document.createElement('div');
       el.className='confetti';
-      el.style.left=Math.random()*100+'vw';
-      el.style.top='-20px';
+      el.style.left=Math.random()*100+'vw';el.style.top='-20px';
       el.style.background=colors[Math.floor(Math.random()*colors.length)];
       el.style.animationDelay=(Math.random()*0.5)+'s';
       document.body.appendChild(el);
