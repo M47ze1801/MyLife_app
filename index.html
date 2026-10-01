@@ -9,7 +9,7 @@
 html,body{height:100%;overflow:hidden;position:fixed;width:100%;touch-action:manipulation;overscroll-behavior:none}
 :root{--cyan:#00f5ff;--pink:#ff00e5;--purple:#b026ff;--green:#00ff88;--yellow:#ffea00;--bg:#0a0a1a;--card:#12122a;--card2:#1a1a35;--text:#e8e8ff;--dim:#8888aa}
 body{background:var(--bg);background-image:radial-gradient(circle at 20% 10%,rgba(176,38,255,.15) 0%,transparent 40%),radial-gradient(circle at 80% 90%,rgba(0,245,255,.12) 0%,transparent 40%);color:var(--text);padding:12px;display:flex;align-items:center;justify-content:center}
-.app{width:100%;max-width:500px;height:100%;max-height:100vh;background:var(--card);border-radius:28px;border:1px solid rgba(0,245,255,.15);box-shadow:0 0 60px rgba(176,38,255,.25),0 0 120px rgba(0,245,255,.1);overflow:hidden;display:flex;flex-direction:column}
+.app{width:100%;max-width:500px;height:100%;max-height:100vh;background:var(--card);border-radius:28px;border:1px solid rgba(0,245,255,.15);box-shadow:0 0 60px rgba(176,38,255,.25),0 0 120px rgba(0,245,255,.1);overflow:hidden;display:flex;flex-direction:column;position:relative}
 header{background:linear-gradient(135deg,#1a0033,#000033);padding:20px 20px 18px;text-align:center;position:relative;overflow:hidden;border-bottom:1px solid rgba(0,245,255,.2);flex-shrink:0}
 header::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent 0deg,rgba(0,245,255,.15) 90deg,transparent 180deg,rgba(255,0,229,.15) 270deg,transparent 360deg);animation:rot 12s linear infinite;pointer-events:none}
 @keyframes rot{to{transform:rotate(360deg)}}
@@ -66,7 +66,6 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(150px);background:var(--card2);color:var(--cyan);padding:14px 26px;border-radius:30px;font-weight:800;font-size:.8rem;opacity:0;transition:all .4s;z-index:200;border:1px solid var(--cyan);box-shadow:0 0 30px rgba(0,245,255,.5);white-space:nowrap;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .toast.money{color:var(--green);border-color:var(--green)}
-.footer-btns{padding:12px 14px;flex-shrink:0;background:var(--card);border-top:1px solid rgba(0,245,255,.1)}
 .confetti{position:fixed;width:8px;height:8px;z-index:300;pointer-events:none;border-radius:50%;animation:fall 3s ease-in forwards}
 @keyframes fall{to{transform:translateY(100vh) rotate(720deg);opacity:0}}
 .login-screen{position:fixed;inset:0;background:var(--bg);background-image:radial-gradient(circle at 20% 10%,rgba(176,38,255,.15) 0%,transparent 40%),radial-gradient(circle at 80% 90%,rgba(0,245,255,.12) 0%,transparent 40%);display:flex;align-items:center;justify-content:center;padding:20px;z-index:500}
@@ -79,6 +78,15 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .login-msg.success{color:var(--green)}
 .powered{text-align:center;margin-top:20px;font-size:.68rem;letter-spacing:2px;color:var(--dim);text-transform:uppercase}
 .powered b{background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900;letter-spacing:2px}
+
+/* Floating 3-dot button */
+.fab-dots{position:absolute;bottom:16px;right:16px;width:44px;height:44px;border-radius:50%;background:var(--card2);border:1px solid rgba(0,245,255,.25);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:100;box-shadow:0 0 20px rgba(0,245,255,.2);transition:all .2s;pointer-events:auto}
+.fab-dots:active{transform:scale(.9)}
+.fab-dots span{display:block;width:4px;height:4px;border-radius:50%;background:var(--cyan);margin:0 2px;box-shadow:0 0 8px var(--cyan)}
+.fab-menu{position:absolute;bottom:70px;right:16px;z-index:110;display:none;flex-direction:column;gap:8px;pointer-events:auto}
+.fab-menu.show{display:flex}
+.fab-menu button{padding:12px 20px;border-radius:14px;border:2px solid rgba(255,68,102,.5);background:var(--card);color:#ff4466;font-weight:800;font-size:.8rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;box-shadow:0 0 15px rgba(255,68,102,.2);white-space:nowrap}
+.fab-menu button:active{transform:scale(.97)}
 </style>
 </head>
 <body>
@@ -117,9 +125,11 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 <div class="tab" data-tab="week">WOCHE</div>
 </div>
 <div class="content" id="content"></div>
-<div class="footer-btns">
-<button class="btn btn-reset" id="resetBtn">Tag zur&uuml;cksetzen</button>
-<button class="btn btn-reset" id="logoutBtn" style="margin-top:8px;border-color:rgba(255,68,102,.5);color:#ff4466">Abmelden</button>
+
+<!-- Floating 3-dot button -->
+<div class="fab-dots" id="fabDots"><span></span><span></span><span></span></div>
+<div class="fab-menu" id="fabMenu">
+<button id="logoutBtn">Abmelden</button>
 </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -225,7 +235,21 @@ document.getElementById('signupBtn').addEventListener('click',function(){
   });
 });
 
+// --- 3-Dot Menü Logik ---
+var fabDots=document.getElementById('fabDots');
+var fabMenu=document.getElementById('fabMenu');
+fabDots.addEventListener('click',function(ev){
+  ev.stopPropagation();
+  fabMenu.classList.toggle('show');
+});
+document.addEventListener('click',function(ev){
+  if(!fabMenu.contains(ev.target) && ev.target!==fabDots){
+    fabMenu.classList.remove('show');
+  }
+});
+// Logout-Button im Menü
 document.getElementById('logoutBtn').addEventListener('click',function(){
+  fabMenu.classList.remove('show');
   signOut(auth);
 });
 
@@ -238,6 +262,7 @@ onAuthStateChanged(auth,function(user){
   }else{
     currentUser=null;
     state=null;
+    fabMenu.classList.remove('show');
     document.getElementById('loginScreen').style.display='flex';
     document.getElementById('app').style.display='none';
     document.getElementById('loginEmail').value='';
@@ -324,20 +349,6 @@ function toggleTask(id){
   render();
 }
 
-function resetDay(){
-  var pts=state.pointsToday||0;
-  state.points=Math.max(0,state.points-pts);
-  state.totalPoints=Math.max(0,state.totalPoints-pts);
-  state.pointsToday=0;
-  state.tasks=buildTodayTasks();
-  state.today=todayKey();
-  refreshLevel();
-  saveToFirebase();
-  render();
-  if(pts>0){showToast('TAG ZURUECKGESETZT -'+pts+' PUNKTE')}
-  else{showToast('TAG ZURUECKGESETZT')}
-}
-
 function render(){if(!state)return;renderHeader();renderStats();renderProgress();renderBanner();renderContent()}
 
 var tabs=document.querySelectorAll('.tab');
@@ -350,11 +361,6 @@ for(var i=0;i<tabs.length;i++){
     renderContent();
   });
 }
-
-document.getElementById('resetBtn').addEventListener('click',function(ev){
-  ev.preventDefault();
-  resetDay();
-});
 
 var toastTimer;
 function showToast(msg,isMoney){var t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(isMoney?' money':'');clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove('show')},2200)}
