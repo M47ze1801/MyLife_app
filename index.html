@@ -208,7 +208,7 @@ var KID_EMOJIS=['🧒','👦','👧','🧑','👶'];
 var accountData=null;
 var currentUser=null;
 var currentTab='tasks';
-var listenerStarted=false;
+var unsubscribeRef=null;
 
 function todayKey(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
 function currentWeekday(){return new Date().getDay()}
@@ -227,7 +227,7 @@ function defaultAccount(){
 }
 
 function isNewFormat(data){
-  return data && typeof data==='object' && data.kids && data.kidOrder && Array.isArray(data.kidOrder) && data.activeKid;
+  return data && typeof data==='object' && data.kids && data.kidOrder && Array.isArray(data.kidOrder) && data.activeKid && data.kids[data.activeKid];
 }
 
 function processKidDay(kid){
@@ -248,14 +248,25 @@ function processKidDay(kid){
   }
   if(typeof d.pointsToday!=='number')d.pointsToday=0;
   if(typeof d.totalPoints!=='number')d.totalPoints=0;
+  if(typeof d.points!=='number')d.points=0;
+  if(typeof d.earned!=='number')d.earned=0;
+  if(!d.history||!Array.isArray(d.history))d.history=[];
   if(!d.tasks||!d.tasks.length)d.tasks=buildTodayTasks();
   d.level=calcLevel(d.totalPoints);
 }
 
 function migrate(data){
-  // Neues Format -> unverändert
-  if(isNewFormat(data))return data;
-  // Altes Format oder leeres Objekt -> in neues Format umwandeln
+  if(isNewFormat(data)){
+    for(var i=0;i<data.kidOrder.length;i++){
+      var kid=data.kids[data.kidOrder[i]];
+      if(kid){
+        if(!kid.name)kid.name='Kind '+(i+1);
+        if(!kid.emoji)kid.emoji=KID_EMOJIS[i%KID_EMOJIS.length];
+        if(!kid.data)kid.data=defaultKidState();
+      }
+    }
+    return data;
+  }
   var id=genKidId();
   var oldData={
     tasks:(data&&data.tasks&&data.tasks.length)?data.tasks:buildTodayTasks(),
@@ -264,7 +275,7 @@ function migrate(data){
     totalPoints:(data&&data.totalPoints)||0,
     level:(data&&data.level)||1,
     earned:(data&&data.earned)||0,
-    history:(data&&data.history)||[],
+    history:(data&&data.history&&Array.isArray(data.history))?data.history:[],
     pointsToday:(data&&data.pointsToday)||0
   };
   var kids={};
@@ -273,12 +284,10 @@ function migrate(data){
 }
 
 function startListener(uid){
-  if(listenerStarted)return;
-  listenerStarted=true;
+  if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
   var userRef=ref(db,'users/'+uid);
-  onValue(userRef,function(snapshot){
+  unsubscribeRef=onValue(userRef,function(snapshot){
     var data=snapshot.val();
-    // Kein Eintrag -> neuen Account anlegen
     if(!data){
       var fresh=defaultAccount();
       accountData=fresh;
@@ -288,15 +297,11 @@ function startListener(uid){
     }
     var isOld=!isNewFormat(data);
     var acc=migrate(data);
-    // Tageswechsel pro Kind
     for(var i=0;i<acc.kidOrder.length;i++){
-      var kid=acc.kids[acc.kidOrder[i]];
-      processKidDay(kid);
+      processKidDay(acc.kids[acc.kidOrder[i]]);
     }
-    // Active kid validieren
     if(!acc.kids[acc.activeKid])acc.activeKid=acc.kidOrder[0];
     accountData=acc;
-    // Migration zurückschreiben
     if(isOld)set(userRef,acc);
     render();
   });
@@ -343,4 +348,20 @@ document.getElementById('manageKidsBtn').addEventListener('click',function(){
   openKidModal();
 });
 document.getElementById('closeKidModal').addEventListener('click',closeKidModal);
-kidModal.addEventListener('click',function(ev){if(ev.target
+kidModal.addEventListener('click',function(ev){if(ev.target===kidModal)closeKidModal()});
+document.getElementById('kidBadge').addEventListener('click',openKidModal);
+
+function renderKidList(){
+  var list=document.getElementById('kidList');
+  var hint=document.getElementById('kidHint');
+  if(!accountData){list.innerHTML='';return}
+  hint.textContent=accountData.kidOrder.length+' von '+MAX_KIDS+' Kindern';
+  var html='';
+  for(var i=0;i<accountData.kidOrder.length;i++){
+    var id=accountData.kidOrder[i];
+    var kid=accountData.kids[id];
+    if(!kid)continue;
+    var active=(id===accountData.activeKid)?' active':'';
+    html+='<div class="kid-item'+active+'" data-id="'+id+'">'
+      +'<span class="emoji">'+(kid.emoji||'🧒')+'</span>'
+      +'<span class="name">'+escapeHtml(k
