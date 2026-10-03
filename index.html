@@ -14,11 +14,13 @@ header{background:linear-gradient(135deg,#1a0033,#000033);padding:20px;text-alig
 header::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent 0deg,rgba(0,245,255,.15) 90deg,transparent 180deg,rgba(255,0,229,.15) 270deg,transparent 360deg);animation:rot 12s linear infinite;pointer-events:none}
 @keyframes rot{to{transform:rotate(360deg)}}
 header>*{position:relative;z-index:1}
-header h1{font-size:1.6rem;font-weight:900;letter-spacing:4px;background-image:linear-gradient(90deg,var(--cyan),var(--pink),var(--purple));background-size:200% auto;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite}
+header h1{font-size:1.5rem;font-weight:900;letter-spacing:3px;background-image:linear-gradient(90deg,var(--cyan),var(--pink),var(--purple));background-size:200% auto;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite;cursor:pointer;display:inline-block;padding:4px 10px;border-radius:8px;transition:transform .15s}
+header h1:active{transform:scale(.95)}
 @keyframes shine{to{background-position:200% center}}
 header p{opacity:.7;font-size:.75rem;margin-top:4px;color:var(--cyan)}
 header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-spacing:1px;text-transform:uppercase}
-.kid-badge{display:inline-block;margin-top:8px;padding:5px 16px;background:rgba(0,245,255,.1);border:1px solid rgba(0,245,255,.4);border-radius:20px;font-size:.72rem;font-weight:800;color:var(--cyan);letter-spacing:1.5px;text-transform:uppercase;cursor:pointer}
+.kid-badge{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:4px 14px 4px 4px;background:rgba(0,245,255,.1);border:1px solid rgba(0,245,255,.4);border-radius:20px;font-size:.72rem;font-weight:800;color:var(--cyan);letter-spacing:1.5px;text-transform:uppercase;cursor:pointer}
+.kid-badge .kid-avatar{width:24px;height:24px;font-size:.9rem}
 .stats{display:flex;justify-content:space-around;padding:14px 12px;background:var(--card2);border-bottom:1px solid rgba(0,245,255,.1);flex-shrink:0}
 .stat{text-align:center;flex:1}
 .stat .value{font-size:1.3rem;font-weight:800}
@@ -34,7 +36,7 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .euro-banner.earned{background:linear-gradient(135deg,rgba(0,255,136,.2),rgba(0,245,255,.15));border-color:rgba(0,255,136,.4);color:var(--green);animation:pulse 1.5s ease-in-out infinite}
 @keyframes pulse{0%,100%{box-shadow:inset 0 0 20px rgba(0,255,136,.1)}50%{box-shadow:inset 0 0 40px rgba(0,255,136,.3)}}
 .tabs{display:flex;background:var(--card2);border-bottom:1px solid rgba(0,245,255,.1);padding:4px;gap:3px;flex-shrink:0}
-.tab{flex:1;padding:10px 4px;text-align:center;cursor:pointer;font-size:.68rem;font-weight:700;color:var(--dim);border-radius:12px;transition:all .3s}
+.tab{flex:1;padding:10px 4px;text-align:center;cursor:pointer;font-size:.66rem;font-weight:700;color:var(--dim);border-radius:12px;transition:all .3s}
 .tab.active{color:var(--cyan);background:rgba(0,245,255,.08);box-shadow:0 0 20px rgba(0,245,255,.2);text-shadow:0 0 10px rgba(0,245,255,.8)}
 .content{padding:14px;flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .section-title{font-size:.65rem;font-weight:800;color:var(--pink);text-transform:uppercase;letter-spacing:2px;margin:12px 0 10px 6px;text-shadow:0 0 10px rgba(255,0,229,.6)}
@@ -63,28 +65,22 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .week-day.today .day-title{color:var(--cyan)}
 .week-day .task-line{font-size:.76rem;color:var(--dim);padding:2px 0}
 .empty{text-align:center;padding:40px 20px;color:var(--dim);font-size:.82rem}
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(150px);background:var(--card2);color:var(--cyan);padding:14px 26px;border-radius:30px;font-weight:800;font-size:.8rem;opacity:0;transition:all .4s;z-index:1200;border:1px solid var(--cyan);box-shadow:0 0 30px rgba(0,245,255,.5);white-space:nowrap;pointer-events:none}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(150px);background:var(--card2);color:var(--cyan);padding:14px 26px;border-radius:30px;font-weight:800;font-size:.8rem;opacity:0;transition:all .4s;z-index:1200;border:1px solid var(--cyan);white-space:nowrap;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .toast.money{color:var(--green);border-color:var(--green)}
 .confetti{position:fixed;width:8px;height:8px;z-index:1250;pointer-events:none;border-radius:50%;animation:fall 3s ease-in forwards}
 @keyframes fall{to{transform:translateY(100vh) rotate(720deg);opacity:0}}
 .login-screen{position:fixed;inset:0;background:var(--bg);background-image:radial-gradient(circle at 20% 10%,rgba(176,38,255,.15) 0%,transparent 40%),radial-gradient(circle at 80% 90%,rgba(0,245,255,.12) 0%,transparent 40%);display:flex;align-items:center;justify-content:center;padding:20px;z-index:500}
-.login-box{width:100%;max-width:380px;background:var(--card);border-radius:28px;border:1px solid rgba(0,245,255,.15);box-shadow:0 0 60px rgba(176,38,255,.25);padding:32px 24px}
-.login-box h2{font-size:1.4rem;font-weight:900;text-align:center;letter-spacing:3px;background-image:linear-gradient(90deg,var(--cyan),var(--pink),var(--purple));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:24px}
+.login-box{width:100%;max-width:380px;background:var(--card);border-radius:28px;border:1px solid rgba(0,245,255,.15);padding:32px 24px}
+.login-box h2{font-size:1.3rem;font-weight:900;text-align:center;letter-spacing:2px;background-image:linear-gradient(90deg,var(--cyan),var(--pink),var(--purple));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:24px}
 .login-box input{width:100%;padding:14px 16px;background:var(--card2);border:1px solid rgba(0,245,255,.2);border-radius:12px;color:var(--text);font-size:.9rem;margin-bottom:12px;outline:none;font-family:inherit}
-.login-box input:focus{border-color:var(--cyan);box-shadow:0 0 15px rgba(0,245,255,.3)}
 .login-msg{font-size:.78rem;text-align:center;margin-top:12px;color:var(--dim);min-height:18px}
 .login-msg.error{color:#ff4466}
 .login-msg.success{color:var(--green)}
 .powered{text-align:center;margin-top:20px;font-size:.68rem;letter-spacing:2px;color:var(--dim);text-transform:uppercase}
 .powered b{background-image:linear-gradient(90deg,var(--cyan),var(--pink));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900}
-/* Floating Buttons */
 .fab-dots{position:absolute;bottom:16px;right:16px;width:44px;height:44px;border-radius:50%;background:var(--card2);border:1px solid rgba(0,245,255,.25);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:100;box-shadow:0 0 20px rgba(0,245,255,.2)}
 .fab-dots span{display:block;width:4px;height:4px;border-radius:50%;background:var(--cyan);margin:0 2px}
-.fab-game{position:absolute;bottom:16px;left:16px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--cyan));border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:100;box-shadow:0 0 25px rgba(0,255,136,.5),0 4px 15px rgba(0,0,0,.35);transition:transform .15s;font-size:1.6rem;line-height:1}
-.fab-game:active{transform:scale(.9)}
-.fab-game::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(0,255,136,.4);animation:gameFabPulse 2s ease-in-out infinite;pointer-events:none}
-@keyframes gameFabPulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.15);opacity:.15}}
 .fab-menu{position:absolute;bottom:70px;right:16px;z-index:110;display:none;flex-direction:column;gap:8px}
 .fab-menu.show{display:flex}
 .fab-menu button{padding:12px 20px;border-radius:14px;border:2px solid rgba(0,245,255,.4);background:var(--card);color:var(--cyan);font-weight:800;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;white-space:nowrap}
@@ -95,18 +91,28 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .modal{width:100%;max-width:420px;max-height:88vh;background:var(--card);border-radius:24px;border:1px solid rgba(0,245,255,.25);padding:22px 18px;display:flex;flex-direction:column;overflow:hidden}
 .modal h3{font-size:1rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);text-align:center;margin-bottom:8px}
 .modal-hint{font-size:.7rem;color:var(--dim);text-align:center;margin-bottom:14px}
-.kid-list{overflow-y:auto;margin-bottom:14px;flex:1;max-height:40vh}
-.kid-item{display:flex;align-items:center;gap:10px;background:var(--card2);border-radius:14px;padding:12px 14px;margin-bottom:8px;border:1px solid rgba(0,245,255,.12);cursor:pointer}
+.kid-list{overflow-y:auto;margin-bottom:10px}
+.kid-item{display:flex;align-items:center;gap:10px;background:var(--card2);border-radius:14px;padding:10px 12px;margin-bottom:8px;border:1px solid rgba(0,245,255,.12);cursor:pointer}
 .kid-item.active{border-color:var(--cyan);background:rgba(0,245,255,.06)}
-.kid-item .emoji{font-size:1.2rem}
+.kid-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.4rem;background:rgba(0,245,255,.1);border:1px solid rgba(0,245,255,.3);overflow:hidden}
+.kid-avatar img{width:100%;height:100%;object-fit:cover}
 .kid-item .name{flex:1;font-weight:700;font-size:.9rem}
 .kid-item.active .name{color:var(--cyan)}
-.kid-item .del{width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,68,102,.5);background:transparent;color:#ff4466;font-weight:900;font-size:.9rem;cursor:pointer;flex-shrink:0;line-height:1}
+.kid-item .edit,.kid-item .del{width:28px;height:28px;border-radius:50%;background:transparent;font-weight:900;font-size:.85rem;cursor:pointer;flex-shrink:0;line-height:1;border:1px solid}
+.kid-item .edit{border-color:rgba(0,245,255,.5);color:var(--cyan)}
+.kid-item .del{border-color:rgba(255,68,102,.5);color:#ff4466}
 .add-row{display:flex;gap:8px;margin-bottom:10px}
 .add-row input{flex:1;padding:12px 14px;background:var(--card2);border:1px solid rgba(0,245,255,.2);border-radius:12px;color:var(--text);font-size:.85rem;outline:none;font-family:inherit;min-width:0}
 .add-row button{padding:12px 18px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-weight:900;font-size:1rem;cursor:pointer;flex-shrink:0}
 .add-row button:disabled{opacity:.4;cursor:not-allowed}
-.modal-close{width:100%;padding:12px;border-radius:14px;background:transparent;border:2px solid rgba(136,136,170,.4);color:var(--dim);font-weight:800;font-size:.8rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
+.modal-close{width:100%;padding:12px;border-radius:14px;background:transparent;border:2px solid rgba(136,136,170,.4);color:var(--dim);font-weight:800;font-size:.8rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-top:6px}
+.kid-edit-avatar{width:90px;height:90px;margin:0 auto 14px;border-radius:50%;background:var(--card2);border:2px solid rgba(0,245,255,.35);display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:2.8rem;cursor:pointer;transition:transform .15s}
+.kid-edit-avatar:active{transform:scale(.96)}
+.kid-edit-avatar img{width:100%;height:100%;object-fit:cover}
+.emoji-picker{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;max-height:150px;overflow-y:auto;padding:8px;background:rgba(0,0,0,.25);border-radius:12px;border:1px solid rgba(0,245,255,.15)}
+.emoji-picker button{aspect-ratio:1;background:transparent;border:2px solid transparent;border-radius:10px;font-size:1.25rem;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+.emoji-picker button.selected{border-color:var(--cyan);background:rgba(0,245,255,.18);box-shadow:0 0 10px rgba(0,245,255,.35)}
+.upload-btn{display:block;width:100%;padding:12px;border-radius:12px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-weight:800;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;text-align:center;cursor:pointer;margin-top:8px}
 .pin-input{width:100%;padding:14px 16px;background:var(--card2);border:1px solid rgba(0,245,255,.25);border-radius:12px;color:var(--text);font-size:1.1rem;letter-spacing:8px;text-align:center;margin-bottom:10px;outline:none;font-family:inherit}
 .parent-scroll{overflow-y:auto;flex:1;margin-bottom:10px;padding-right:4px}
 .task-edit{background:var(--card2);border-radius:12px;padding:10px;margin-bottom:8px;border:1px solid rgba(0,245,255,.12)}
@@ -126,22 +132,26 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .pin-links{display:flex;gap:8px;margin-top:10px}
 .pin-links button{flex:1;padding:10px;border-radius:12px;background:transparent;border:2px solid rgba(136,136,170,.4);color:var(--dim);font-weight:800;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
 .settings-box{background:var(--card2);border-radius:14px;padding:14px;margin-bottom:14px;border:1px solid rgba(255,234,0,.25)}
+.settings-box.kids{border-color:rgba(176,38,255,.4)}
 .settings-box.rewards{border-color:rgba(0,245,255,.25)}
 .settings-box.pending{border-color:rgba(255,0,229,.3)}
+.settings-box.suggest{border-color:rgba(0,255,136,.35)}
 .settings-title{font-size:.7rem;font-weight:800;color:var(--yellow);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+.settings-box.kids .settings-title{color:var(--purple)}
 .settings-box.rewards .settings-title{color:var(--cyan)}
 .settings-box.pending .settings-title{color:var(--pink)}
+.settings-box.suggest .settings-title{color:var(--green)}
 .setting-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 .setting-row label{font-size:.82rem;color:var(--text);font-weight:600}
 .setting-row .input-wrap{display:flex;align-items:center;gap:4px}
 .setting-row input{width:80px;padding:8px 10px;background:rgba(0,0,0,.3);border:1px solid rgba(0,245,255,.25);border-radius:8px;color:var(--text);font-size:.9rem;text-align:center;outline:none;font-family:inherit;font-weight:700}
-.setting-row .unit{font-size:.85rem;color:var(--dim);font-weight:700}
 .preset-row{display:flex;gap:6px;margin-bottom:12px}
 .preset-row button{flex:1;padding:8px 4px;border-radius:8px;background:rgba(0,0,0,.3);border:1px solid rgba(0,245,255,.2);color:var(--cyan);font-weight:800;font-size:.75rem;cursor:pointer}
 .preset-row button.active{background:rgba(0,245,255,.2);border-color:var(--cyan);color:#fff}
 .reward-card{background:var(--card2);border-radius:16px;padding:14px;margin-bottom:10px;border:1px solid rgba(0,245,255,.15)}
 .reward-card.pending{border-color:rgba(255,234,0,.4)}
 .reward-card.done{border-color:rgba(0,255,136,.35)}
+.reward-card.suggested{border-color:rgba(0,255,136,.4);background:linear-gradient(135deg,rgba(0,255,136,.05),rgba(0,245,255,.03))}
 .reward-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .reward-emoji{font-size:1.6rem;flex-shrink:0}
 .reward-title{flex:1;font-weight:800;font-size:.9rem}
@@ -154,6 +164,7 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .reward-btn:disabled{opacity:.4;cursor:not-allowed;background:rgba(136,136,170,.25)}
 .reward-status{font-size:.72rem;font-weight:800;text-align:center;letter-spacing:1px;text-transform:uppercase;padding:8px;border-radius:10px;margin-top:8px}
 .reward-status.pending{color:var(--yellow);background:rgba(255,234,0,.1);border:1px solid rgba(255,234,0,.3)}
+.reward-status.suggested{color:var(--green);background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3)}
 .reward-edit{background:var(--card2);border-radius:12px;padding:10px;margin-bottom:8px;border:1px solid rgba(0,245,255,.12)}
 .reward-edit .row{display:flex;gap:6px;align-items:center}
 .reward-edit .row input{padding:8px 10px;background:rgba(0,0,0,.3);border:1px solid rgba(0,245,255,.18);border-radius:8px;color:var(--text);font-size:.82rem;outline:none;font-family:inherit;min-width:0}
@@ -162,6 +173,7 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .reward-edit .row input.e-cost{width:75px;text-align:center;font-weight:800;color:var(--cyan)}
 .reward-edit .row .del{width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,68,102,.5);background:transparent;color:#ff4466;font-weight:900;cursor:pointer;flex-shrink:0;line-height:1;font-size:.8rem}
 .pending-item{background:var(--card2);border-radius:12px;padding:10px 12px;margin-bottom:8px;border:1px solid rgba(255,234,0,.3);display:flex;align-items:center;gap:8px}
+.pending-item.suggest{border-color:rgba(0,255,136,.35)}
 .pending-item .info{flex:1;min-width:0}
 .pending-item .who{font-size:.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:700}
 .pending-item .what{font-size:.85rem;font-weight:800;margin-top:2px}
@@ -221,7 +233,7 @@ body.light .app{background:#fdfbf7;border-color:rgba(180,160,255,.35)}
 body.light header{background:linear-gradient(135deg,#efe6ff,#e6f5ff);border-bottom-color:rgba(140,120,220,.25)}
 body.light header h1{background-image:linear-gradient(90deg,#0088a8,#c40088,#7a1fc4);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 body.light header p{color:#0088a8}
-body.light .stats,body.light .day-progress{background:#f5f0e8;border-bottom-color:rgba(140,120,220,.15)}
+body.light .stats,body.light .day-progress{background:#f5f0e8}
 body.light .stat .value{text-shadow:none}
 body.light .stat:nth-child(1) .value{color:#8a1fd6}
 body.light .stat:nth-child(2) .value{color:#0088a8}
@@ -235,6 +247,8 @@ body.light .task{background:#ffffff;border-color:rgba(140,120,220,.18);box-shado
 body.light .task-check{background:rgba(0,180,220,.08);border-color:rgba(0,180,220,.45)}
 body.light .section-title{color:#c40088;text-shadow:none}
 body.light .kid-badge{background:rgba(0,180,220,.12);border-color:rgba(0,180,220,.45);color:#0088a8}
+body.light .kid-avatar{background:rgba(0,180,220,.1);border-color:rgba(0,180,220,.35)}
+body.light .kid-item .edit{border-color:rgba(0,180,220,.5);color:#0088a8}
 body.light .money-card{background:linear-gradient(135deg,rgba(140,255,190,.18),rgba(150,235,255,.15));border-color:rgba(0,180,120,.4)}
 body.light .money-total{background-image:linear-gradient(135deg,#00a05a,#0088a8);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 body.light .history-item{background:#ffffff;border-left-color:#00a05a}
@@ -248,8 +262,6 @@ body.light .login-box h2{background-image:linear-gradient(90deg,#0088a8,#c40088,
 body.light .login-box input{background:#f5f0e8;border-color:rgba(140,120,220,.25);color:#1a1a2e}
 body.light .fab-dots{background:#ffffff;border-color:rgba(140,120,220,.35)}
 body.light .fab-dots span{background:#0088a8}
-body.light .fab-game{background:linear-gradient(135deg,#00a05a,#0088a8);box-shadow:0 0 25px rgba(0,160,90,.4),0 4px 15px rgba(140,120,220,.25)}
-body.light .fab-game::before{border-color:rgba(0,160,90,.45)}
 body.light .fab-menu button{background:#ffffff;border-color:rgba(140,120,220,.45);color:#0088a8}
 body.light .fab-menu button.danger{border-color:rgba(220,60,90,.55);color:#c4304f}
 body.light .fab-menu button.gold{border-color:rgba(180,140,0,.55);color:#8a6800}
@@ -260,6 +272,9 @@ body.light .kid-item.active{background:rgba(0,180,220,.10);border-color:#0088a8}
 body.light .kid-item.active .name{color:#0088a8}
 body.light .add-row input{background:#f5f0e8;border-color:rgba(140,120,220,.25);color:#1a1a2e}
 body.light .modal-close{border-color:rgba(120,120,140,.4);color:#6a6a80}
+body.light .emoji-picker{background:rgba(255,255,255,.6);border-color:rgba(140,120,220,.2)}
+body.light .emoji-picker button.selected{background:rgba(0,180,220,.18);border-color:#0088a8;box-shadow:0 0 10px rgba(0,180,220,.3)}
+body.light .kid-edit-avatar{background:#f5f0e8;border-color:rgba(0,180,220,.35)}
 body.light .pin-input{background:#f5f0e8;border-color:rgba(140,120,220,.3);color:#1a1a2e}
 body.light .task-edit{background:#f5f0e8;border-color:rgba(140,120,220,.15)}
 body.light .task-edit .row input{background:#ffffff;border-color:rgba(140,120,220,.2);color:#1a1a2e}
@@ -273,18 +288,24 @@ body.light .empty{color:#6a6a80}
 body.light .stat .label,body.light .day-progress .text,body.light .task-meta,body.light .week-day .task-line,body.light .modal-hint,body.light .history-item .date,body.light .money-sub{color:#6a6a80}
 body.light .powered b{background-image:linear-gradient(90deg,#0088a8,#c40088);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 body.light .settings-box{background:#f5f0e8;border-color:rgba(180,140,0,.35)}
+body.light .settings-box.kids{border-color:rgba(140,60,200,.4)}
 body.light .settings-box.rewards{border-color:rgba(0,180,220,.35)}
 body.light .settings-box.pending{border-color:rgba(200,0,140,.35)}
+body.light .settings-box.suggest{border-color:rgba(0,160,90,.4)}
 body.light .settings-title{color:#8a6800}
+body.light .settings-box.kids .settings-title{color:#8a1fd6}
 body.light .settings-box.rewards .settings-title{color:#0088a8}
 body.light .settings-box.pending .settings-title{color:#c40088}
+body.light .settings-box.suggest .settings-title{color:#00a05a}
 body.light .setting-row input{background:#ffffff;border-color:rgba(140,120,220,.25);color:#1a1a2e}
 body.light .preset-row button{background:#ffffff;border-color:rgba(140,120,220,.25);color:#0088a8}
 body.light .preset-row button.active{background:rgba(0,180,220,.15);border-color:#0088a8;color:#005f7a}
 body.light .reward-card{background:#ffffff;border-color:rgba(140,120,220,.2)}
+body.light .reward-card.suggested{border-color:rgba(0,160,90,.4);background:linear-gradient(135deg,rgba(140,255,190,.15),rgba(150,235,255,.1))}
 body.light .reward-edit{background:#f5f0e8;border-color:rgba(140,120,220,.15)}
 body.light .reward-edit .row input{background:#ffffff;border-color:rgba(140,120,220,.2);color:#1a1a2e}
 body.light .pending-item{background:#f5f0e8;border-color:rgba(180,140,0,.35)}
+body.light .pending-item.suggest{border-color:rgba(0,160,90,.4)}
 body.light .game-overlay{background:rgba(250,247,242,.92)}
 body.light .game-app{border-color:rgba(0,180,220,.35)}
 body.light .game-digit{background:rgba(255,255,255,.65);border-color:rgba(140,120,220,.2);color:#6a6a80}
@@ -309,10 +330,10 @@ body.light .game-result{background:rgba(250,247,242,.95)}
 
 <div class="app" id="app" style="display:none">
 <header>
-<h1>BETTER LIFE</h1>
+<h1 id="gameLogo">BETTER LIFE</h1>
 <p>Ordnung - Haushalt - Routinen</p>
 <div class="date" id="headerDate"></div>
-<div class="kid-badge" id="kidBadge">Kind</div>
+<div class="kid-badge" id="kidBadge"></div>
 </header>
 <div class="stats">
 <div class="stat"><div class="value" id="statLevel">1</div><div class="label">Level</div></div>
@@ -326,31 +347,31 @@ body.light .game-result{background:rgba(250,247,242,.95)}
 <div class="euro-banner" id="euroBanner">ALLE AUFGABEN = 5&euro; F&Uuml;R MORGEN</div>
 <div class="tabs" id="tabs">
 <div class="tab active" data-tab="tasks">HEUTE</div>
-<div class="tab" data-tab="rewards">PRÄMIE</div>
+<div class="tab" data-tab="rewards">DEIN BEREICH</div>
 <div class="tab" data-tab="money">GELD</div>
 <div class="tab" data-tab="week">WOCHE</div>
 </div>
 <div class="content" id="content"></div>
-<button class="fab-game" id="gameBtn" aria-label="Tresor-Spiel öffnen">🎮</button>
 <div class="fab-dots" id="fabDots"><span></span><span></span><span></span></div>
 <div class="fab-menu" id="fabMenu">
 <button id="parentBtn" class="gold">Eltern-Bereich</button>
-<button id="manageKidsBtn">Kinder verwalten</button>
 <button id="themeBtn">☀️ Hell</button>
 <button id="logoutBtn" class="danger">Abmelden</button>
 </div>
 </div>
 
-<div class="modal-overlay" id="kidModal">
+<div class="modal-overlay" id="kidEditModal">
 <div class="modal">
-<h3>Kinder verwalten</h3>
-<div class="modal-hint" id="kidHint">Bis zu 5 Kinder pro Konto</div>
-<div class="kid-list" id="kidList"></div>
-<div class="add-row">
-<input type="text" id="newKidName" placeholder="Name des Kindes" maxlength="20">
-<button id="addKidBtn">+</button>
-</div>
-<button class="modal-close" id="closeKidModal">Schließen</button>
+<h3 id="kidEditTitle">Kind bearbeiten</h3>
+<div class="modal-hint">Symbol oder Bild wählen</div>
+<div class="kid-edit-avatar" id="kidEditAvatar"></div>
+<input type="text" id="kidEditName" placeholder="Name" maxlength="20" style="width:100%;padding:12px 14px;background:var(--card2);border:1px solid rgba(0,245,255,.2);border-radius:12px;color:var(--text);font-size:.9rem;outline:none;font-family:inherit;margin-bottom:10px">
+<div class="modal-hint" style="margin:4px 0 8px">Emoji auswählen</div>
+<div class="emoji-picker" id="emojiPicker"></div>
+<label class="upload-btn">📷 Bild hochladen<input type="file" id="kidEditPhoto" accept="image/*" style="display:none"></label>
+<button class="modal-close" id="kidEditRemovePhoto" style="border-color:rgba(255,68,102,.5);color:#ff4466">Bild entfernen</button>
+<button class="btn" id="kidEditSave" style="margin-top:10px">Speichern</button>
+<button class="modal-close" id="kidEditCancel">Abbrechen</button>
 </div>
 </div>
 
@@ -374,6 +395,17 @@ body.light .game-result{background:rgba(250,247,242,.95)}
 </div>
 <div id="parentPanel" style="display:none;flex:1;flex-direction:column;overflow:hidden">
 <div class="parent-scroll">
+
+<div class="settings-box kids">
+<div class="settings-title">👶 Kinder verwalten</div>
+<div class="modal-hint" id="kidHint" style="margin:0 0 10px">Bis zu 5 Kinder pro Konto</div>
+<div class="kid-list" id="parentKidList"></div>
+<div class="add-row">
+<input type="text" id="newKidName" placeholder="Name des Kindes" maxlength="20">
+<button id="addKidBtn">+</button>
+</div>
+</div>
+
 <div class="settings-box">
 <div class="settings-title">💰 Belohnung & Punkte</div>
 <div class="setting-row"><label>Tagesgeld</label><div class="input-wrap"><input type="number" id="setDailyReward" min="0" step="0.5" value="5"><span class="unit">€</span></div></div>
@@ -381,6 +413,7 @@ body.light .game-result{background:rgba(250,247,242,.95)}
 <div class="setting-row"><label>Punkte pro Aufgabe</label><div class="input-wrap"><input type="number" id="setPoints" min="1" step="1" value="10"></div></div>
 <div class="preset-row" id="pointsPresets"><button data-val="5">5</button><button data-val="10">10</button><button data-val="20">20</button><button data-val="50">50</button></div>
 </div>
+
 <div class="settings-box rewards">
 <div class="settings-title">🎁 Belohnungen verwalten</div>
 <div id="rewardEditList"></div>
@@ -393,12 +426,20 @@ body.light .game-result{background:rgba(250,247,242,.95)}
 <button id="addRewardBtn">+ Belohnung hinzufügen</button>
 </div>
 </div>
+
+<div class="settings-box suggest">
+<div class="settings-title">💡 Vorschläge von Kindern</div>
+<div id="suggestionsList"></div>
+</div>
+
 <div class="settings-box pending">
 <div class="settings-title">📥 Offene Anfragen</div>
 <div id="pendingRequestsList"></div>
 </div>
+
 <div class="modal-hint">Aufgaben anpassen – gilt für alle Kinder</div>
 <div id="taskEditList"></div>
+
 </div>
 <div class="add-task-form">
 <input type="text" id="newTaskTitle" placeholder="Neue Aufgabe" maxlength="40">
@@ -459,10 +500,7 @@ const firebaseConfig = {
   messagingSenderId: "1091690464149",
   appId: "1:1091690464149:web:0e2f0ee897e3c93bb96c9c"
 };
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
 
 var DEFAULT_TEMPLATES=[
 {id:'zähne',title:'Zähne putzen',cat:'Hygiene',days:[0,1,2,3,4,5,6],important:true},
@@ -474,10 +512,11 @@ var DEFAULT_TEMPLATES=[
 {id:'wäsche',title:'Wäsche laufen lassen & verräumen',cat:'Haushalt',days:[2,4]}
 ];
 var DEFAULT_DAILY_REWARD=5,DEFAULT_POINTS_PER_TASK=10,LEVEL_BASE=20,MAX_KIDS=5;
-var KID_EMOJIS=['🧒','👦','👧','🧑','👶'];
 var DAY_LABELS=['So','Mo','Di','Mi','Do','Fr','Sa'],DAY_ORDER=[1,2,3,4,5,6,0];
+var EMOJI_SET=['🧒','👦','👧','🧑','👶','🐱','🐶','🦊','🐼','🐨','🦁','🐸','🦄','🐯','🐰','🐻','🐷','🐵','🐧','🦉','🦋','🌟','⭐','🌈','⚽','🏀','🎮','🎨','🎵','🚀','🦖','🐙','🐢','🐝','🌸','🍀','🔥','💎','🎯','🎸'];
 
 var accountData=null,currentUser=null,currentTab='tasks',unsubscribeRef=null;
+var editingKidId=null,editingEmoji='🧒',editingPhoto='';
 
 function todayKey(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
 function currentWeekday(){return new Date().getDay()}
@@ -488,15 +527,21 @@ function fmtEur(n){var s=String(n);if(s.indexOf('.')>-1)s=s.replace('.',',');ret
 function getDailyReward(){if(accountData&&accountData.settings&&typeof accountData.settings.dailyReward==='number'&&accountData.settings.dailyReward>=0)return accountData.settings.dailyReward;return DEFAULT_DAILY_REWARD}
 function getPointsPerTask(){if(accountData&&accountData.settings&&typeof accountData.settings.pointsPerTask==='number'&&accountData.settings.pointsPerTask>=1)return accountData.settings.pointsPerTask;return DEFAULT_POINTS_PER_TASK}
 function getRewards(){if(accountData&&accountData.rewards&&Array.isArray(accountData.rewards))return accountData.rewards;return[]}
+function renderAvatar(kid,size){
+  size=size||38;
+  if(kid&&kid.photo)return '<div class="kid-avatar" style="width:'+size+'px;height:'+size+'px"><img src="'+kid.photo+'"></div>';
+  var em=(kid&&kid.emoji)||'🧒';
+  return '<div class="kid-avatar" style="width:'+size+'px;height:'+size+'px;font-size:'+(size*0.55)+'px">'+em+'</div>';
+}
 
 function buildKidData(templates){
   var wd=currentWeekday(),tasks=[];
   for(var i=0;i<templates.length;i++){var t=templates[i];if(t.days.indexOf(wd)!==-1)tasks.push({id:t.id,title:t.title,cat:t.cat,important:!!t.important,done:false})}
-  return {tasks:tasks,today:todayKey(),points:0,totalPoints:0,level:1,earned:0,history:[],pointsToday:0,pendingRewards:[],rewardHistory:[]};
+  return {tasks:tasks,today:todayKey(),points:0,totalPoints:0,level:1,earned:0,history:[],pointsToday:0,pendingRewards:[],rewardHistory:[],suggestedRewards:[]};
 }
 function defaultAccount(){
   var id=genId('kid'),templates=clone(DEFAULT_TEMPLATES),kids={};
-  kids[id]={name:'Kind 1',emoji:'🧒',data:buildKidData(templates)};
+  kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:buildKidData(templates)};
   return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},rewards:[]};
 }
 function getKid(){if(!accountData||!accountData.activeKid||!accountData.kids)return null;return accountData.kids[accountData.activeKid]||null}
@@ -522,6 +567,7 @@ function processKidDay(kid){
   if(!d.tasks||!d.tasks.length)d.tasks=buildKidData(getTemplates()).tasks;
   if(!d.pendingRewards||!Array.isArray(d.pendingRewards))d.pendingRewards=[];
   if(!d.rewardHistory||!Array.isArray(d.rewardHistory))d.rewardHistory=[];
+  if(!d.suggestedRewards||!Array.isArray(d.suggestedRewards))d.suggestedRewards=[];
   d.level=calcLevel(d.totalPoints);
 }
 
@@ -539,10 +585,12 @@ function migrate(data){
       var kid=data.kids[data.kidOrder[i]];
       if(kid){
         if(!kid.name)kid.name='Kind '+(i+1);
-        if(!kid.emoji)kid.emoji=KID_EMOJIS[i%KID_EMOJIS.length];
+        if(!kid.emoji)kid.emoji=EMOJI_SET[i%EMOJI_SET.length];
+        if(typeof kid.photo!=='string')kid.photo='';
         if(!kid.data)kid.data=buildKidData(data.taskTemplates);
         if(!kid.data.pendingRewards||!Array.isArray(kid.data.pendingRewards))kid.data.pendingRewards=[];
         if(!kid.data.rewardHistory||!Array.isArray(kid.data.rewardHistory))kid.data.rewardHistory=[];
+        if(!kid.data.suggestedRewards||!Array.isArray(kid.data.suggestedRewards))kid.data.suggestedRewards=[];
       }
     }
     return data;
@@ -553,7 +601,7 @@ function migrate(data){
     oldData.history=(data.history&&Array.isArray(data.history))?data.history:[];oldData.pointsToday=data.pointsToday||0;
     if(data.tasks&&data.tasks.length)oldData.tasks=data.tasks;
   }
-  var kids={};kids[id]={name:'Kind 1',emoji:'🧒',data:oldData};
+  var kids={};kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:oldData};
   return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},rewards:[]};
 }
 
@@ -571,6 +619,7 @@ function startListener(uid){
     if(isOld)set(userRef,acc);
     applyTheme(accountData.theme||getSavedTheme());
     render();
+    if(parentPanelEl.style.display==='flex')refreshParentPanel();
   });
 }
 function saveToFirebase(){if(!currentUser||!accountData)return;set(ref(db,'users/'+currentUser.uid),accountData)}
@@ -621,75 +670,17 @@ document.getElementById('themeBtn').addEventListener('click',function(){
   showToast(next==='light'?'PERLMUTT-DESIGN':'DUNKLES DESIGN');
 });
 
-var kidModal=document.getElementById('kidModal');
-function openKidModal(){renderKidList();kidModal.classList.add('show')}
-function closeKidModal(){kidModal.classList.remove('show')}
-document.getElementById('manageKidsBtn').addEventListener('click',function(){fabMenu.classList.remove('show');openKidModal()});
-document.getElementById('closeKidModal').addEventListener('click',closeKidModal);
-kidModal.addEventListener('click',function(ev){if(ev.target===kidModal)closeKidModal()});
-document.getElementById('kidBadge').addEventListener('click',openKidModal);
-
-function renderKidList(){
-  var list=document.getElementById('kidList'),hint=document.getElementById('kidHint');
-  if(!accountData){list.innerHTML='';return}
-  hint.textContent=accountData.kidOrder.length+' von '+MAX_KIDS+' Kindern';
-  var html='';
-  for(var i=0;i<accountData.kidOrder.length;i++){
-    var id=accountData.kidOrder[i],kid=accountData.kids[id];
-    if(!kid)continue;
-    var active=(id===accountData.activeKid)?' active':'';
-    html+='<div class="kid-item'+active+'" data-id="'+id+'"><span class="emoji">'+(kid.emoji||'🧒')+'</span><span class="name">'+escapeHtml(kid.name||'Kind')+'</span><button class="del" data-del="'+id+'">✕</button></div>';
-  }
-  list.innerHTML=html;
-  var items=list.querySelectorAll('.kid-item');
-  for(var i=0;i<items.length;i++)items[i].addEventListener('click',function(ev){if(ev.target.getAttribute('data-del'))return;switchKid(this.getAttribute('data-id'))});
-  var dels=list.querySelectorAll('.del');
-  for(var i=0;i<dels.length;i++)dels[i].addEventListener('click',function(ev){ev.stopPropagation();deleteKid(this.getAttribute('data-del'))});
-  document.getElementById('addKidBtn').disabled=(accountData.kidOrder.length>=MAX_KIDS);
-}
-function switchKid(id){
-  if(!accountData.kids[id])return;
-  accountData.activeKid=id;saveToFirebase();render();closeKidModal();
-  showToast('GEWECHSELT ZU '+(accountData.kids[id].name||'').toUpperCase());
-}
-function deleteKid(id){
-  if(!accountData.kids[id])return;
-  if(accountData.kidOrder.length<=1){showToast('MINDESTENS 1 KIND');return}
-  var name=accountData.kids[id].name||'Kind';
-  if(!confirm('Kind "'+name+'" wirklich löschen?'))return;
-  delete accountData.kids[id];
-  var idx=accountData.kidOrder.indexOf(id);if(idx>-1)accountData.kidOrder.splice(idx,1);
-  if(accountData.activeKid===id)accountData.activeKid=accountData.kidOrder[0];
-  saveToFirebase();renderKidList();render();showToast('GELÖSCHT: '+name.toUpperCase());
-}
-document.getElementById('addKidBtn').addEventListener('click',function(){
-  if(!accountData)return;
-  if(accountData.kidOrder.length>=MAX_KIDS){showToast('MAX '+MAX_KIDS+' KINDER');return}
-  var input=document.getElementById('newKidName'),name=input.value.trim();
-  if(!name){showToast('NAME EINGEBEN');return}
-  var id=genId('kid'),emoji=KID_EMOJIS[accountData.kidOrder.length%KID_EMOJIS.length];
-  accountData.kids[id]={name:name,emoji:emoji,data:buildKidData(getTemplates())};
-  accountData.kidOrder.push(id);input.value='';
-  saveToFirebase();renderKidList();render();showToast('HINZUGEFÜGT: '+name.toUpperCase());
-});
-document.getElementById('newKidName').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('addKidBtn').click()}});
-
+/* ===== Eltern-Bereich ===== */
 var parentModal=document.getElementById('parentModal');
 var pinSetupEl=document.getElementById('pinSetup'),pinEntryEl=document.getElementById('pinEntry'),parentPanelEl=document.getElementById('parentPanel'),parentTitleEl=document.getElementById('parentTitle');
-
 function openParentFlow(){
-  fabMenu.classList.remove('show');
-  if(!accountData)return;
+  fabMenu.classList.remove('show');if(!accountData)return;
   parentModal.classList.add('show');
   if(!accountData.pinSet)showPinSetup(false);else showPinEntry();
 }
-function closeParentFlow(){
-  parentModal.classList.remove('show');
-  pinSetupEl.style.display='none';pinEntryEl.style.display='none';parentPanelEl.style.display='none';
-}
+function closeParentFlow(){parentModal.classList.remove('show');pinSetupEl.style.display='none';pinEntryEl.style.display='none';parentPanelEl.style.display='none'}
 document.getElementById('parentBtn').addEventListener('click',openParentFlow);
 parentModal.addEventListener('click',function(ev){if(ev.target===parentModal)closeParentFlow()});
-
 function showPinSetup(changeMode){
   pinSetupEl.style.display='block';pinEntryEl.style.display='none';parentPanelEl.style.display='none';
   parentTitleEl.textContent=changeMode?'PIN ändern':'Eltern-Bereich';
@@ -705,17 +696,19 @@ function showPinEntry(){
   document.getElementById('pinInput').value='';
   setTimeout(function(){document.getElementById('pinInput').focus()},100);
 }
+function refreshParentPanel(){
+  refreshSettingsUI();renderParentKidList();renderRewardEditor();renderSuggestions();renderPendingRequests();renderTaskEditor();
+}
 function showParentPanel(){
   pinSetupEl.style.display='none';pinEntryEl.style.display='none';parentPanelEl.style.display='flex';
-  parentTitleEl.textContent='Aufgaben verwalten';
-  refreshSettingsUI();renderRewardEditor();renderPendingRequests();renderTaskEditor();
+  parentTitleEl.textContent='Eltern-Bereich';
+  refreshParentPanel();
 }
 document.getElementById('pinSaveBtn').addEventListener('click',function(){
   var p1=document.getElementById('pinNew1').value.trim(),p2=document.getElementById('pinNew2').value.trim(),msg=document.getElementById('pinSetupMsg');
   if(!/^\d{6}$/.test(p1)){msg.textContent='PIN muss genau 6 Ziffern haben.';msg.className='login-msg error';return}
   if(p1!==p2){msg.textContent='PINs stimmen nicht überein.';msg.className='login-msg error';return}
-  accountData.pin=p1;accountData.pinSet=true;saveToFirebase();
-  showToast('PIN GESPEICHERT');showParentPanel();
+  accountData.pin=p1;accountData.pinSet=true;saveToFirebase();showToast('PIN GESPEICHERT');showParentPanel();
 });
 document.getElementById('pinSetupCancel').addEventListener('click',closeParentFlow);
 ['pinNew1','pinNew2'].forEach(function(id){document.getElementById(id).addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('pinSaveBtn').click()}})});
@@ -729,6 +722,133 @@ document.getElementById('pinInput').addEventListener('keydown',function(ev){if(e
 document.getElementById('parentCloseBtn').addEventListener('click',closeParentFlow);
 document.getElementById('changePinBtn').addEventListener('click',function(){showPinSetup(true)});
 
+/* ===== Kinder-Verwaltung (im Elternbereich) ===== */
+document.getElementById('kidBadge').addEventListener('click',openParentFlow);
+
+function renderParentKidList(){
+  var list=document.getElementById('parentKidList'),hint=document.getElementById('kidHint');
+  if(!accountData){list.innerHTML='';return}
+  hint.textContent=accountData.kidOrder.length+' von '+MAX_KIDS+' Kindern';
+  var html='';
+  for(var i=0;i<accountData.kidOrder.length;i++){
+    var id=accountData.kidOrder[i],kid=accountData.kids[id];
+    if(!kid)continue;
+    var active=(id===accountData.activeKid)?' active':'';
+    html+='<div class="kid-item'+active+'" data-id="'+id+'">'
+      +renderAvatar(kid,38)
+      +'<span class="name">'+escapeHtml(kid.name||'Kind')+'</span>'
+      +'<button class="edit" data-edit="'+id+'">✎</button>'
+      +'<button class="del" data-del="'+id+'">✕</button>'
+      +'</div>';
+  }
+  list.innerHTML=html;
+  var items=list.querySelectorAll('.kid-item');
+  for(var i=0;i<items.length;i++)items[i].addEventListener('click',function(ev){
+    if(ev.target.getAttribute('data-del')||ev.target.getAttribute('data-edit'))return;
+    switchKid(this.getAttribute('data-id'));
+  });
+  var edits=list.querySelectorAll('.edit');
+  for(var i=0;i<edits.length;i++)edits[i].addEventListener('click',function(ev){ev.stopPropagation();openKidEdit(this.getAttribute('data-edit'))});
+  var dels=list.querySelectorAll('.del');
+  for(var i=0;i<dels.length;i++)dels[i].addEventListener('click',function(ev){ev.stopPropagation();deleteKid(this.getAttribute('data-del'))});
+  document.getElementById('addKidBtn').disabled=(accountData.kidOrder.length>=MAX_KIDS);
+}
+function switchKid(id){
+  if(!accountData.kids[id])return;
+  accountData.activeKid=id;saveToFirebase();render();
+  showToast('GEWECHSELT ZU '+(accountData.kids[id].name||'').toUpperCase());
+}
+function deleteKid(id){
+  if(!accountData.kids[id])return;
+  if(accountData.kidOrder.length<=1){showToast('MINDESTENS 1 KIND');return}
+  var name=accountData.kids[id].name||'Kind';
+  if(!confirm('Kind "'+name+'" wirklich löschen?'))return;
+  delete accountData.kids[id];
+  var idx=accountData.kidOrder.indexOf(id);if(idx>-1)accountData.kidOrder.splice(idx,1);
+  if(accountData.activeKid===id)accountData.activeKid=accountData.kidOrder[0];
+  saveToFirebase();renderParentKidList();render();showToast('GELÖSCHT: '+name.toUpperCase());
+}
+document.getElementById('addKidBtn').addEventListener('click',function(){
+  if(!accountData)return;
+  if(accountData.kidOrder.length>=MAX_KIDS){showToast('MAX '+MAX_KIDS+' KINDER');return}
+  var input=document.getElementById('newKidName'),name=input.value.trim();
+  if(!name){showToast('NAME EINGEBEN');return}
+  var id=genId('kid');
+  accountData.kids[id]={name:name,emoji:EMOJI_SET[accountData.kidOrder.length%EMOJI_SET.length],photo:'',data:buildKidData(getTemplates())};
+  accountData.kidOrder.push(id);input.value='';
+  saveToFirebase();renderParentKidList();render();showToast('HINZUGEFÜGT: '+name.toUpperCase());
+  openKidEdit(id);
+});
+document.getElementById('newKidName').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('addKidBtn').click()}});
+
+/* ===== Kind bearbeiten (Emoji / Bild) ===== */
+var kidEditModal=document.getElementById('kidEditModal');
+function openKidEdit(id){
+  if(!accountData||!accountData.kids[id])return;
+  var kid=accountData.kids[id];
+  editingKidId=id;editingEmoji=kid.emoji||'🧒';editingPhoto=kid.photo||'';
+  document.getElementById('kidEditTitle').textContent=(kid.name||'Kind')+' bearbeiten';
+  document.getElementById('kidEditName').value=kid.name||'';
+  renderEmojiPicker();updateKidEditAvatar();
+  kidEditModal.classList.add('show');
+}
+function closeKidEdit(){kidEditModal.classList.remove('show');editingKidId=null}
+document.getElementById('kidEditCancel').addEventListener('click',closeKidEdit);
+kidEditModal.addEventListener('click',function(ev){if(ev.target===kidEditModal)closeKidEdit()});
+
+function renderEmojiPicker(){
+  var el=document.getElementById('emojiPicker'),html='';
+  for(var i=0;i<EMOJI_SET.length;i++){
+    var e=EMOJI_SET[i],sel=(e===editingEmoji&&!editingPhoto)?' selected':'';
+    html+='<button class="'+sel.trim()+'" data-emoji="'+e+'">'+e+'</button>';
+  }
+  el.innerHTML=html;
+  var btns=el.querySelectorAll('button');
+  for(var i=0;i<btns.length;i++)btns[i].addEventListener('click',function(){
+    editingEmoji=this.getAttribute('data-emoji');editingPhoto='';renderEmojiPicker();updateKidEditAvatar();
+  });
+}
+function updateKidEditAvatar(){
+  var el=document.getElementById('kidEditAvatar');
+  if(editingPhoto)el.innerHTML='<img src="'+editingPhoto+'">';
+  else el.innerHTML=editingEmoji;
+}
+document.getElementById('kidEditAvatar').addEventListener('click',function(){document.getElementById('kidEditPhoto').click()});
+document.getElementById('kidEditPhoto').addEventListener('change',function(ev){
+  var file=ev.target.files&&ev.target.files[0];
+  if(!file)return;
+  if(!/^image\//.test(file.type)){showToast('NUR BILDER ERLAUBT');return}
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var maxSize=200,w=img.width,h=img.height;
+      if(w>h){if(w>maxSize){h=h*(maxSize/w);w=maxSize}}
+      else{if(h>maxSize){w=w*(maxSize/h);h=maxSize}}
+      var canvas=document.createElement('canvas');
+      canvas.width=Math.round(w);canvas.height=Math.round(h);
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      editingPhoto=canvas.toDataURL('image/jpeg',0.85);
+      updateKidEditAvatar();renderEmojiPicker();showToast('BILD GELADEN');
+    };
+    img.onerror=function(){showToast('BILD KONNTE NICHT GELADEN WERDEN')};
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);ev.target.value='';
+});
+document.getElementById('kidEditRemovePhoto').addEventListener('click',function(){
+  editingPhoto='';updateKidEditAvatar();renderEmojiPicker();showToast('BILD ENTFERNT');
+});
+document.getElementById('kidEditSave').addEventListener('click',function(){
+  if(!editingKidId||!accountData.kids[editingKidId]){closeKidEdit();return}
+  var name=document.getElementById('kidEditName').value.trim();
+  if(!name){showToast('NAME EINGEBEN');return}
+  var kid=accountData.kids[editingKidId];
+  kid.name=name;kid.emoji=editingEmoji;kid.photo=editingPhoto;
+  saveToFirebase();closeKidEdit();renderParentKidList();render();showToast('GESPEICHERT');
+});
+
+/* ===== Einstellungen ===== */
 function refreshSettingsUI(){
   if(!accountData)return;
   var dr=getDailyReward(),pp=getPointsPerTask();
@@ -753,6 +873,7 @@ for(var i=0;i<dps.length;i++)dps[i].addEventListener('click',function(){saveSett
 var pps=document.querySelectorAll('#pointsPresets button');
 for(var i=0;i<pps.length;i++)pps[i].addEventListener('click',function(){saveSettings(null,parseInt(this.getAttribute('data-val'),10))});
 
+/* ===== Belohnungen (Eltern) ===== */
 function renderRewardEditor(){
   var list=document.getElementById('rewardEditList');if(!list)return;
   if(!accountData||!accountData.rewards){list.innerHTML='';return}
@@ -795,6 +916,53 @@ document.getElementById('addRewardBtn').addEventListener('click',function(){
   saveToFirebase();render();renderRewardEditor();showToast('BELOHNUNG HINZUGEFÜGT');
 });
 
+/* ===== Vorschläge von Kindern (Eltern) ===== */
+function renderSuggestions(){
+  var list=document.getElementById('suggestionsList');if(!list)return;
+  if(!accountData){list.innerHTML='';return}
+  var html='',count=0;
+  for(var i=0;i<accountData.kidOrder.length;i++){
+    var kidId=accountData.kidOrder[i],kid=accountData.kids[kidId];
+    if(!kid||!kid.data||!kid.data.suggestedRewards)continue;
+    for(var j=0;j<kid.data.suggestedRewards.length;j++){
+      var sug=kid.data.suggestedRewards[j];count++;
+      html+='<div class="pending-item suggest"><div class="info">'
+        +'<div class="who">'+(kid.emoji||'🧒')+' '+escapeHtml(kid.name||'Kind')+'</div>'
+        +'<div class="what">'+(sug.emoji||'💡')+' '+escapeHtml(sug.title||'')+'</div>'
+        +'<div class="cost">Wunsch: '+sug.cost+' Punkte</div></div>'
+        +'<div class="actions"><button class="approve" data-kid="'+kidId+'" data-sug="'+sug.id+'">✓</button>'
+        +'<button class="reject" data-kid="'+kidId+'" data-sug="'+sug.id+'">✕</button></div></div>';
+    }
+  }
+  if(count===0)html='<div class="pending-empty">Keine Vorschläge</div>';
+  list.innerHTML=html;
+  var appr=list.querySelectorAll('.approve');
+  for(var i=0;i<appr.length;i++)appr[i].addEventListener('click',function(){approveSuggestion(this.getAttribute('data-kid'),this.getAttribute('data-sug'))});
+  var rej=list.querySelectorAll('.reject');
+  for(var i=0;i<rej.length;i++)rej[i].addEventListener('click',function(){rejectSuggestion(this.getAttribute('data-kid'),this.getAttribute('data-sug'))});
+}
+function approveSuggestion(kidId,sugId){
+  var kid=accountData.kids[kidId];if(!kid||!kid.data||!kid.data.suggestedRewards)return;
+  var idx=-1;for(var i=0;i<kid.data.suggestedRewards.length;i++)if(kid.data.suggestedRewards[i].id===sugId){idx=i;break}
+  if(idx<0)return;
+  var sug=kid.data.suggestedRewards[idx];
+  if(!accountData.rewards)accountData.rewards=[];
+  accountData.rewards.push({id:genId('rw'),title:sug.title,emoji:sug.emoji||'🎁',cost:sug.cost});
+  kid.data.suggestedRewards.splice(idx,1);
+  saveToFirebase();render();renderRewardEditor();renderSuggestions();
+  showToast('PRÄMIE ANGENOMMEN: '+sug.title.toUpperCase());fireConfetti(20);
+}
+function rejectSuggestion(kidId,sugId){
+  var kid=accountData.kids[kidId];if(!kid||!kid.data||!kid.data.suggestedRewards)return;
+  var idx=-1;for(var i=0;i<kid.data.suggestedRewards.length;i++)if(kid.data.suggestedRewards[i].id===sugId){idx=i;break}
+  if(idx<0)return;
+  var sug=kid.data.suggestedRewards[idx];
+  if(!confirm('Vorschlag "'+sug.title+'" ablehnen?'))return;
+  kid.data.suggestedRewards.splice(idx,1);
+  saveToFirebase();render();renderSuggestions();showToast('VORSCHLAG ABGELEHNT');
+}
+
+/* ===== Offene Anfragen ===== */
 function renderPendingRequests(){
   var list=document.getElementById('pendingRequestsList');if(!list)return;
   if(!accountData){list.innerHTML='';return}
@@ -842,6 +1010,7 @@ function rejectReward(kidId,reqId){
   saveToFirebase();render();renderPendingRequests();showToast('ANFRAGE ABGELEHNT');
 }
 
+/* ===== Aufgaben-Editor ===== */
 function renderTaskEditor(){
   var list=document.getElementById('taskEditList');if(!accountData){list.innerHTML='';return}
   var html='';
@@ -895,7 +1064,7 @@ onAuthStateChanged(auth,function(user){
   }else{
     currentUser=null;accountData=null;
     if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
-    fabMenu.classList.remove('show');kidModal.classList.remove('show');closeParentFlow();
+    fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();
     document.getElementById('loginScreen').style.display='flex';
     document.getElementById('app').style.display='none';
     document.getElementById('loginEmail').value='';document.getElementById('loginPassword').value='';
@@ -907,8 +1076,9 @@ function showLoginMsg(msg,isError){var el=document.getElementById('loginMsg');el
 function renderHeader(){
   var d=new Date(),wd=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'][d.getDay()];
   document.getElementById('headerDate').textContent=wd+' - '+d.toLocaleDateString('de-DE',{day:'2-digit',month:'long'});
-  var kid=getKid();
-  document.getElementById('kidBadge').textContent=(kid?((kid.emoji||'🧒')+' '):'')+(kid?(kid.name||'Kind'):'Kind');
+  var kid=getKid(),badge=document.getElementById('kidBadge');
+  if(kid){badge.innerHTML=renderAvatar(kid,24)+'<span>'+escapeHtml(kid.name||'Kind')+'</span>'}
+  else{badge.innerHTML='<span>Kind</span>'}
 }
 function renderStats(){
   var d=getKidData();if(!d)return;
@@ -962,6 +1132,29 @@ function renderContent(){
 function renderRewardsView(el,d){
   var rewards=getRewards(),html='';
   html+='<div class="money-card" style="margin-bottom:14px"><div style="font-size:.68rem;color:#8888aa;letter-spacing:2px;">DEIN PUNKTESTAND</div><div class="money-total">'+d.points+'</div><div class="money-sub">Punkte verfügbar</div></div>';
+
+  /* Eigene Prämie vorschlagen */
+  html+='<div class="settings-box suggest" style="margin-bottom:14px">'
+    +'<div class="settings-title">💡 Eigene Prämie vorschlagen</div>'
+    +'<div class="add-task-form" style="margin-bottom:0">'
+    +'<input type="text" id="suggestTitle" placeholder="Was möchtest du? (z.B. Kino)" maxlength="40">'
+    +'<div class="add-task-inline">'
+    +'<input type="text" id="suggestEmoji" placeholder="🎬" maxlength="4" style="max-width:70px;text-align:center">'
+    +'<input type="number" id="suggestCost" placeholder="Punkte" min="1" step="1" style="text-align:center">'
+    +'</div>'
+    +'<button id="suggestBtn">Vorschlag senden</button>'
+    +'</div></div>';
+
+  /* Vorschläge des Kindes (warten) */
+  if(d.suggestedRewards&&d.suggestedRewards.length){
+    html+='<div class="section-title">Deine Vorschläge (warten auf Eltern)</div>';
+    for(var i=0;i<d.suggestedRewards.length;i++){
+      var sug=d.suggestedRewards[i];
+      html+='<div class="reward-card suggested"><div class="reward-header"><span class="reward-emoji">'+(sug.emoji||'💡')+'</span><span class="reward-title">'+escapeHtml(sug.title||'')+'</span><span class="reward-cost">'+sug.cost+' P</span></div><div class="reward-status suggested">⏳ Wartet auf Genehmigung</div></div>';
+    }
+  }
+
+  /* Wartende Einlösungen */
   if(d.pendingRewards&&d.pendingRewards.length){
     html+='<div class="section-title">Wartet auf Eltern</div>';
     for(var i=0;i<d.pendingRewards.length;i++){
@@ -969,8 +1162,10 @@ function renderRewardsView(el,d){
       html+='<div class="reward-card pending"><div class="reward-header"><span class="reward-emoji">'+(req.emoji||'🎁')+'</span><span class="reward-title">'+escapeHtml(req.title||'')+'</span><span class="reward-cost">'+req.cost+' P</span></div><div class="reward-status pending">⏳ Anfrage gesendet</div></div>';
     }
   }
+
+  /* Verfügbare Belohnungen */
   html+='<div class="section-title">Belohnungen</div>';
-  if(rewards.length===0){html+='<div class="empty">Noch keine Belohnungen vorhanden.<br>Deine Eltern können im Eltern-Bereich welche anlegen.</div>'}
+  if(rewards.length===0){html+='<div class="empty">Noch keine Belohnungen vorhanden.<br>Schlage oben deine eigene Prämie vor!</div>'}
   else{
     for(var i=0;i<rewards.length;i++){
       var r=rewards[i],have=d.points||0,pct=Math.min(100,Math.round((have/r.cost)*100)),canRedeem=have>=r.cost,alreadyPending=false;
@@ -982,6 +1177,8 @@ function renderRewardsView(el,d){
       html+='</div>';
     }
   }
+
+  /* Verlauf */
   if(d.rewardHistory&&d.rewardHistory.length){
     html+='<div class="section-title">Erhaltene Belohnungen</div>';
     for(var i=0;i<d.rewardHistory.length;i++){
@@ -989,9 +1186,24 @@ function renderRewardsView(el,d){
       html+='<div class="reward-card done"><div class="reward-header"><span class="reward-emoji">'+(h.emoji||'🎁')+'</span><span class="reward-title">'+escapeHtml(h.title||'')+'</span><span class="reward-cost" style="color:var(--green)">-'+h.cost+' P</span></div><div style="font-size:.7rem;color:var(--dim);text-align:right">'+formatDate(h.date)+'</div></div>';
     }
   }
+
   el.innerHTML=html;
   var btns=el.querySelectorAll('.redeem-btn');
   for(var i=0;i<btns.length;i++)btns[i].addEventListener('click',function(){requestReward(this.getAttribute('data-id'))});
+  var sBtn=document.getElementById('suggestBtn');
+  if(sBtn)sBtn.addEventListener('click',suggestReward);
+}
+function suggestReward(){
+  var d=getKidData();if(!d)return;
+  var titleEl=document.getElementById('suggestTitle'),emojiEl=document.getElementById('suggestEmoji'),costEl=document.getElementById('suggestCost');
+  if(!titleEl||!costEl)return;
+  var title=titleEl.value.trim(),emoji=emojiEl.value.trim()||'💡',cost=parseInt(costEl.value,10);
+  if(!title){showToast('TITEL EINGEBEN');return}
+  if(isNaN(cost)||cost<1){showToast('PUNKTE EINGEBEN');return}
+  if(!d.suggestedRewards)d.suggestedRewards=[];
+  d.suggestedRewards.push({id:genId('sug'),title:title,emoji:emoji,cost:cost,date:todayKey()});
+  titleEl.value='';emojiEl.value='';costEl.value='';
+  saveToFirebase();render();showToast('VORSCHLAG GESENDET 💡');fireConfetti(15);
 }
 function requestReward(rewardId){
   var d=getKidData();if(!d)return;
@@ -1038,7 +1250,7 @@ function fireConfetti(count){
   for(var i=0;i<count;i++){(function(){var el=document.createElement('div');el.className='confetti';el.style.left=Math.random()*100+'vw';el.style.top='-20px';el.style.background=colors[Math.floor(Math.random()*colors.length)];el.style.animationDelay=(Math.random()*0.5)+'s';document.body.appendChild(el);setTimeout(function(){el.remove()},3500)})()}
 }
 
-/* ====== MINIGAME ====== */
+/* ===== Minigame ===== */
 var MG_CODE_LENGTH=6,MG_TIMER_DURATION=180,MG_MAX_HINTS=6;
 var mgState={code:[],input:[],timeLeft:MG_TIMER_DURATION,hints:MG_MAX_HINTS,active:false,over:false,success:false,lastSecondTick:0,nextTickAt:0,hintRevealUntil:0,hintRevealIndex:-1};
 var mgAudioCtx=null,mgAudioReady=false,mgRaf=null;
@@ -1113,17 +1325,8 @@ function mgPressKey(k){
     if(mgState.input.length===MG_CODE_LENGTH){mgState.success=true;mgState.active=false;mgState.over=true;mgSfx.win();setTimeout(mgShowGameOver,400)}
   }else{mgSfx.error();mgState.input=[];showToast('FALSCHE ZIFFER!');mgRenderDigits();mgRenderProgress()}
 }
-function mgUseHint(){
-  if(!mgState.active||mgState.hints<=0)return;
-  mgInitAudio();mgSfx.hint();mgState.hints--;
-  mgState.hintRevealIndex=mgState.input.length;
-  mgState.hintRevealUntil=performance.now()+2000;
-  mgRenderHintBtn();
-}
-function mgResetInput(){
-  if(!mgState.active)return;
-  mgInitAudio();mgState.input=[];mgState.hintRevealIndex=-1;mgSfx.tick();mgRenderDigits();mgRenderProgress();
-}
+function mgUseHint(){if(!mgState.active||mgState.hints<=0)return;mgInitAudio();mgSfx.hint();mgState.hints--;mgState.hintRevealIndex=mgState.input.length;mgState.hintRevealUntil=performance.now()+2000;mgRenderHintBtn()}
+function mgResetInput(){if(!mgState.active)return;mgInitAudio();mgState.input=[];mgState.hintRevealIndex=-1;mgSfx.tick();mgRenderDigits();mgRenderProgress()}
 function mgNewGame(){
   mgInitAudio();mgState.code=[];
   for(var i=0;i<MG_CODE_LENGTH;i++)mgState.code.push(Math.floor(Math.random()*10));
@@ -1164,7 +1367,7 @@ function mgOpenGame(){
 }
 function mgCloseGame(){gameOverlay.classList.remove('show');mgState.active=false;if(mgRaf){cancelAnimationFrame(mgRaf);mgRaf=null}}
 
-document.getElementById('gameBtn').addEventListener('click',function(){mgOpenGame()});
+document.getElementById('gameLogo').addEventListener('click',function(){mgOpenGame()});
 document.getElementById('gameClose').addEventListener('click',mgCloseGame);
 document.getElementById('gameHint').addEventListener('click',mgUseHint);
 document.getElementById('gameReset').addEventListener('click',mgResetInput);
