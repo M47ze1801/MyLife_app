@@ -92,6 +92,7 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:800;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.show{display:flex}
 #kidEditModal{z-index:900}
+#spSettingsModal{z-index:970}
 .modal{width:100%;max-width:420px;max-height:88vh;background:var(--card);border-radius:24px;border:1px solid rgba(0,245,255,.25);padding:22px 18px;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1}
 .modal h3{font-size:1rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);text-align:center;margin-bottom:8px}
 .modal-hint{font-size:.7rem;color:var(--dim);text-align:center;margin-bottom:14px}
@@ -233,6 +234,56 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .game-result p{font-size:.85rem;color:var(--dim);text-align:center}
 .game-code-reveal{font-family:'Courier New',monospace;font-size:1.5rem;color:var(--yellow);letter-spacing:8px;font-weight:900}
 .game-result button{margin-top:8px;padding:12px 34px;background:linear-gradient(135deg,var(--purple),var(--pink));border:none;border-radius:10px;color:#fff;font-size:.85rem;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:1.5px;text-transform:uppercase}
+
+/* ===== Schule-Karte (Täglich-Bereich) ===== */
+.schule-card{background:linear-gradient(135deg,rgba(0,245,255,.08),rgba(176,38,255,.10));border:1px solid rgba(0,245,255,.3);border-radius:16px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;position:relative;overflow:hidden;transition:transform .15s}
+.schule-card:active{transform:scale(.985)}
+.schule-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--cyan),var(--pink));box-shadow:0 0 15px var(--cyan)}
+.schule-card .schule-icon{width:34px;height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.25rem;background:rgba(0,245,255,.12);border:1px solid rgba(0,245,255,.4);border-radius:50%}
+.schule-card .schule-info{flex:1;min-width:0}
+.schule-card .schule-title{font-weight:800;font-size:.92rem;color:var(--text)}
+.schule-card .schule-sub{font-size:.68rem;color:var(--dim);margin-top:2px}
+.schule-card .schule-arrow{font-size:1.5rem;color:var(--cyan);font-weight:300;opacity:.75;flex-shrink:0;line-height:1}
+
+/* ===== Stundenplan-Overlay ===== */
+.sp-overlay{position:fixed;inset:0;background:var(--bg);background-image:radial-gradient(circle at 20% 10%,rgba(176,38,255,.15) 0%,transparent 40%),radial-gradient(circle at 80% 90%,rgba(0,245,255,.12) 0%,transparent 40%);z-index:960;display:none;align-items:center;justify-content:center;padding:12px}
+.sp-overlay.show{display:flex;animation:gfadeIn .25s ease}
+.sp-app{width:100%;max-width:500px;height:100%;max-height:100vh;background:var(--card);border-radius:28px;border:1px solid rgba(0,245,255,.15);box-shadow:0 0 60px rgba(176,38,255,.25);overflow:hidden;display:flex;flex-direction:column;position:relative}
+.sp-topbar{background:linear-gradient(135deg,#1a0033,#000033);padding:14px 16px;position:relative;overflow:hidden;border-bottom:1px solid rgba(0,245,255,.2);flex-shrink:0;display:flex;align-items:center;gap:10px}
+.sp-topbar::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent 0deg,rgba(0,245,255,.15) 90deg,transparent 180deg,rgba(255,0,229,.15) 270deg,transparent 360deg);animation:rot 12s linear infinite;pointer-events:none}
+.sp-topbar>*{position:relative;z-index:1}
+.sp-title-wrap{flex:1;min-width:0}
+.sp-title-wrap h2{font-size:1.1rem;font-weight:900;letter-spacing:2px;background-image:linear-gradient(90deg,var(--cyan),var(--pink),var(--purple));background-size:200% auto;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite;line-height:1.2}
+.sp-title-wrap p{font-size:.65rem;color:var(--cyan);margin-top:3px;opacity:.85;letter-spacing:1.5px;text-transform:uppercase;font-weight:700}
+.sp-icon-btn{width:38px;height:38px;border-radius:50%;background:rgba(0,245,255,.1);border:1px solid rgba(0,245,255,.35);color:var(--cyan);font-size:1rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;line-height:1;font-family:inherit;padding:0}
+.sp-icon-btn:active{transform:scale(.93);background:rgba(0,245,255,.2)}
+.sp-icon-btn.sp-close{border-color:rgba(255,68,102,.5);color:#ff4466}
+.sp-days{display:flex;gap:5px;padding:8px 10px;background:var(--card2);border-bottom:1px solid rgba(0,245,255,.1);flex-shrink:0}
+.sp-day{flex:1;padding:10px 4px;text-align:center;cursor:pointer;font-size:.72rem;font-weight:800;color:var(--dim);border-radius:12px;transition:all .25s;border:1px solid transparent;background:transparent;font-family:inherit;position:relative;letter-spacing:.5px}
+.sp-day.active{color:var(--cyan);background:rgba(0,245,255,.08);border-color:rgba(0,245,255,.4);box-shadow:0 0 20px rgba(0,245,255,.2);text-shadow:0 0 10px rgba(0,245,255,.8)}
+.sp-day.today::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.75}
+.sp-list{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.sp-lesson{position:relative;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--card2);border:1px solid rgba(0,245,255,.15);border-left:3px solid transparent;transition:transform .12s;cursor:pointer;min-height:56px}
+.sp-lesson:active{transform:scale(.985)}
+.sp-lesson.empty{border-style:dashed;background:transparent;opacity:.85}
+.sp-lesson.filled{border-left-color:var(--c,var(--cyan));background:linear-gradient(90deg,color-mix(in srgb,var(--c,var(--cyan)) 20%,var(--card2)) 0%,var(--card2) 65%)}
+.sp-lesson select{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;appearance:none;-webkit-appearance:none;font-size:16px;cursor:pointer}
+.sp-lesson:focus-within{outline:2px solid var(--cyan);outline-offset:2px}
+.sp-idx{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:.8rem;font-weight:800;background:rgba(0,0,0,.3);color:var(--cyan)}
+.sp-lesson.filled .sp-idx{background:color-mix(in srgb,var(--c,var(--cyan)) 55%,rgba(0,0,0,.35));color:#fff;text-shadow:0 0 6px rgba(0,0,0,.45)}
+.sp-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.sp-code{font-size:.95rem;font-weight:800;line-height:1.2;color:var(--text);letter-spacing:.5px}
+.sp-lesson.empty .sp-code{color:var(--dim);font-weight:600;font-size:1.1rem}
+.sp-name{font-size:.68rem;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-tm{flex:none;font-size:.68rem;font-variant-numeric:tabular-nums;color:var(--dim);text-align:right;line-height:1.35;font-weight:700}
+.sp-break{display:flex;align-items:center;gap:10px;padding:2px 4px;margin:2px 0}
+.sp-break::before,.sp-break::after{content:'';flex:1;height:1px;background:rgba(0,245,255,.18)}
+.sp-break span{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+.sp-custom-list{max-height:170px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-top:4px;margin-bottom:6px}
+.sp-custom-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:11px;background:var(--card2);font-size:.86rem;font-weight:700;color:var(--text);border:1px solid rgba(0,245,255,.12)}
+.sp-custom-item button{margin-left:auto;width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,68,102,.5);background:transparent;color:#ff4466;font-size:.85rem;cursor:pointer;line-height:1;font-family:inherit;font-weight:900}
+.sp-empty-hint{font-size:.78rem;color:var(--dim);padding:10px 4px;text-align:center;font-style:italic}
+
 body.light{--cyan:#0099b8;--pink:#d6009c;--purple:#8a1fd6;--green:#00a05a;--yellow:#b08000;--bg:#f5f0e8;--card:#fdfbf7;--card2:#f0ebe3;--text:#1a1a2e;--dim:#6a6a80;background-color:#f5f0e8;background-image:radial-gradient(circle at 15% 10%,rgba(210,180,255,.45) 0%,transparent 45%),radial-gradient(circle at 85% 15%,rgba(180,235,255,.45) 0%,transparent 45%),radial-gradient(circle at 50% 85%,rgba(255,200,235,.40) 0%,transparent 50%),radial-gradient(circle at 10% 95%,rgba(200,255,225,.35) 0%,transparent 45%),radial-gradient(circle at 90% 70%,rgba(255,235,180,.30) 0%,transparent 45%),linear-gradient(135deg,#faf7f2 0%,#f2ece3 50%,#faf7f2 100%);color:#1a1a2e}
 body.light .app{background:#fdfbf7;border-color:rgba(180,160,255,.35)}
 body.light header{background:linear-gradient(135deg,#efe6ff,#e6f5ff);border-bottom-color:rgba(140,120,220,.25)}
@@ -318,6 +369,24 @@ body.light .game-digit{background:rgba(255,255,255,.65);border-color:rgba(140,12
 body.light .game-key{background:#f0ebe3;border-color:rgba(140,120,220,.2)}
 body.light .game-actions button{background:#f0ebe3;border-color:rgba(140,120,220,.3);color:#0088a8}
 body.light .game-result{background:rgba(250,247,242,.95)}
+body.light .schule-card{background:linear-gradient(135deg,rgba(0,180,220,.10),rgba(140,60,200,.08));border-color:rgba(0,180,220,.4)}
+body.light .schule-card .schule-icon{background:rgba(0,180,220,.15);border-color:rgba(0,180,220,.5)}
+body.light .sp-overlay{background-color:#f5f0e8;background-image:radial-gradient(circle at 15% 10%,rgba(210,180,255,.45) 0%,transparent 45%),radial-gradient(circle at 85% 15%,rgba(180,235,255,.45) 0%,transparent 45%),radial-gradient(circle at 50% 85%,rgba(255,200,235,.40) 0%,transparent 50%),linear-gradient(135deg,#faf7f2 0%,#f2ece3 50%,#faf7f2 100%)}
+body.light .sp-app{background:#fdfbf7;border-color:rgba(140,120,220,.3)}
+body.light .sp-topbar{background:linear-gradient(135deg,#efe6ff,#e6f5ff);border-bottom-color:rgba(140,120,220,.25)}
+body.light .sp-title-wrap h2{background-image:linear-gradient(90deg,#0088a8,#c40088,#7a1fc4);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+body.light .sp-title-wrap p{color:#0088a8}
+body.light .sp-icon-btn{background:rgba(0,180,220,.12);border-color:rgba(0,180,220,.45);color:#0088a8}
+body.light .sp-icon-btn.sp-close{border-color:rgba(220,60,90,.5);color:#c4304f}
+body.light .sp-days{background:#f5f0e8}
+body.light .sp-day.active{color:#0088a8;background:rgba(0,180,220,.12);border-color:#0088a8;text-shadow:none}
+body.light .sp-lesson{background:#ffffff;border-color:rgba(140,120,220,.18)}
+body.light .sp-lesson.empty{background:transparent}
+body.light .sp-lesson.filled{background:linear-gradient(90deg,color-mix(in srgb,var(--c,#0088a8) 25%,#ffffff) 0%,#ffffff 65%)}
+body.light .sp-idx{background:rgba(0,180,220,.1);color:#0088a8}
+body.light .sp-lesson.filled .sp-idx{background:color-mix(in srgb,var(--c,#0088a8) 60%,#ffffff);color:#fff;text-shadow:none}
+body.light .sp-break::before,body.light .sp-break::after{background:rgba(140,120,220,.2)}
+body.light .sp-custom-item{background:#f5f0e8;border-color:rgba(140,120,220,.15)}
 </style>
 </head>
 <body>
@@ -453,6 +522,35 @@ body.light .game-result{background:rgba(250,247,242,.95)}
 </div>
 </div>
 
+<div class="sp-overlay" id="spOverlay">
+<div class="sp-app">
+<div class="sp-topbar">
+<div class="sp-title-wrap">
+<h2>🏫 Schule</h2>
+<p id="spToday">—</p>
+</div>
+<button class="sp-icon-btn" id="spSettingsBtn" aria-label="Einstellungen">⚙️</button>
+<button class="sp-icon-btn sp-close" id="spCloseBtn" aria-label="Schließen">✕</button>
+</div>
+<nav class="sp-days" id="spDays" role="tablist" aria-label="Wochentag wählen"></nav>
+<main class="sp-list" id="spList" role="tabpanel"></main>
+</div>
+</div>
+
+<div class="modal-overlay" id="spSettingsModal">
+<div class="modal">
+<h3>Eigene Fächer</h3>
+<div class="modal-hint">Fach hinzufügen</div>
+<div class="add-row">
+<input type="text" id="spNewSubject" placeholder="Kürzel, z. B. WP" maxlength="14" autocapitalize="characters" autocomplete="off">
+<button id="spAddBtn">+</button>
+</div>
+<div class="sp-custom-list" id="spCustomList"></div>
+<button class="modal-close" id="spClearBtn" style="border-color:rgba(255,68,102,.5);color:#ff4466;margin-top:6px">Alle Einträge löschen</button>
+<button class="modal-close" id="spSettingsClose">Fertig</button>
+</div>
+</div>
+
 <div class="game-overlay" id="gameOverlay">
 <div class="game-app" id="gameApp">
 <div class="game-header">
@@ -523,9 +621,70 @@ var DEFAULT_DAILY_REWARD=5,DEFAULT_POINTS_PER_TASK=10,LEVEL_BASE=20,MAX_KIDS=5;
 var DAY_LABELS=['So','Mo','Di','Mi','Do','Fr','Sa'],DAY_ORDER=[1,2,3,4,5,6,0];
 var EMOJI_SET=['🧒','👦','👧','🧑','👶','🐱','🐶','🦊','🐼','🐨','🦁','🐸','🦄','🐯','🐰','🐻','🐷','🐵','🐧','🦉','🦋','🌟','⭐','🌈','⚽','🏀','🎮','🎨','🎵','🚀','🦖','🐙','🐢','🐝','🌸','🍀','🔥','💎','🎯','🎸'];
 
+/* ===== Stundenplan-Konstanten ===== */
+var SP_DAYS=[
+{id:'mo',short:'Mo',long:'Montag'},
+{id:'di',short:'Di',long:'Dienstag'},
+{id:'mi',short:'Mi',long:'Mittwoch'},
+{id:'do',short:'Do',long:'Donnerstag'},
+{id:'fr',short:'Fr',long:'Freitag'}
+];
+var SP_SCHEDULE=[
+{type:'lesson',nr:1,time:'7:50–8:35'},
+{type:'lesson',nr:2,time:'8:35–9:20'},
+{type:'break',time:'9:20–9:40',label:'Pause'},
+{type:'lesson',nr:3,time:'9:40–10:25'},
+{type:'lesson',nr:4,time:'10:25–11:10'},
+{type:'break',time:'11:10–11:25',label:'Pause'},
+{type:'lesson',nr:5,time:'11:25–12:10'},
+{type:'lesson',nr:6,time:'12:10–12:55'},
+{type:'break',time:'12:55–13:40',label:'Mittagspause'},
+{type:'lesson',nr:7,time:'13:40–14:25'},
+{type:'lesson',nr:8,time:'14:30–15:15'}
+];
+var SP_SUBJECT_GROUPS=[
+{label:'Grundschule',items:[
+['D','Deutsch'],['Ma','Mathematik'],['SU','Sachunterricht'],['Eng','Englisch'],
+['Ku','Kunst'],['Mu','Musik'],['Sp','Sport'],['Rel','Religion'],['Eth','Ethik'],
+['Wer','Werken'],['Txt','Textiles Gestalten'],['SW','Schwimmen'],
+['Fö','Förderunterricht'],['FrA','Freiarbeit'],['AG','Arbeitsgemeinschaft'],
+['DaZ','Deutsch als Zweitsprache']
+]},
+{label:'Sprachen',items:[
+['E','Englisch'],['F','Französisch'],['L','Latein'],['S','Spanisch'],
+['I','Italienisch'],['R','Russisch'],['Tür','Türkisch'],['NL','Niederländisch'],
+['Griech','Griechisch'],['Chi','Chinesisch'],['FE','Fachenglisch']
+]},
+{label:'Gesellschaftswissenschaften',items:[
+['Ge','Geschichte'],['Ek','Erdkunde'],['Geo','Geografie'],['Po','Politik'],
+['Wi','Wirtschaft'],['Soz','Sozialkunde'],['PuG','Politik und Gesellschaft'],
+['WiPo','Wirtschaft/Politik'],['WuR','Wirtschaft und Recht'],
+['Psy','Psychologie'],['Phi','Philosophie'],['Pä','Pädagogik'],
+['Rw','Rechnungswesen'],['BWL','Betriebswirtschaftslehre'],['VWL','Volkswirtschaftslehre']
+]},
+{label:'MINT',items:[
+['Bio','Biologie'],['Ph','Physik'],['Ch','Chemie'],['Inf','Informatik'],
+['NW','Naturwissenschaften'],['MNT','Mensch-Natur-Technik'],['Tech','Technik'],
+['TM','Technische Mathematik'],['ET','Elektrotechnik'],['MT','Metalltechnik'],
+['BT','Bautechnik'],['HT','Holztechnik'],['IT','Informationstechnik'],
+['DV','Datenverarbeitung'],['WInf','Wirtschaftsinformatik']
+]},
+{label:'Berufsschule',items:[
+['WiSo','Wirtschafts- und Sozialkunde'],['LF','Lernfeld'],['BP','Betriebspraxis'],
+['FP','Fachpraxis'],['FT','Fachtheorie'],['FK','Fachkunde'],['FR','Fachrechnen'],
+['BfK','Berufsfachliche Kompetenz'],['ÜBA','Überbetriebliche Ausbildung'],
+['Warenk','Warenkunde'],['BüW','Bürowirtschaft']
+]},
+{label:'Sonstiges',items:[
+['Kl','Klassenlehrerstunde'],['Fs','Freistunde'],['V','Vertretung'],
+['Fo','Förderstunde'],['SV','Schülervertretung'],['LZ','Lernzeit']
+]}
+];
+
 var accountData=null,currentUser=null,currentTab='tasks',unsubscribeRef=null;
 var editingKidId=null,editingEmoji='🧒',editingPhoto='';
 var loginLockedUntil=0;
+var spCurrentDay='mo';
 
 function todayKey(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
 function currentWeekday(){return new Date().getDay()}
@@ -543,6 +702,11 @@ function renderAvatar(kid,size){
   return '<div class="kid-avatar" style="width:'+size+'px;height:'+size+'px;font-size:'+(size*0.55)+'px">'+em+'</div>';
 }
 
+function defaultStundenplan(){
+  var wd=currentWeekday();
+  var dayId=(wd>=1&&wd<=5)?SP_DAYS[wd-1].id:'mo';
+  return {cells:{},custom:[],day:dayId};
+}
 function buildKidData(templates){
   var wd=currentWeekday(),tasks=[];
   if(Array.isArray(templates)){for(var i=0;i<templates.length;i++){var t=templates[i];if(t&&Array.isArray(t.days)&&t.days.indexOf(wd)!==-1)tasks.push({id:t.id,title:t.title,cat:t.cat,important:!!t.important,done:false})}}
@@ -551,7 +715,7 @@ function buildKidData(templates){
 function defaultAccount(){
   var id=genId('kid'),templates=clone(DEFAULT_TEMPLATES),kids={};
   kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:buildKidData(templates)};
-  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},rewards:[]};
+  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},rewards:[],stundenplan:defaultStundenplan()};
 }
 function getKid(){if(!accountData||!accountData.activeKid||!accountData.kids)return null;return accountData.kids[accountData.activeKid]||null}
 function getKidData(){var k=getKid();return k?k.data:null}
@@ -567,6 +731,7 @@ function needsRepair(d){
   if(!Array.isArray(d.taskTemplates)||d.taskTemplates.length===0)return true;
   if(!Array.isArray(d.rewards))return true;
   if(!d.settings||typeof d.settings!=='object')return true;
+  if(!d.stundenplan||typeof d.stundenplan!=='object')return true;
   return false;
 }
 
@@ -618,6 +783,10 @@ function migrate(data){
     if(typeof data.settings.dailyReward!=='number'||data.settings.dailyReward<0)data.settings.dailyReward=DEFAULT_DAILY_REWARD;
     if(typeof data.settings.pointsPerTask!=='number'||data.settings.pointsPerTask<1)data.settings.pointsPerTask=DEFAULT_POINTS_PER_TASK;
     if(!Array.isArray(data.rewards))data.rewards=[];
+    if(!data.stundenplan||typeof data.stundenplan!=='object')data.stundenplan=defaultStundenplan();
+    if(!data.stundenplan.cells||typeof data.stundenplan.cells!=='object')data.stundenplan.cells={};
+    if(!Array.isArray(data.stundenplan.custom))data.stundenplan.custom=[];
+    if(typeof data.stundenplan.day!=='string')data.stundenplan.day='mo';
     if(!Array.isArray(data.kidOrder))data.kidOrder=[];
     for(var i=0;i<data.kidOrder.length;i++){
       var kid=data.kids[data.kidOrder[i]];
@@ -649,7 +818,7 @@ function migrate(data){
   }
   var kids={};
   kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:oldData};
-  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},rewards:[]};
+  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},rewards:[],stundenplan:defaultStundenplan()};
 }
 
 function startListener(uid){
@@ -676,6 +845,7 @@ function startListener(uid){
       applyTheme(accountData.theme||getSavedTheme());
       render();
       if(parentPanelEl && parentPanelEl.style.display==='flex')refreshParentPanel();
+      if(spOverlay && spOverlay.classList.contains('show'))spRefreshOpen();
     }catch(err){
       console.error('Listener-Fehler:',err);
       showToast('Datenfehler – bitte neu anmelden');
@@ -1163,6 +1333,242 @@ function rejectReward(kidId,reqId){
   saveToFirebase();render();renderPendingRequests();showToast('ANFRAGE ABGELEHNT');
 }
 
+/* ===== STUNDENPLAN ===== */
+var spOverlay=document.getElementById('spOverlay');
+var spSettingsModal=document.getElementById('spSettingsModal');
+
+function spColorFor(str){
+  var h=0;
+  for(var i=0;i<str.length;i++)h=(h*31+str.charCodeAt(i))%360;
+  return 'hsl('+h+',75%,62%)';
+}
+function spNameMap(){
+  var m={};
+  for(var g=0;g<SP_SUBJECT_GROUPS.length;g++){
+    var items=SP_SUBJECT_GROUPS[g].items;
+    for(var i=0;i<items.length;i++)m[items[i][0]]=items[i][1];
+  }
+  if(accountData&&accountData.stundenplan&&Array.isArray(accountData.stundenplan.custom)){
+    for(var i=0;i<accountData.stundenplan.custom.length;i++)m[accountData.stundenplan.custom[i]]='Eigenes Fach';
+  }
+  return m;
+}
+function spGetData(){
+  if(!accountData)return {cells:{},custom:[],day:'mo'};
+  if(!accountData.stundenplan)accountData.stundenplan=defaultStundenplan();
+  if(!accountData.stundenplan.cells)accountData.stundenplan.cells={};
+  if(!Array.isArray(accountData.stundenplan.custom))accountData.stundenplan.custom=[];
+  if(typeof accountData.stundenplan.day!=='string')accountData.stundenplan.day='mo';
+  return accountData.stundenplan;
+}
+function spOptionsHTML(selected){
+  var h='<option value=""'+(selected?'':' selected')+'>— leer —</option>';
+  for(var g=0;g<SP_SUBJECT_GROUPS.length;g++){
+    var grp=SP_SUBJECT_GROUPS[g];
+    h+='<optgroup label="'+escapeHtml(grp.label)+'">';
+    for(var i=0;i<grp.items.length;i++){
+      var k=grp.items[i][0],n=grp.items[i][1];
+      h+='<option value="'+escapeHtml(k)+'"'+(selected===k?' selected':'')+'>'+escapeHtml(k)+' – '+escapeHtml(n)+'</option>';
+    }
+    h+='</optgroup>';
+  }
+  var sd=spGetData();
+  if(sd.custom.length){
+    h+='<optgroup label="Eigene Fächer">';
+    for(var i=0;i<sd.custom.length;i++){
+      h+='<option value="'+escapeHtml(sd.custom[i])+'"'+(selected===sd.custom[i]?' selected':'')+'>'+escapeHtml(sd.custom[i])+'</option>';
+    }
+    h+='</optgroup>';
+  }
+  return h;
+}
+function spRenderDays(){
+  var el=document.getElementById('spDays');
+  var jsDay=new Date().getDay();
+  var todayId=(jsDay>=1&&jsDay<=5)?SP_DAYS[jsDay-1].id:null;
+  var sd=spGetData();
+  var html='';
+  for(var i=0;i<SP_DAYS.length;i++){
+    var d=SP_DAYS[i];
+    var cls='sp-day';
+    if(d.id===sd.day)cls+=' active';
+    if(d.id===todayId)cls+=' today';
+    html+='<button class="'+cls+'" data-day="'+d.id+'">'+d.short+'</button>';
+  }
+  el.innerHTML=html;
+}
+function spRenderList(){
+  var el=document.getElementById('spList');
+  var sd=spGetData();
+  var dayObj=null;
+  for(var i=0;i<SP_DAYS.length;i++)if(SP_DAYS[i].id===sd.day)dayObj=SP_DAYS[i];
+  document.getElementById('spToday').textContent=dayObj?dayObj.long:'';
+  var names=spNameMap();
+  var html='';
+  for(var i=0;i<SP_SCHEDULE.length;i++){
+    var row=SP_SCHEDULE[i];
+    if(row.type==='break'){
+      html+='<div class="sp-break"><span>'+escapeHtml(row.label)+' · '+escapeHtml(row.time)+'</span></div>';
+      continue;
+    }
+    var key=sd.day+'-'+row.nr;
+    var v=sd.cells[key]||'';
+    var nm=v?(names[v]||'Eigenes Fach'):'';
+    var cls='sp-lesson '+(v?'filled':'empty');
+    var style=v?(' style="--c:'+spColorFor(v)+'"'):'';
+    html+='<label class="'+cls+'"'+style+'>'
+      +'<span class="sp-idx">'+row.nr+'</span>'
+      +'<span class="sp-txt">'
+      +'<span class="sp-code">'+(v?escapeHtml(v):'＋')+'</span>'
+      +'<span class="sp-name">'+(v?escapeHtml(nm):'Fach wählen')+'</span>'
+      +'</span>'
+      +'<span class="sp-tm">'+row.time.replace('–','<br>')+'</span>'
+      +'<select class="sp-select" data-key="'+key+'" aria-label="'+escapeHtml(dayObj?dayObj.long:'')+', '+row.nr+'. Stunde">'
+      +spOptionsHTML(v)
+      +'</select>'
+      +'</label>';
+  }
+  el.innerHTML=html;
+}
+function spRenderCustomList(){
+  var el=document.getElementById('spCustomList');
+  var sd=spGetData();
+  if(!sd.custom.length){
+    el.innerHTML='<p class="sp-empty-hint">Noch keine eigenen Fächer angelegt.</p>';
+    return;
+  }
+  var html='';
+  for(var i=0;i<sd.custom.length;i++){
+    var k=sd.custom[i];
+    html+='<div class="sp-custom-item"><span>'+escapeHtml(k)+'</span><button data-del="'+escapeHtml(k)+'" aria-label="löschen">✕</button></div>';
+  }
+  el.innerHTML=html;
+}
+function spRenderAll(){
+  spRenderDays();
+  spRenderList();
+  spRenderCustomList();
+}
+function spRefreshOpen(){
+  if(!spOverlay.classList.contains('show'))return;
+  spRenderAll();
+}
+function spOpen(){
+  if(!accountData)return;
+  fabMenu.classList.remove('show');
+  var sd=spGetData();
+  spCurrentDay=sd.day;
+  spOverlay.classList.add('show');
+  spRenderAll();
+}
+function spClose(){
+  spOverlay.classList.remove('show');
+}
+
+// Tage-Auswahl
+document.getElementById('spDays').addEventListener('click',function(ev){
+  var btn=ev.target.closest('.sp-day');
+  if(!btn)return;
+  var sd=spGetData();
+  if(sd.day===btn.getAttribute('data-day'))return;
+  sd.day=btn.getAttribute('data-day');
+  saveToFirebase();
+  spRenderDays();
+  spRenderList();
+});
+// Fach-Auswahl
+document.getElementById('spList').addEventListener('change',function(ev){
+  var sel=ev.target.closest('.sp-select');
+  if(!sel)return;
+  var sd=spGetData();
+  var key=sel.getAttribute('data-key');
+  var val=sel.value;
+  if(val)sd.cells[key]=val;else delete sd.cells[key];
+  saveToFirebase();
+  spRenderList();
+  if(navigator.vibrate)navigator.vibrate(6);
+});
+// Swipe zwischen Tagen
+(function(){
+  var tX=0,tY=0,tracking=false;
+  var listEl=document.getElementById('spList');
+  listEl.addEventListener('touchstart',function(e){
+    if(e.touches.length!==1)return;
+    tX=e.touches[0].clientX;tY=e.touches[0].clientY;tracking=true;
+  },{passive:true});
+  listEl.addEventListener('touchend',function(e){
+    if(!tracking)return;tracking=false;
+    var dx=e.changedTouches[0].clientX-tX;
+    var dy=e.changedTouches[0].clientY-tY;
+    if(Math.abs(dx)<60||Math.abs(dx)<Math.abs(dy)*1.6)return;
+    var sd=spGetData();
+    var i=-1;
+    for(var x=0;x<SP_DAYS.length;x++)if(SP_DAYS[x].id===sd.day)i=x;
+    if(i<0)return;
+    var next=dx<0?i+1:i-1;
+    if(next<0||next>=SP_DAYS.length)return;
+    sd.day=SP_DAYS[next].id;
+    saveToFirebase();
+    spRenderDays();
+    spRenderList();
+    if(navigator.vibrate)navigator.vibrate(8);
+  },{passive:true});
+})();
+// Close-Buttons
+document.getElementById('spCloseBtn').addEventListener('click',spClose);
+document.getElementById('spOverlay').addEventListener('click',function(ev){if(ev.target===spOverlay)spClose()});
+// Settings
+document.getElementById('spSettingsBtn').addEventListener('click',function(){
+  spRenderCustomList();
+  spSettingsModal.classList.add('show');
+  document.getElementById('spNewSubject').value='';
+});
+document.getElementById('spSettingsClose').addEventListener('click',function(){spSettingsModal.classList.remove('show')});
+spSettingsModal.addEventListener('click',function(ev){if(ev.target===spSettingsModal)spSettingsModal.classList.remove('show')});
+// Eigenes Fach hinzufügen
+function spAddCustom(){
+  var input=document.getElementById('spNewSubject');
+  if(!input)return;
+  var val=input.value.trim().toUpperCase();
+  if(!val){showToast('KÜRZEL EINGEBEN');return}
+  var sd=spGetData();
+  if(!Array.isArray(sd.custom))sd.custom=[];
+  var names=spNameMap();
+  if(names[val]){showToast('FACH EXISTIERT BEREITS');input.value='';return}
+  if(sd.custom.indexOf(val)>-1){showToast('FACH EXISTIERT BEREITS');input.value='';return}
+  sd.custom.push(val);
+  input.value='';input.blur();
+  saveToFirebase();
+  spRenderCustomList();
+  spRenderList();
+  if(navigator.vibrate)navigator.vibrate(10);
+  showToast('FACH HINZUGEFÜGT: '+val);
+}
+document.getElementById('spAddBtn').addEventListener('click',spAddCustom);
+document.getElementById('spNewSubject').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();spAddCustom()}});
+// Eigenes Fach löschen
+document.getElementById('spCustomList').addEventListener('click',function(ev){
+  var btn=ev.target.closest('[data-del]');
+  if(!btn)return;
+  var k=btn.getAttribute('data-del');
+  var sd=spGetData();
+  sd.custom=sd.custom.filter(function(x){return x!==k});
+  var keys=Object.keys(sd.cells);
+  for(var i=0;i<keys.length;i++){if(sd.cells[keys[i]]===k)delete sd.cells[keys[i]]}
+  saveToFirebase();
+  spRenderCustomList();
+  spRenderList();
+});
+// Alles löschen
+document.getElementById('spClearBtn').addEventListener('click',function(){
+  if(!confirm('Alle eingetragenen Fächer löschen?'))return;
+  var sd=spGetData();
+  sd.cells={};
+  saveToFirebase();
+  spRenderList();
+  spSettingsModal.classList.remove('show');
+});
+
 onAuthStateChanged(auth,function(user){
   if(user){
     currentUser=user;
@@ -1173,7 +1579,7 @@ onAuthStateChanged(auth,function(user){
     currentUser=null;accountData=null;
     if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
     try{localStorage.setItem('mylife_last_logout',Date.now())}catch(e){}
-    fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();
+    fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();spClose();
     elLoginScreen.style.display='flex';
     elApp.style.display='none';
     document.getElementById('loginEmail').value='';document.getElementById('loginPassword').value='';
@@ -1213,12 +1619,22 @@ function renderContent(){
   var d=getKidData();if(!d)return;
   var el=document.getElementById('content');
   if(currentTab==='tasks'){
-    if(d.tasks.length===0){el.innerHTML='<div class="empty">Heute keine Aufgaben!</div>';return}
     var html='',daily=[],others=[];
     for(var i=0;i<d.tasks.length;i++){if(d.tasks[i].important)daily.push(d.tasks[i]);else others.push(d.tasks[i])}
-    if(daily.length){html+='<div class="section-title">Täglich</div>';for(var i=0;i<daily.length;i++)html+=renderTask(daily[i])}
-    if(others.length){html+='<div class="section-title">Heute zusätzlich</div>';for(var i=0;i<others.length;i++)html+=renderTask(others[i])}
-    el.innerHTML=html;bindTaskClicks();
+    html+='<div class="section-title">Täglich</div>';
+    html+='<div class="schule-card" id="schuleCard"><div class="schule-icon">🏫</div><div class="schule-info"><div class="schule-title">Schule</div><div class="schule-sub">Stundenplan anschauen</div></div><div class="schule-arrow">›</div></div>';
+    for(var i=0;i<daily.length;i++)html+=renderTask(daily[i]);
+    if(d.tasks.length===0){
+      html+='<div class="empty" style="padding:20px 10px">Heute keine Aufgaben!</div>';
+    }
+    if(others.length){
+      html+='<div class="section-title">Heute zusätzlich</div>';
+      for(var i=0;i<others.length;i++)html+=renderTask(others[i]);
+    }
+    el.innerHTML=html;
+    bindTaskClicks();
+    var sc=document.getElementById('schuleCard');
+    if(sc)sc.addEventListener('click',spOpen);
   }else if(currentTab==='rewards'){renderRewardsView(el,d)}
   else if(currentTab==='money'){
     var h='';
