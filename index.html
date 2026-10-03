@@ -187,6 +187,7 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .pending-item .approve{background:rgba(0,255,136,.15);border-color:var(--green);color:var(--green)}
 .pending-item .reject{background:rgba(255,68,102,.1);border-color:#ff4466;color:#ff4466}
 .pending-empty{text-align:center;color:var(--dim);font-size:.75rem;padding:14px 10px;font-style:italic}
+.sug-cost-input{width:72px;padding:6px 8px;background:rgba(0,0,0,.3);border:1px solid rgba(0,245,255,.25);border-radius:8px;color:var(--text);font-size:.82rem;text-align:center;outline:none;font-family:inherit;font-weight:700}
 .game-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1100;display:none;align-items:center;justify-content:center;padding:12px;backdrop-filter:blur(6px);overflow-y:auto}
 .game-overlay.show{display:flex;animation:gfadeIn .25s ease}
 @keyframes gfadeIn{from{opacity:0}to{opacity:1}}
@@ -310,6 +311,7 @@ body.light .reward-edit{background:#f5f0e8;border-color:rgba(140,120,220,.15)}
 body.light .reward-edit .row input{background:#ffffff;border-color:rgba(140,120,220,.2);color:#1a1a2e}
 body.light .pending-item{background:#f5f0e8;border-color:rgba(180,140,0,.35)}
 body.light .pending-item.suggest{border-color:rgba(0,160,90,.4)}
+body.light .sug-cost-input{background:#ffffff;border-color:rgba(140,120,220,.25);color:#1a1a2e}
 body.light .game-overlay{background:rgba(250,247,242,.92)}
 body.light .game-app{border-color:rgba(0,180,220,.35)}
 body.light .game-digit{background:rgba(255,255,255,.65);border-color:rgba(140,120,220,.2);color:#6a6a80}
@@ -1044,7 +1046,7 @@ document.getElementById('addRewardBtn').addEventListener('click',function(){
   saveToFirebase();render();renderRewardEditor();showToast('BELOHNUNG HINZUGEFÜGT');
 });
 
-/* ===== Vorschläge ===== */
+/* ===== Vorschläge (Eltern-Ansicht mit Punkte-Eingabe) ===== */
 function renderSuggestions(){
   var list=document.getElementById('suggestionsList');if(!list)return;
   if(!accountData){list.innerHTML='';return}
@@ -1054,16 +1056,32 @@ function renderSuggestions(){
     if(!kid||!kid.data||!kid.data.suggestedRewards)continue;
     for(var j=0;j<kid.data.suggestedRewards.length;j++){
       var sug=kid.data.suggestedRewards[j];count++;
+      var val=(sug.cost>0)?sug.cost:'';
       html+='<div class="pending-item suggest"><div class="info">'
         +'<div class="who">'+(kid.emoji||'🧒')+' '+escapeHtml(kid.name||'Kind')+'</div>'
         +'<div class="what">'+(sug.emoji||'💡')+' '+escapeHtml(sug.title||'')+'</div>'
-        +'<div class="cost">Wunsch: '+sug.cost+' Punkte</div></div>'
+        +'<div class="cost" style="display:flex;align-items:center;gap:6px;margin-top:6px">'
+        +'<input type="number" class="sug-cost-input" data-kid="'+kidId+'" data-sug="'+sug.id+'" value="'+val+'" placeholder="Punkte" min="1" step="1">'
+        +'<span style="font-size:.65rem;color:var(--dim)">Punkte festlegen</span></div></div>'
         +'<div class="actions"><button class="approve" data-kid="'+kidId+'" data-sug="'+sug.id+'">✓</button>'
         +'<button class="reject" data-kid="'+kidId+'" data-sug="'+sug.id+'">✕</button></div></div>';
     }
   }
   if(count===0)html='<div class="pending-empty">Keine Vorschläge</div>';
   list.innerHTML=html;
+  var costs=list.querySelectorAll('.sug-cost-input');
+  for(var i=0;i<costs.length;i++)costs[i].addEventListener('change',function(){
+    var kidId=this.getAttribute('data-kid'),sugId=this.getAttribute('data-sug');
+    var kid=accountData.kids[kidId];if(!kid||!kid.data||!kid.data.suggestedRewards)return;
+    for(var x=0;x<kid.data.suggestedRewards.length;x++){
+      if(kid.data.suggestedRewards[x].id===sugId){
+        var v=parseInt(this.value,10);
+        kid.data.suggestedRewards[x].cost=(isNaN(v)||v<1)?0:v;
+        break;
+      }
+    }
+    saveToFirebase();
+  });
   var appr=list.querySelectorAll('.approve');
   for(var i=0;i<appr.length;i++)appr[i].addEventListener('click',function(){approveSuggestion(this.getAttribute('data-kid'),this.getAttribute('data-sug'))});
   var rej=list.querySelectorAll('.reject');
@@ -1074,8 +1092,15 @@ function approveSuggestion(kidId,sugId){
   var idx=-1;for(var i=0;i<kid.data.suggestedRewards.length;i++)if(kid.data.suggestedRewards[i].id===sugId){idx=i;break}
   if(idx<0)return;
   var sug=kid.data.suggestedRewards[idx];
+  var input=document.querySelector('.sug-cost-input[data-kid="'+kidId+'"][data-sug="'+sugId+'"]');
+  var cost=input?parseInt(input.value,10):NaN;
+  if(isNaN(cost)||cost<1){
+    showToast('PUNKTE FESTLEGEN');
+    if(input){input.focus();input.style.borderColor='#ff4466';setTimeout(function(){input.style.borderColor=''},1500)}
+    return;
+  }
   if(!accountData.rewards)accountData.rewards=[];
-  accountData.rewards.push({id:genId('rw'),title:sug.title,emoji:sug.emoji||'🎁',cost:sug.cost});
+  accountData.rewards.push({id:genId('rw'),title:sug.title,emoji:sug.emoji||'🎁',cost:cost});
   kid.data.suggestedRewards.splice(idx,1);
   saveToFirebase();render();renderRewardEditor();renderSuggestions();
   showToast('PRÄMIE ANGENOMMEN: '+sug.title.toUpperCase());fireConfetti(20);
@@ -1221,7 +1246,8 @@ function renderRewardsView(el,d){
     html+='<div class="section-title">Deine Vorschläge (warten auf Eltern)</div>';
     for(var i=0;i<d.suggestedRewards.length;i++){
       var sug=d.suggestedRewards[i];
-      html+='<div class="reward-card suggested"><div class="reward-header"><span class="reward-emoji">'+(sug.emoji||'💡')+'</span><span class="reward-title">'+escapeHtml(sug.title||'')+'</span><span class="reward-cost">'+sug.cost+' P</span></div><div class="reward-status suggested">⏳ Wartet auf Genehmigung</div></div>';
+      var costTxt=(sug.cost>0)?(sug.cost+' P'):'Punkte offen';
+      html+='<div class="reward-card suggested"><div class="reward-header"><span class="reward-emoji">'+(sug.emoji||'💡')+'</span><span class="reward-title">'+escapeHtml(sug.title||'')+'</span><span class="reward-cost">'+costTxt+'</span></div><div class="reward-status suggested">⏳ Wartet auf Genehmigung – Punkte legen die Eltern fest</div></div>';
     }
   }
   if(d.pendingRewards&&d.pendingRewards.length){
@@ -1255,10 +1281,8 @@ function renderRewardsView(el,d){
     +'<div class="settings-title">💡 Eigene Prämie vorschlagen</div>'
     +'<div class="add-task-form" style="margin-bottom:0">'
     +'<input type="text" id="suggestTitle" placeholder="Was möchtest du? (z.B. Kino)" maxlength="40">'
-    +'<div class="add-task-inline">'
-    +'<input type="text" id="suggestEmoji" placeholder="🎬" maxlength="4" style="max-width:70px;text-align:center">'
-    +'<input type="number" id="suggestCost" placeholder="Punkte" min="1" step="1" style="text-align:center">'
-    +'</div>'
+    +'<input type="text" id="suggestEmoji" placeholder="🎬" maxlength="4" style="text-align:center">'
+    +'<div class="modal-hint" style="margin:6px 0 8px;text-align:left;font-size:.68rem;line-height:1.4">Die Punkte, die die Prämie kostet, legen deine Eltern fest.</div>'
     +'<button id="suggestBtn">Vorschlag senden</button>'
     +'</div></div>';
   el.innerHTML=html;
@@ -1269,14 +1293,13 @@ function renderRewardsView(el,d){
 }
 function suggestReward(){
   var d=getKidData();if(!d)return;
-  var titleEl=document.getElementById('suggestTitle'),emojiEl=document.getElementById('suggestEmoji'),costEl=document.getElementById('suggestCost');
-  if(!titleEl||!costEl)return;
-  var title=titleEl.value.trim(),emoji=emojiEl.value.trim()||'💡',cost=parseInt(costEl.value,10);
+  var titleEl=document.getElementById('suggestTitle'),emojiEl=document.getElementById('suggestEmoji');
+  if(!titleEl)return;
+  var title=titleEl.value.trim(),emoji=(emojiEl&&emojiEl.value.trim())||'💡';
   if(!title){showToast('TITEL EINGEBEN');return}
-  if(isNaN(cost)||cost<1){showToast('PUNKTE EINGEBEN');return}
   if(!d.suggestedRewards)d.suggestedRewards=[];
-  d.suggestedRewards.push({id:genId('sug'),title:title,emoji:emoji,cost:cost,date:todayKey()});
-  titleEl.value='';emojiEl.value='';costEl.value='';
+  d.suggestedRewards.push({id:genId('sug'),title:title,emoji:emoji,cost:0,date:todayKey()});
+  titleEl.value='';if(emojiEl)emojiEl.value='';
   saveToFirebase();render();showToast('VORSCHLAG GESENDET 💡');fireConfetti(15);
 }
 function requestReward(rewardId){
