@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>BETTER LIFE</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
@@ -496,7 +499,6 @@ const firebaseConfig = {
 };
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
 
-/* DOM Referenzen FRÜH deklariert */
 var elLoginScreen=document.getElementById('loginScreen');
 var elApp=document.getElementById('app');
 var parentModal=document.getElementById('parentModal');
@@ -521,6 +523,7 @@ var EMOJI_SET=['🧒','👦','👧','🧑','👶','🐱','🐶','🦊','🐼','�
 
 var accountData=null,currentUser=null,currentTab='tasks',unsubscribeRef=null;
 var editingKidId=null,editingEmoji='🧒',editingPhoto='';
+var loginLockedUntil=0;
 
 function todayKey(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
 function currentWeekday(){return new Date().getDay()}
@@ -540,7 +543,7 @@ function renderAvatar(kid,size){
 
 function buildKidData(templates){
   var wd=currentWeekday(),tasks=[];
-  for(var i=0;i<templates.length;i++){var t=templates[i];if(t.days.indexOf(wd)!==-1)tasks.push({id:t.id,title:t.title,cat:t.cat,important:!!t.important,done:false})}
+  if(Array.isArray(templates)){for(var i=0;i<templates.length;i++){var t=templates[i];if(t&&Array.isArray(t.days)&&t.days.indexOf(wd)!==-1)tasks.push({id:t.id,title:t.title,cat:t.cat,important:!!t.important,done:false})}}
   return {tasks:tasks,today:todayKey(),points:0,totalPoints:0,level:1,earned:0,history:[],pointsToday:0,pendingRewards:[],rewardHistory:[],suggestedRewards:[]};
 }
 function defaultAccount(){
@@ -550,8 +553,20 @@ function defaultAccount(){
 }
 function getKid(){if(!accountData||!accountData.activeKid||!accountData.kids)return null;return accountData.kids[accountData.activeKid]||null}
 function getKidData(){var k=getKid();return k?k.data:null}
-function getTemplates(){return(accountData&&accountData.taskTemplates&&accountData.taskTemplates.length)?accountData.taskTemplates:clone(DEFAULT_TEMPLATES)}
-function isNewFormat(d){return d&&typeof d==='object'&&d.kids&&d.kidOrder&&Array.isArray(d.kidOrder)&&d.activeKid&&d.kids[d.activeKid]}
+function getTemplates(){
+  if(accountData && Array.isArray(accountData.taskTemplates) && accountData.taskTemplates.length){
+    return accountData.taskTemplates;
+  }
+  return clone(DEFAULT_TEMPLATES);
+}
+function isNewFormat(d){return !!(d&&typeof d==='object'&&d.kids&&d.kidOrder&&Array.isArray(d.kidOrder)&&d.activeKid&&d.kids[d.activeKid])}
+function needsRepair(d){
+  if(!isNewFormat(d))return true;
+  if(!Array.isArray(d.taskTemplates)||d.taskTemplates.length===0)return true;
+  if(!Array.isArray(d.rewards))return true;
+  if(!d.settings||typeof d.settings!=='object')return true;
+  return false;
+}
 
 function processKidDay(kid){
   if(!kid||!kid.data)return;
@@ -569,22 +584,39 @@ function processKidDay(kid){
   if(typeof d.earned!=='number')d.earned=0;
   if(!d.history||!Array.isArray(d.history))d.history=[];
   if(!d.tasks||!d.tasks.length)d.tasks=buildKidData(getTemplates()).tasks;
-  if(!d.pendingRewards||!Array.isArray(d.pendingRewards))d.pendingRewards=[];
-  if(!d.rewardHistory||!Array.isArray(d.rewardHistory))d.rewardHistory=[];
-  if(!d.suggestedRewards||!Array.isArray(d.suggestedRewards))d.suggestedRewards=[];
+  if(!Array.isArray(d.pendingRewards))d.pendingRewards=[];
+  if(!Array.isArray(d.rewardHistory))d.rewardHistory=[];
+  if(!Array.isArray(d.suggestedRewards))d.suggestedRewards=[];
   d.level=calcLevel(d.totalPoints);
 }
 
 function migrate(data){
   if(isNewFormat(data)){
-    if(!data.taskTemplates||!Array.isArray(data.taskTemplates)||!data.taskTemplates.length)data.taskTemplates=clone(DEFAULT_TEMPLATES);
+    if(!Array.isArray(data.taskTemplates)||data.taskTemplates.length===0){
+      data.taskTemplates=clone(DEFAULT_TEMPLATES);
+    }
+    var cleaned=[];
+    for(var i=0;i<data.taskTemplates.length;i++){
+      var t=data.taskTemplates[i];
+      if(t&&typeof t==='object'&&t.title){
+        cleaned.push({
+          id:t.id||genId('tpl'),
+          title:String(t.title),
+          cat:t.cat||'Sonstiges',
+          days:Array.isArray(t.days)?t.days:[1,2,3,4,5],
+          important:!!t.important
+        });
+      }
+    }
+    data.taskTemplates=cleaned.length?cleaned:clone(DEFAULT_TEMPLATES);
     if(typeof data.pinSet!=='boolean')data.pinSet=false;
     if(typeof data.pin!=='string')data.pin='';
     if(typeof data.theme!=='string')data.theme='dark';
     if(!data.settings||typeof data.settings!=='object')data.settings={};
     if(typeof data.settings.dailyReward!=='number'||data.settings.dailyReward<0)data.settings.dailyReward=DEFAULT_DAILY_REWARD;
     if(typeof data.settings.pointsPerTask!=='number'||data.settings.pointsPerTask<1)data.settings.pointsPerTask=DEFAULT_POINTS_PER_TASK;
-    if(!data.rewards||!Array.isArray(data.rewards))data.rewards=[];
+    if(!Array.isArray(data.rewards))data.rewards=[];
+    if(!Array.isArray(data.kidOrder))data.kidOrder=[];
     for(var i=0;i<data.kidOrder.length;i++){
       var kid=data.kids[data.kidOrder[i]];
       if(kid){
@@ -592,20 +624,29 @@ function migrate(data){
         if(!kid.emoji)kid.emoji=EMOJI_SET[i%EMOJI_SET.length];
         if(typeof kid.photo!=='string')kid.photo='';
         if(!kid.data)kid.data=buildKidData(data.taskTemplates);
-        if(!kid.data.pendingRewards||!Array.isArray(kid.data.pendingRewards))kid.data.pendingRewards=[];
-        if(!kid.data.rewardHistory||!Array.isArray(kid.data.rewardHistory))kid.data.rewardHistory=[];
-        if(!kid.data.suggestedRewards||!Array.isArray(kid.data.suggestedRewards))kid.data.suggestedRewards=[];
+        if(!Array.isArray(kid.data.tasks))kid.data.tasks=buildKidData(data.taskTemplates).tasks;
+        if(!Array.isArray(kid.data.pendingRewards))kid.data.pendingRewards=[];
+        if(!Array.isArray(kid.data.rewardHistory))kid.data.rewardHistory=[];
+        if(!Array.isArray(kid.data.suggestedRewards))kid.data.suggestedRewards=[];
+        if(!Array.isArray(kid.data.history))kid.data.history=[];
       }
     }
+    if(!data.kids[data.activeKid] && data.kidOrder.length)data.activeKid=data.kidOrder[0];
     return data;
   }
   var id=genId('kid'),templates=clone(DEFAULT_TEMPLATES),oldData=buildKidData(templates);
   if(data){
-    oldData.today=data.today||todayKey();oldData.points=data.points||0;oldData.totalPoints=data.totalPoints||0;oldData.level=data.level||1;oldData.earned=data.earned||0;
-    oldData.history=(data.history&&Array.isArray(data.history))?data.history:[];oldData.pointsToday=data.pointsToday||0;
+    oldData.today=data.today||todayKey();
+    oldData.points=data.points||0;
+    oldData.totalPoints=data.totalPoints||0;
+    oldData.level=data.level||1;
+    oldData.earned=data.earned||0;
+    oldData.history=(data.history&&Array.isArray(data.history))?data.history:[];
+    oldData.pointsToday=data.pointsToday||0;
     if(data.tasks&&data.tasks.length)oldData.tasks=data.tasks;
   }
-  var kids={};kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:oldData};
+  var kids={};
+  kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:oldData};
   return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},rewards:[]};
 }
 
@@ -613,20 +654,39 @@ function startListener(uid){
   if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
   var userRef=ref(db,'users/'+uid);
   unsubscribeRef=onValue(userRef,function(snapshot){
-    var data=snapshot.val();
-    if(!data){var fresh=defaultAccount();accountData=fresh;set(userRef,fresh);applyTheme(accountData.theme||getSavedTheme());render();return}
-    var isOld=!isNewFormat(data);
-    var acc=migrate(data);
-    for(var i=0;i<acc.kidOrder.length;i++)processKidDay(acc.kids[acc.kidOrder[i]]);
-    if(!acc.kids[acc.activeKid])acc.activeKid=acc.kidOrder[0];
-    accountData=acc;
-    if(isOld)set(userRef,acc);
-    applyTheme(accountData.theme||getSavedTheme());
-    render();
-    if(parentPanelEl && parentPanelEl.style.display==='flex')refreshParentPanel();
+    try{
+      if(!currentUser||currentUser.uid!==uid)return;
+      var data=snapshot.val();
+      if(!data){
+        var fresh=defaultAccount();
+        accountData=fresh;
+        set(userRef,fresh);
+        applyTheme(accountData.theme||getSavedTheme());
+        render();
+        return;
+      }
+      var wasBroken=needsRepair(data);
+      var acc=migrate(data);
+      for(var i=0;i<acc.kidOrder.length;i++)processKidDay(acc.kids[acc.kidOrder[i]]);
+      if(!acc.kids[acc.activeKid] && acc.kidOrder.length)acc.activeKid=acc.kidOrder[0];
+      accountData=acc;
+      if(wasBroken)set(userRef,acc);
+      applyTheme(accountData.theme||getSavedTheme());
+      render();
+      if(parentPanelEl && parentPanelEl.style.display==='flex')refreshParentPanel();
+    }catch(err){
+      console.error('Listener-Fehler:',err);
+      showToast('Datenfehler – bitte neu anmelden');
+    }
   });
 }
-function saveToFirebase(){if(!currentUser||!accountData)return;set(ref(db,'users/'+currentUser.uid),accountData)}
+function saveToFirebase(){
+  if(!currentUser||!accountData)return;
+  if(!Array.isArray(accountData.taskTemplates)||accountData.taskTemplates.length===0){
+    return;
+  }
+  set(ref(db,'users/'+currentUser.uid),accountData);
+}
 
 function applyTemplateChanges(){
   if(!accountData)return;
@@ -648,18 +708,39 @@ function getSavedTheme(){try{return localStorage.getItem('mylife_theme')||'dark'
 function setSavedTheme(t){try{localStorage.setItem('mylife_theme',t)}catch(e){}}
 applyTheme(getSavedTheme());
 
+/* ===== Auth Fehler-Formatierung ===== */
+function formatAuthError(err){
+  var c=(err&&err.code)||'';
+  if(c==='auth/too-many-requests')return 'Zu viele Anmeldeversuche. Bitte warte 10 Minuten oder setze dein Passwort in der Firebase Console zurück.';
+  if(c==='auth/wrong-password'||c==='auth/invalid-credential')return 'Falsches Passwort.';
+  if(c==='auth/user-not-found')return 'Kein Konto mit dieser E-Mail gefunden.';
+  if(c==='auth/invalid-email')return 'Ungültige E-Mail-Adresse.';
+  if(c==='auth/network-request-failed')return 'Netzwerkfehler – bitte Internetverbindung prüfen.';
+  if(c==='auth/email-already-in-use')return 'Diese E-Mail wird bereits verwendet.';
+  if(c==='auth/weak-password')return 'Passwort zu schwach (min. 6 Zeichen).';
+  return 'Fehler: '+((err&&err.message)||'Unbekannt');
+}
+
 document.getElementById('loginBtn').addEventListener('click',function(){
   var email=document.getElementById('loginEmail').value.trim(),pw=document.getElementById('loginPassword').value;
   if(!email||!pw){showLoginMsg('Bitte E-Mail und Passwort eingeben.',true);return}
+  if(Date.now()<loginLockedUntil){
+    var secs=Math.ceil((loginLockedUntil-Date.now())/1000);
+    showLoginMsg('Zu viele Versuche. Bitte '+secs+' Sekunden warten.',true);
+    return;
+  }
   showLoginMsg('Anmelden...',false);
-  signInWithEmailAndPassword(auth,email,pw).catch(function(err){showLoginMsg('Fehler: '+err.message,true)});
+  signInWithEmailAndPassword(auth,email,pw).catch(function(err){
+    showLoginMsg(formatAuthError(err),true);
+    if(err&&err.code==='auth/too-many-requests')loginLockedUntil=Date.now()+600000;
+  });
 });
 document.getElementById('signupBtn').addEventListener('click',function(){
   var email=document.getElementById('loginEmail').value.trim(),pw=document.getElementById('loginPassword').value;
   if(!email||!pw){showLoginMsg('Bitte E-Mail und Passwort eingeben.',true);return}
   if(pw.length<6){showLoginMsg('Passwort muss mindestens 6 Zeichen haben.',true);return}
   showLoginMsg('Konto wird erstellt...',false);
-  createUserWithEmailAndPassword(auth,email,pw).catch(function(err){showLoginMsg('Fehler: '+err.message,true)});
+  createUserWithEmailAndPassword(auth,email,pw).catch(function(err){showLoginMsg(formatAuthError(err),true)});
 });
 
 var fabDots=document.getElementById('fabDots'),fabMenu=document.getElementById('fabMenu');
@@ -674,7 +755,6 @@ document.getElementById('themeBtn').addEventListener('click',function(){
   showToast(next==='light'?'PERLMUTT-DESIGN':'DUNKLES DESIGN');
 });
 
-/* ===== Eltern-Bereich ===== */
 function openParentFlow(){
   fabMenu.classList.remove('show');if(!accountData)return;
   parentModal.classList.add('show');
@@ -699,7 +779,7 @@ function showPinEntry(){
   setTimeout(function(){document.getElementById('pinInput').focus()},100);
 }
 function refreshParentPanel(){
-  refreshSettingsUI();renderParentKidList();renderRewardEditor();renderSuggestions();renderPendingRequests();renderTaskEditor();
+  refreshSettingsUI();renderParentKidList();renderTaskEditor();renderRewardEditor();renderSuggestions();renderPendingRequests();
 }
 function showParentPanel(){
   pinSetupEl.style.display='none';pinEntryEl.style.display='none';parentPanelEl.style.display='flex';
@@ -725,7 +805,6 @@ document.getElementById('parentCloseBtn').addEventListener('click',closeParentFl
 document.getElementById('changePinBtn').addEventListener('click',function(){showPinSetup(true)});
 document.getElementById('kidBadge').addEventListener('click',openParentFlow);
 
-/* ===== Kinder-Verwaltung ===== */
 function renderParentKidList(){
   var list=document.getElementById('parentKidList'),hint=document.getElementById('kidHint');
   if(!accountData){list.innerHTML='';return}
@@ -766,7 +845,7 @@ function deleteKid(id){
   if(!confirm('Kind "'+name+'" wirklich löschen?'))return;
   delete accountData.kids[id];
   var idx=accountData.kidOrder.indexOf(id);if(idx>-1)accountData.kidOrder.splice(idx,1);
-  if(accountData.activeKid===id)accountData.activeKid=accountData.kidOrder[0];
+  if(accountData.activeKid===id && accountData.kidOrder.length)accountData.activeKid=accountData.kidOrder[0];
   saveToFirebase();renderParentKidList();render();showToast('GELÖSCHT: '+name.toUpperCase());
 }
 document.getElementById('addKidBtn').addEventListener('click',function(){
@@ -782,7 +861,6 @@ document.getElementById('addKidBtn').addEventListener('click',function(){
 });
 document.getElementById('newKidName').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('addKidBtn').click()}});
 
-/* ===== Kind bearbeiten ===== */
 function openKidEdit(id){
   if(!accountData||!accountData.kids[id])return;
   var kid=accountData.kids[id];
@@ -846,6 +924,57 @@ document.getElementById('kidEditSave').addEventListener('click',function(){
   kid.name=name;kid.emoji=editingEmoji;kid.photo=editingPhoto;
   saveToFirebase();closeKidEdit();renderParentKidList();render();showToast('GESPEICHERT');
 });
+
+/* ===== Aufgaben-Editor ===== */
+function renderTaskEditor(){
+  var list=document.getElementById('taskEditList');if(!list)return;
+  if(!accountData){list.innerHTML='';return}
+  if(!Array.isArray(accountData.taskTemplates)||!accountData.taskTemplates.length){
+    list.innerHTML='<div class="pending-empty">Noch keine Aufgaben angelegt</div>';
+    return;
+  }
+  var html='';
+  for(var i=0;i<accountData.taskTemplates.length;i++){
+    var t=accountData.taskTemplates[i];
+    html+='<div class="task-edit" data-id="'+t.id+'">';
+    html+='<div class="row"><input type="text" class="edit-title" value="'+escapeHtml(t.title)+'" maxlength="40" placeholder="Aufgabe"><button class="del" data-del="'+t.id+'">✕</button></div>';
+    html+='<div class="row"><input type="text" class="edit-cat" value="'+escapeHtml(t.cat)+'" maxlength="20" placeholder="Kategorie" style="max-width:110px"><label><input type="checkbox" class="edit-imp" '+(t.important?'checked':'')+'> Wichtig</label></div>';
+    html+='<div class="days">';
+    for(var k=0;k<DAY_ORDER.length;k++){var d=DAY_ORDER[k],on=t.days.indexOf(d)!==-1;html+='<button class="day-toggle'+(on?' on':'')+'" data-day="'+d+'">'+DAY_LABELS[d]+'</button>'}
+    html+='</div></div>';
+  }
+  list.innerHTML=html;
+  var edits=list.querySelectorAll('.task-edit');
+  for(var i=0;i<edits.length;i++){(function(el){
+    var id=el.getAttribute('data-id'),tmpl=null;
+    for(var x=0;x<accountData.taskTemplates.length;x++)if(accountData.taskTemplates[x].id===id){tmpl=accountData.taskTemplates[x];break}
+    if(!tmpl)return;
+    el.querySelector('.edit-title').addEventListener('change',function(){var v=this.value.trim();if(!v){this.value=tmpl.title;return}tmpl.title=v;applyTemplateChanges();saveToFirebase();render()});
+    el.querySelector('.edit-cat').addEventListener('change',function(){var v=this.value.trim();if(!v){this.value=tmpl.cat;return}tmpl.cat=v;applyTemplateChanges();saveToFirebase();render()});
+    el.querySelector('.edit-imp').addEventListener('change',function(){tmpl.important=this.checked;applyTemplateChanges();saveToFirebase();render()});
+    var dayBtns=el.querySelectorAll('.day-toggle');
+    for(var j=0;j<dayBtns.length;j++)dayBtns[j].addEventListener('click',function(){
+      var d=parseInt(this.getAttribute('data-day'),10),idx=tmpl.days.indexOf(d);
+      if(idx>-1){tmpl.days.splice(idx,1);this.classList.remove('on')}else{tmpl.days.push(d);this.classList.add('on')}
+      applyTemplateChanges();saveToFirebase();render();
+    });
+    el.querySelector('.del').addEventListener('click',function(){
+      if(!confirm('Aufgabe "'+tmpl.title+'" löschen?'))return;
+      var idx=accountData.taskTemplates.indexOf(tmpl);if(idx>-1)accountData.taskTemplates.splice(idx,1);
+      applyTemplateChanges();saveToFirebase();render();renderTaskEditor();showToast('GELÖSCHT');
+    });
+  })(edits[i])}
+}
+document.getElementById('addTaskBtn').addEventListener('click',function(){
+  if(!accountData)return;
+  var title=document.getElementById('newTaskTitle').value.trim(),cat=document.getElementById('newTaskCat').value.trim()||'Sonstiges';
+  if(!title){showToast('TITEL EINGEBEN');return}
+  if(!Array.isArray(accountData.taskTemplates))accountData.taskTemplates=[];
+  accountData.taskTemplates.push({id:genId('custom'),title:title,cat:cat,days:[1,2,3,4,5],important:false,custom:true});
+  document.getElementById('newTaskTitle').value='';document.getElementById('newTaskCat').value='';
+  applyTemplateChanges();saveToFirebase();render();renderTaskEditor();showToast('HINZUGEFÜGT');
+});
+document.getElementById('newTaskTitle').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('addTaskBtn').click()}});
 
 /* ===== Einstellungen ===== */
 function refreshSettingsUI(){
@@ -1009,52 +1138,6 @@ function rejectReward(kidId,reqId){
   saveToFirebase();render();renderPendingRequests();showToast('ANFRAGE ABGELEHNT');
 }
 
-/* ===== Aufgaben-Editor ===== */
-function renderTaskEditor(){
-  var list=document.getElementById('taskEditList');if(!accountData){list.innerHTML='';return}
-  var html='';
-  for(var i=0;i<accountData.taskTemplates.length;i++){
-    var t=accountData.taskTemplates[i];
-    html+='<div class="task-edit" data-id="'+t.id+'">';
-    html+='<div class="row"><input type="text" class="edit-title" value="'+escapeHtml(t.title)+'" maxlength="40" placeholder="Aufgabe"><button class="del" data-del="'+t.id+'">✕</button></div>';
-    html+='<div class="row"><input type="text" class="edit-cat" value="'+escapeHtml(t.cat)+'" maxlength="20" placeholder="Kategorie" style="max-width:110px"><label><input type="checkbox" class="edit-imp" '+(t.important?'checked':'')+'> Wichtig</label></div>';
-    html+='<div class="days">';
-    for(var k=0;k<DAY_ORDER.length;k++){var d=DAY_ORDER[k],on=t.days.indexOf(d)!==-1;html+='<button class="day-toggle'+(on?' on':'')+'" data-day="'+d+'">'+DAY_LABELS[d]+'</button>'}
-    html+='</div></div>';
-  }
-  list.innerHTML=html;
-  var edits=list.querySelectorAll('.task-edit');
-  for(var i=0;i<edits.length;i++){(function(el){
-    var id=el.getAttribute('data-id'),tmpl=null;
-    for(var x=0;x<accountData.taskTemplates.length;x++)if(accountData.taskTemplates[x].id===id){tmpl=accountData.taskTemplates[x];break}
-    if(!tmpl)return;
-    el.querySelector('.edit-title').addEventListener('change',function(){var v=this.value.trim();if(!v){this.value=tmpl.title;return}tmpl.title=v;applyTemplateChanges();saveToFirebase();render()});
-    el.querySelector('.edit-cat').addEventListener('change',function(){var v=this.value.trim();if(!v){this.value=tmpl.cat;return}tmpl.cat=v;applyTemplateChanges();saveToFirebase();render()});
-    el.querySelector('.edit-imp').addEventListener('change',function(){tmpl.important=this.checked;applyTemplateChanges();saveToFirebase();render()});
-    var dayBtns=el.querySelectorAll('.day-toggle');
-    for(var j=0;j<dayBtns.length;j++)dayBtns[j].addEventListener('click',function(){
-      var d=parseInt(this.getAttribute('data-day'),10),idx=tmpl.days.indexOf(d);
-      if(idx>-1){tmpl.days.splice(idx,1);this.classList.remove('on')}else{tmpl.days.push(d);this.classList.add('on')}
-      applyTemplateChanges();saveToFirebase();render();
-    });
-    el.querySelector('.del').addEventListener('click',function(){
-      if(!confirm('Aufgabe "'+tmpl.title+'" löschen?'))return;
-      var idx=accountData.taskTemplates.indexOf(tmpl);if(idx>-1)accountData.taskTemplates.splice(idx,1);
-      applyTemplateChanges();saveToFirebase();render();renderTaskEditor();showToast('GELÖSCHT');
-    });
-  })(edits[i])}
-}
-document.getElementById('addTaskBtn').addEventListener('click',function(){
-  if(!accountData)return;
-  var title=document.getElementById('newTaskTitle').value.trim(),cat=document.getElementById('newTaskCat').value.trim()||'Sonstiges';
-  if(!title){showToast('TITEL EINGEBEN');return}
-  accountData.taskTemplates.push({id:genId('custom'),title:title,cat:cat,days:[1,2,3,4,5],important:false,custom:true});
-  document.getElementById('newTaskTitle').value='';document.getElementById('newTaskCat').value='';
-  applyTemplateChanges();saveToFirebase();render();renderTaskEditor();showToast('HINZUGEFÜGT');
-});
-document.getElementById('newTaskTitle').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();document.getElementById('addTaskBtn').click()}});
-
-/* ===== Auth State ===== */
 onAuthStateChanged(auth,function(user){
   if(user){
     currentUser=user;
@@ -1064,6 +1147,7 @@ onAuthStateChanged(auth,function(user){
   }else{
     currentUser=null;accountData=null;
     if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
+    try{localStorage.setItem('mylife_last_logout',Date.now())}catch(e){}
     fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();
     elLoginScreen.style.display='flex';
     elApp.style.display='none';
@@ -1118,9 +1202,10 @@ function renderContent(){
     el.innerHTML='<div class="money-card"><div style="font-size:.68rem;color:#8888aa;letter-spacing:2px;">INSGESAMT VERDIENT</div><div class="money-total">'+fmtEur(d.earned||0)+'</div><div class="money-sub">'+fmtEur(getDailyReward())+' pro Tag</div></div><div class="section-title">Verlauf</div>'+h;
   }else if(currentTab==='week'){
     var today=currentWeekday(),wd=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],out='';
+    var tpl=getTemplates();
     for(var k=0;k<DAY_ORDER.length;k++){
       var i=DAY_ORDER[k],tasks=[];
-      for(var j=0;j<accountData.taskTemplates.length;j++)if(accountData.taskTemplates[j].days.indexOf(i)!==-1)tasks.push(accountData.taskTemplates[j]);
+      for(var j=0;j<tpl.length;j++)if(Array.isArray(tpl[j].days)&&tpl[j].days.indexOf(i)!==-1)tasks.push(tpl[j]);
       var lines='';
       if(tasks.length){for(var j=0;j<tasks.length;j++)lines+='<div class="task-line">'+escapeHtml(tasks[j].title)+'</div>'}
       else lines='<div class="task-line" style="opacity:.5">Freier Tag</div>';
@@ -1132,16 +1217,6 @@ function renderContent(){
 function renderRewardsView(el,d){
   var rewards=getRewards(),html='';
   html+='<div class="money-card" style="margin-bottom:14px"><div style="font-size:.68rem;color:#8888aa;letter-spacing:2px;">DEIN PUNKTESTAND</div><div class="money-total">'+d.points+'</div><div class="money-sub">Punkte verfügbar</div></div>';
-  html+='<div class="settings-box suggest" style="margin-bottom:14px">'
-    +'<div class="settings-title">💡 Eigene Prämie vorschlagen</div>'
-    +'<div class="add-task-form" style="margin-bottom:0">'
-    +'<input type="text" id="suggestTitle" placeholder="Was möchtest du? (z.B. Kino)" maxlength="40">'
-    +'<div class="add-task-inline">'
-    +'<input type="text" id="suggestEmoji" placeholder="🎬" maxlength="4" style="max-width:70px;text-align:center">'
-    +'<input type="number" id="suggestCost" placeholder="Punkte" min="1" step="1" style="text-align:center">'
-    +'</div>'
-    +'<button id="suggestBtn">Vorschlag senden</button>'
-    +'</div></div>';
   if(d.suggestedRewards&&d.suggestedRewards.length){
     html+='<div class="section-title">Deine Vorschläge (warten auf Eltern)</div>';
     for(var i=0;i<d.suggestedRewards.length;i++){
@@ -1157,7 +1232,7 @@ function renderRewardsView(el,d){
     }
   }
   html+='<div class="section-title">Belohnungen</div>';
-  if(rewards.length===0){html+='<div class="empty">Noch keine Belohnungen vorhanden.<br>Schlage oben deine eigene Prämie vor!</div>'}
+  if(rewards.length===0){html+='<div class="empty">Noch keine Belohnungen vorhanden.<br>Schlage unten deine eigene Prämie vor!</div>'}
   else{
     for(var i=0;i<rewards.length;i++){
       var r=rewards[i],have=d.points||0,pct=Math.min(100,Math.round((have/r.cost)*100)),canRedeem=have>=r.cost,alreadyPending=false;
@@ -1176,6 +1251,16 @@ function renderRewardsView(el,d){
       html+='<div class="reward-card done"><div class="reward-header"><span class="reward-emoji">'+(h.emoji||'🎁')+'</span><span class="reward-title">'+escapeHtml(h.title||'')+'</span><span class="reward-cost" style="color:var(--green)">-'+h.cost+' P</span></div><div style="font-size:.7rem;color:var(--dim);text-align:right">'+formatDate(h.date)+'</div></div>';
     }
   }
+  html+='<div class="settings-box suggest" style="margin-top:14px;margin-bottom:14px">'
+    +'<div class="settings-title">💡 Eigene Prämie vorschlagen</div>'
+    +'<div class="add-task-form" style="margin-bottom:0">'
+    +'<input type="text" id="suggestTitle" placeholder="Was möchtest du? (z.B. Kino)" maxlength="40">'
+    +'<div class="add-task-inline">'
+    +'<input type="text" id="suggestEmoji" placeholder="🎬" maxlength="4" style="max-width:70px;text-align:center">'
+    +'<input type="number" id="suggestCost" placeholder="Punkte" min="1" step="1" style="text-align:center">'
+    +'</div>'
+    +'<button id="suggestBtn">Vorschlag senden</button>'
+    +'</div></div>';
   el.innerHTML=html;
   var btns=el.querySelectorAll('.redeem-btn');
   for(var i=0;i<btns.length;i++)btns[i].addEventListener('click',function(){requestReward(this.getAttribute('data-id'))});
