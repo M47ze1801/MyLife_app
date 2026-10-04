@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>BETTER LIFE</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#b026ff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="BETTER LIFE">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BETTER LIFE">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
 html,body{height:100%;overflow:hidden;position:fixed;width:100%;touch-action:manipulation;overscroll-behavior:none}
@@ -86,6 +96,8 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .login-msg.success{color:var(--green)}
 .powered{text-align:center;margin-top:20px;font-size:.68rem;letter-spacing:2px;color:var(--dim);text-transform:uppercase}
 .powered b{background-image:linear-gradient(90deg,var(--cyan),var(--pink));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900}
+.login-legal{text-align:center;margin-top:10px;font-size:.68rem}
+.login-legal a{color:var(--dim);text-decoration:underline}
 .lang-pills{display:flex;gap:8px;justify-content:center;margin-bottom:18px}
 .lang-pill{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:9px 4px;background:var(--card2);border:1px solid rgba(0,245,255,.15);border-radius:12px;color:var(--dim);font-family:inherit;cursor:pointer;transition:all .18s;letter-spacing:1px}
 .lang-pill .lang-flag{font-size:1.25rem;line-height:1}
@@ -103,6 +115,7 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .modal-overlay.show{display:flex}
 #kidEditModal{z-index:900}
 #spSettingsModal{z-index:970}
+#legalModal{z-index:980}
 .modal{width:100%;max-width:420px;max-height:88vh;background:var(--card);border-radius:24px;border:1px solid rgba(0,245,255,.25);padding:22px 18px;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1}
 .modal h3{font-size:1rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);text-align:center;margin-bottom:8px}
 .modal-hint{font-size:.7rem;color:var(--dim);text-align:center;margin-bottom:14px}
@@ -319,6 +332,20 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .parent-kid-switch-btn:active{transform:scale(.98)}
 .parent-kid-switch-btn .parent-kid-switch-name{flex:1;font-weight:800;font-size:.92rem;color:var(--text)}
 .parent-kid-switch-btn .parent-kid-switch-chevron{color:var(--cyan);font-size:.9rem;opacity:.8}
+.legal-tabs{display:flex;gap:6px;margin-bottom:12px;padding:4px;background:rgba(0,0,0,.25);border-radius:12px}
+.legal-tab{flex:1;padding:9px 4px;border-radius:9px;border:none;background:transparent;color:var(--dim);font-family:inherit;font-weight:800;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.legal-tab.active{background:rgba(0,245,255,.15);color:var(--cyan);box-shadow:0 0 15px rgba(0,245,255,.2)}
+.legal-tab:active{transform:scale(.97)}
+.legal-body{overflow-y:auto;flex:1;font-size:.82rem;line-height:1.55;color:var(--text);padding-right:6px}
+.legal-body h4{font-size:.82rem;font-weight:900;color:var(--cyan);letter-spacing:1px;text-transform:uppercase;margin:14px 0 6px}
+.legal-body h4:first-child{margin-top:0}
+.legal-body p{margin:0 0 8px}
+.legal-body a{color:var(--cyan);text-decoration:none;word-break:break-word}
+.legal-body a:hover{text-decoration:underline}
+.legal-body ul{margin:0 0 10px 18px;padding:0}
+.legal-body li{margin-bottom:3px}
+.legal-body strong{color:var(--cyan);font-weight:800}
+.legal-body .legal-note{background:rgba(255,234,0,.08);border-left:3px solid var(--yellow);padding:8px 10px;border-radius:6px;font-size:.75rem;color:var(--dim);margin:10px 0}
 body.light{--cyan:#0099b8;--pink:#d6009c;--purple:#8a1fd6;--green:#00a05a;--yellow:#b08000;--bg:#f5f0e8;--card:#fdfbf7;--card2:#f0ebe3;--text:#1a1a2e;--dim:#6a6a80;background-color:#f5f0e8;background-image:radial-gradient(circle at 15% 10%,rgba(210,180,255,.45) 0%,transparent 45%),radial-gradient(circle at 85% 15%,rgba(180,235,255,.45) 0%,transparent 45%),radial-gradient(circle at 50% 85%,rgba(255,200,235,.40) 0%,transparent 50%),radial-gradient(circle at 10% 95%,rgba(200,255,225,.35) 0%,transparent 45%),radial-gradient(circle at 90% 70%,rgba(255,235,180,.30) 0%,transparent 45%),linear-gradient(135deg,#faf7f2 0%,#f2ece3 50%,#faf7f2 100%);color:#1a1a2e}
 body.light .app{background:#fdfbf7;border-color:rgba(180,160,255,.35)}
 body.light header{background:linear-gradient(135deg,#efe6ff,#e6f5ff);border-bottom-color:rgba(140,120,220,.25)}
@@ -441,6 +468,13 @@ body.light .kid-switcher-item.active .check{color:#0088a8}
 body.light .parent-kid-switch-btn{background:#f5f0e8;border-color:rgba(0,180,220,.3)}
 body.light .parent-kid-switch-btn .parent-kid-switch-name{color:#1a1a2e}
 body.light .parent-kid-switch-btn .parent-kid-switch-chevron{color:#0088a8}
+body.light .legal-tabs{background:rgba(255,255,255,.6)}
+body.light .legal-tab{color:#6a6a80}
+body.light .legal-tab.active{background:rgba(0,180,220,.15);color:#0088a8;box-shadow:0 0 15px rgba(0,180,220,.2)}
+body.light .legal-body h4{color:#0088a8}
+body.light .legal-body a{color:#0088a8}
+body.light .legal-body strong{color:#0088a8}
+body.light .legal-body .legal-note{background:rgba(180,140,0,.08);border-left-color:#b08000;color:#6a6a80}
 </style>
 </head>
 <body>
@@ -463,6 +497,7 @@ body.light .parent-kid-switch-btn .parent-kid-switch-chevron{color:#0088a8}
 <button class="btn btn-reset" id="signupBtn" type="button" style="margin-top:8px">Neues Konto erstellen</button>
 <div class="login-msg" id="loginMsg"></div>
 <div class="powered">Powered by <b>M47ze</b></div>
+<div class="login-legal"><a href="#" id="loginLegalLink">Impressum · Datenschutz · Nutzung</a></div>
 </div>
 </div>
 
@@ -495,6 +530,7 @@ body.light .parent-kid-switch-btn .parent-kid-switch-chevron{color:#0088a8}
 <button id="parentBtn" class="gold">Eltern-Bereich</button>
 <button id="langBtn">🌐 Deutsch</button>
 <button id="themeBtn">☀️ Hell</button>
+<button id="legalBtn">📄 Rechtliches</button>
 <button id="logoutBtn" class="danger">Abmelden</button>
 </div>
 </div>
@@ -655,6 +691,19 @@ body.light .parent-kid-switch-btn .parent-kid-switch-chevron{color:#0088a8}
 </div>
 </div>
 
+<div class="modal-overlay" id="legalModal">
+<div class="modal" style="max-width:520px">
+<h3 id="legalTitle">📄 Rechtliches</h3>
+<div class="legal-tabs" id="legalTabs">
+<button class="legal-tab active" data-legal="impressum" type="button">Impressum</button>
+<button class="legal-tab" data-legal="datenschutz" type="button">Datenschutz</button>
+<button class="legal-tab" data-legal="nutzung" type="button">Nutzung</button>
+</div>
+<div class="legal-body" id="legalBody"></div>
+<button class="modal-close" id="legalClose" style="margin-top:10px">Schließen</button>
+</div>
+</div>
+
 <div class="game-overlay" id="gameOverlay">
 <div class="game-app" id="gameApp">
 <div class="game-header">
@@ -759,6 +808,7 @@ var T={
     kidSwitcherTitle:'Kind auswählen',
     parentActiveKidTitle:'👶 Aktives Kind',
     parentActiveKidHint:'Antippen, um auf ein anderes Kind zu wechseln.',
+    legalBtn:'📄 Rechtliches',
     loginAsKid:'Kind',loginAsParent:'Eltern',loginBtnParent:'Als Eltern anmelden',
     pinPlaceholder:'Eltern-PIN',
     errNoPinSet:'Für dieses Konto ist noch kein Eltern-PIN gesetzt. Bitte zuerst als Kind anmelden und den PIN im Eltern-Bereich festlegen.',
@@ -831,6 +881,7 @@ var T={
     kidSwitcherTitle:'Choose child',
     parentActiveKidTitle:'👶 Active child',
     parentActiveKidHint:'Tap to switch to another child.',
+    legalBtn:'📄 Legal',
     loginAsKid:'Child',loginAsParent:'Parents',loginBtnParent:'Sign in as parent',
     pinPlaceholder:'Parent PIN',
     errNoPinSet:'No parent PIN set for this account yet. Please sign in as child first and set the PIN in the parent area.',
@@ -849,6 +900,149 @@ var T={
     months:['January','February','March','April','May','June','July','August','September','October','November','December']
   }
 };
+
+/* ===== Rechtstexte ===== */
+var LEGAL_TEXTS={
+  impressum:{
+    de:`<h4>Angaben gemäß § 5 DDG</h4>
+<p><strong>Mathias Neumann</strong><br>
+Kastelbergstr. 4<br>
+79189 Bad Krozingen<br>
+Deutschland</p>
+<h4>Kontakt</h4>
+<p>E-Mail: <a href="mailto:mathias1984@yahoo.de">mathias1984@yahoo.de</a></p>
+<h4>Verantwortlich für den Inhalt</h4>
+<p>Mathias Neumann (Anschrift wie oben)</p>
+<div class="legal-note">Diese Anwendung ist ein privates, nicht-kommerzielles Projekt und wird ausschließlich im Familien- und Freundeskreis verwendet. Es besteht keine Gewinnerzielungsabsicht.</div>
+<h4>Haftung für Inhalte</h4>
+<p>Die Inhalte dieser Anwendung wurden mit größtmöglicher Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann jedoch keine Gewähr übernommen werden. Als privater Anbieter bin ich gemäß § 7 Abs. 1 DDG für eigene Inhalte nach den allgemeinen Gesetzen verantwortlich, jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen.</p>
+<h4>Haftung für Links</h4>
+<p>Diese Anwendung enthält keine Verlinkungen zu externen Websites Dritter.</p>
+<h4>Urheberrecht</h4>
+<p>Die durch den Betreiber erstellten Inhalte und Werke in dieser Anwendung unterliegen dem deutschen Urheberrecht. Eine Vervielfältigung, Bearbeitung, Verbreitung oder Verwertung außerhalb der Grenzen des Urheberrechts bedarf der schriftlichen Zustimmung des Betreibers.</p>`,
+    en:`<h4>Information pursuant to § 5 DDG (German Law)</h4>
+<p><strong>Mathias Neumann</strong><br>
+Kastelbergstr. 4<br>
+79189 Bad Krozingen<br>
+Germany</p>
+<h4>Contact</h4>
+<p>Email: <a href="mailto:mathias1984@yahoo.de">mathias1984@yahoo.de</a></p>
+<h4>Responsible for content</h4>
+<p>Mathias Neumann (address as above)</p>
+<div class="legal-note">This application is a private, non-commercial project used exclusively within family and friends. There is no intention of profit.</div>
+<h4>Liability for content</h4>
+<p>The contents of this application were created with the greatest possible care. However, no guarantee can be given for the accuracy, completeness, or timeliness of the content. As a private provider, I am responsible for my own content in accordance with § 7 (1) DDG under general law, but am not obligated to monitor transmitted or stored third-party information.</p>
+<h4>Liability for links</h4>
+<p>This application contains no links to external third-party websites.</p>
+<h4>Copyright</h4>
+<p>The content and works created by the operator in this application are subject to German copyright law. Reproduction, editing, distribution, or exploitation outside the limits of copyright law requires the written consent of the operator.</p>`
+  },
+  datenschutz:{
+    de:`<h4>1. Verantwortlicher</h4>
+<p>Mathias Neumann<br>Kastelbergstr. 4<br>79189 Bad Krozingen<br>E-Mail: <a href="mailto:mathias1984@yahoo.de">mathias1984@yahoo.de</a></p>
+<h4>2. Umfang und Zweck</h4>
+<p>BETTER LIFE ist eine private Familien-Anwendung zur Verwaltung von Alltagsaufgaben, Routinen und Belohnungen für Kinder. Die Nutzung ist ausschließlich für Familie und Freunde bestimmt.</p>
+<h4>3. Verarbeitete Daten</h4>
+<ul>
+<li><strong>Bei der Anmeldung:</strong> E-Mail-Adresse und Passwort (Passwort wird von Firebase verschlüsselt gespeichert)</li>
+<li><strong>Bei der Nutzung:</strong> Vornamen der Kinder, gewählte Avatare oder hochgeladene Bilder, Aufgabenlisten, Punkte, verdientes Geld, Belohnungen und Verlauf</li>
+<li><strong>Technisch:</strong> Gerätespezifische Einstellungen (Sprache, Design) werden lokal auf dem Gerät gespeichert</li>
+</ul>
+<h4>4. Rechtsgrundlage</h4>
+<p>Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO (Einwilligung) und Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung/Nutzung). Für die Daten der Kinder erfolgt die Verarbeitung mit Einwilligung der erziehungsberechtigten Person.</p>
+<h4>5. Empfänger / Drittanbieter</h4>
+<p>Zur Bereitstellung der Anwendung werden Dienste von <strong>Google Firebase</strong> (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland) genutzt:</p>
+<ul>
+<li>Firebase Authentication (Anmeldung)</li>
+<li>Firebase Realtime Database (Datenspeicherung in der EU-Region <em>europe-west1</em>, Belgien)</li>
+</ul>
+<p>Es besteht ein Auftragsverarbeitungsvertrag mit Google. Eine Weitergabe an sonstige Dritte findet nicht statt.</p>
+<h4>6. Speicherdauer</h4>
+<p>Die Daten werden solange gespeichert, wie das Nutzerkonto besteht. Nach Löschung des Kindes oder des Kontos werden die zugehörigen Daten aus der Datenbank entfernt.</p>
+<h4>7. Rechte der Betroffenen</h4>
+<p>Es besteht ein Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Anfragen können jederzeit per E-Mail an den Verantwortlichen gerichtet werden.</p>
+<h4>8. Beschwerderecht</h4>
+<p>Es besteht ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde. Zuständig ist der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg.</p>
+<h4>9. Kinder</h4>
+<p>Die App richtet sich an Familien. Kinder nutzen die App unter Aufsicht und mit Einwilligung ihrer Erziehungsberechtigten. Eltern können jederzeit die Löschung von Kinderdaten über die App (Eltern-Bereich → Kind löschen) veranlassen.</p>
+<h4>10. Cookies und Tracking</h4>
+<p>Es werden <strong>keine Cookies zu Werbe- oder Trackingzwecken</strong> verwendet. Es findet kein Nutzerprofiling statt. Lediglich technisch notwendige Daten werden im lokalen Speicher des Browsers abgelegt.</p>`,
+    en:`<h4>1. Controller</h4>
+<p>Mathias Neumann<br>Kastelbergstr. 4<br>79189 Bad Krozingen<br>Germany<br>Email: <a href="mailto:mathias1984@yahoo.de">mathias1984@yahoo.de</a></p>
+<h4>2. Scope and purpose</h4>
+<p>BETTER LIFE is a private family application for managing everyday tasks, routines and rewards for children. Use is intended exclusively for family and friends.</p>
+<h4>3. Processed data</h4>
+<ul>
+<li><strong>On login:</strong> email address and password (password stored encrypted by Firebase)</li>
+<li><strong>On use:</strong> children's first names, selected avatars or uploaded images, task lists, points, earned money, rewards and history</li>
+<li><strong>Technical:</strong> device-specific settings (language, theme) stored locally on the device</li>
+</ul>
+<h4>4. Legal basis</h4>
+<p>Processing is based on Art. 6 (1) (a) GDPR (consent) and Art. 6 (1) (b) GDPR (performance of use). Children's data is processed with the consent of the legal guardian.</p>
+<h4>5. Recipients / third parties</h4>
+<p>The following <strong>Google Firebase</strong> services are used (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland):</p>
+<ul>
+<li>Firebase Authentication (login)</li>
+<li>Firebase Realtime Database (data storage in EU region <em>europe-west1</em>, Belgium)</li>
+</ul>
+<p>A data processing agreement exists with Google. No data is shared with other third parties.</p>
+<h4>6. Storage duration</h4>
+<p>Data is stored for as long as the user account exists. When a child or account is deleted, the associated data is removed from the database.</p>
+<h4>7. Data subject rights</h4>
+<p>You have the right to access, rectification, erasure, restriction of processing, data portability and objection. Requests can be sent by email to the controller at any time.</p>
+<h4>8. Right to complain</h4>
+<p>You have the right to lodge a complaint with a data protection supervisory authority. The competent authority is the State Commissioner for Data Protection and Freedom of Information Baden-Württemberg (Germany).</p>
+<h4>9. Children</h4>
+<p>The app is intended for families. Children use the app under supervision and with the consent of their legal guardians. Parents can request deletion of children's data at any time via the app (Parent area → Delete child).</p>
+<h4>10. Cookies and tracking</h4>
+<p><strong>No cookies are used for advertising or tracking purposes</strong>. No user profiling takes place. Only technically necessary data is stored in the browser's local storage.</p>`
+  },
+  nutzung:{
+    de:`<h4>1. Geltungsbereich</h4>
+<p>Diese Nutzungsbedingungen gelten für die Nutzung der privaten Familien-Anwendung BETTER LIFE durch den Betreiber sowie durch dessen Familie und Freunde.</p>
+<h4>2. Zweck</h4>
+<p>Die Anwendung dient der privaten Organisation von Alltagsaufgaben, Routinen und Belohnungen für Kinder. Eine kommerzielle Nutzung ist nicht vorgesehen.</p>
+<h4>3. Konto und Zugangsdaten</h4>
+<p>Für die Nutzung ist ein Konto mit E-Mail-Adresse und Passwort erforderlich. Zugangsdaten sind vertraulich zu behandeln und dürfen nicht an unbefugte Dritte weitergegeben werden. Der Nutzer ist für die Sicherheit seines Kontos selbst verantwortlich.</p>
+<h4>4. Nutzungsumfang</h4>
+<p>Die Anwendung darf ausschließlich im privaten Rahmen verwendet werden. Eine Weitergabe, Vervielfältigung oder öffentliche Zugänglichmachung ist ohne Zustimmung des Betreibers nicht gestattet.</p>
+<h4>5. Verfügbarkeit</h4>
+<p>Es besteht kein Anspruch auf ständige Verfügbarkeit. Die Anwendung kann jederzeit geändert, eingeschränkt oder eingestellt werden. Wartungsarbeiten können zu kurzzeitigen Ausfällen führen.</p>
+<h4>6. Haftung</h4>
+<p>Die Nutzung erfolgt auf eigene Verantwortung. Der Betreiber haftet nicht für Datenverluste, Ausfälle oder sonstige Schäden, die durch die Nutzung der Anwendung entstehen, außer bei Vorsatz oder grober Fahrlässigkeit.</p>
+<h4>7. Kündigung / Löschung</h4>
+<p>Die Nutzung kann jederzeit durch Abmeldung oder Löschung des Kontos beendet werden. Der Betreiber behält sich vor, Konten bei missbräuchlicher Nutzung zu sperren.</p>
+<h4>8. Änderungen</h4>
+<p>Diese Nutzungsbedingungen können jederzeit angepasst werden. Änderungen werden den Nutzern in der Anwendung angezeigt.</p>
+<h4>9. Anwendbares Recht</h4>
+<p>Es gilt deutsches Recht. Gerichtsstand ist, soweit gesetzlich zulässig, der Sitz des Betreibers.</p>
+<h4>10. Salvatorische Klausel</h4>
+<p>Sollte eine Bestimmung dieser Nutzungsbedingungen unwirksam sein, bleiben die übrigen Bestimmungen davon unberührt.</p>
+<p style="margin-top:16px;font-size:.72rem;color:var(--dim)">Stand: Oktober 2026</p>`,
+    en:`<h4>1. Scope</h4>
+<p>These terms of use apply to the use of the private family application BETTER LIFE by the operator and their family and friends.</p>
+<h4>2. Purpose</h4>
+<p>The application serves the private organization of everyday tasks, routines and rewards for children. Commercial use is not intended.</p>
+<h4>3. Account and credentials</h4>
+<p>An account with email address and password is required for use. Credentials must be treated confidentially and must not be passed on to unauthorized third parties. The user is responsible for the security of their account.</p>
+<h4>4. Scope of use</h4>
+<p>The application may only be used for private purposes. Sharing, reproduction or public disclosure without the operator's consent is not permitted.</p>
+<h4>5. Availability</h4>
+<p>There is no entitlement to constant availability. The application may be changed, restricted or discontinued at any time. Maintenance work may lead to brief outages.</p>
+<h4>6. Liability</h4>
+<p>Use is at your own risk. The operator is not liable for data loss, outages or other damages arising from use of the application, except in cases of intent or gross negligence.</p>
+<h4>7. Termination / deletion</h4>
+<p>Use can be ended at any time by signing out or deleting the account. The operator reserves the right to block accounts in case of misuse.</p>
+<h4>8. Changes</h4>
+<p>These terms of use may be adjusted at any time. Changes will be shown to users in the application.</p>
+<h4>9. Applicable law</h4>
+<p>German law applies. Jurisdiction is, as far as legally permissible, the operator's place of business.</p>
+<h4>10. Severability clause</h4>
+<p>Should any provision of these terms of use be invalid, the remaining provisions shall remain unaffected.</p>
+<p style="margin-top:16px;font-size:.72rem;color:var(--dim)">Last updated: October 2026</p>`
+  }
+};
+var legalCurrentTab='impressum';
 
 var DEFAULT_TEMPLATES=[
 {id:'zähne',title:'Zähne putzen',cat:'Hygiene',days:[0,1,2,3,4,5,6],important:true},
@@ -1235,6 +1429,7 @@ function applyStaticTranslations(){
   setTxt('parentBtn',t('parentTitle'));
   setTxt('logoutBtn',t('logout'));
   setTxt('langBtn','🌐 '+(getLang()==='en'?'Language':'Deutsch'));
+  setTxt('legalBtn',t('legalBtn'));
   var themeBtn=document.getElementById('themeBtn');
   if(themeBtn)themeBtn.textContent=(getSavedTheme()==='light')?t('tThemeDark'):t('tThemeLight');
   setTxt('kidEditHint',t('kidEditSym'));
@@ -1287,6 +1482,7 @@ function applyStaticTranslations(){
   setTxt('parentActiveKidHint',t('parentActiveKidHint'));
   refreshLoginLangPills();
   refreshParentLangOptions();
+  if(typeof renderLegalContent==='function' && legalModalEl && legalModalEl.classList.contains('show')){renderLegalContent()}
 }
 
 function formatAuthError(err){
@@ -1587,6 +1783,50 @@ if(kidSwitcherCloseEl)kidSwitcherCloseEl.addEventListener('click',closeKidSwitch
 var parentKidSwitchBtnEl=document.getElementById('parentKidSwitchBtn');
 if(parentKidSwitchBtnEl)parentKidSwitchBtnEl.addEventListener('click',function(){
   openKidSwitcher();
+});
+
+/* ===== Rechts-Modals ===== */
+var legalModalEl=document.getElementById('legalModal');
+var legalBodyEl=document.getElementById('legalBody');
+var legalBtnEl=document.getElementById('legalBtn');
+var legalCloseEl=document.getElementById('legalClose');
+
+function openLegalModal(tab){
+  if(!legalModalEl)return;
+  try{fabMenu.classList.remove('show')}catch(e){}
+  legalCurrentTab=tab||'impressum';
+  renderLegalContent();
+  legalModalEl.classList.add('show');
+}
+function closeLegalModal(){
+  if(legalModalEl)legalModalEl.classList.remove('show');
+}
+function renderLegalContent(){
+  if(!legalBodyEl)return;
+  var lang=(typeof getLang==='function')?getLang():'de';
+  var texts=LEGAL_TEXTS[legalCurrentTab];
+  if(!texts){legalBodyEl.innerHTML='';return}
+  legalBodyEl.innerHTML=texts[lang]||texts.de;
+  legalBodyEl.scrollTop=0;
+  var tabs=document.querySelectorAll('#legalTabs .legal-tab');
+  for(var i=0;i<tabs.length;i++){
+    if(tabs[i].getAttribute('data-legal')===legalCurrentTab)tabs[i].classList.add('active');
+    else tabs[i].classList.remove('active');
+  }
+}
+if(legalBtnEl)legalBtnEl.addEventListener('click',function(){openLegalModal('impressum')});
+if(legalCloseEl)legalCloseEl.addEventListener('click',closeLegalModal);
+if(legalModalEl)legalModalEl.addEventListener('click',function(ev){if(ev.target===legalModalEl)closeLegalModal()});
+var legalTabsEl=document.getElementById('legalTabs');
+if(legalTabsEl)legalTabsEl.addEventListener('click',function(ev){
+  var btn=ev.target.closest('.legal-tab');if(!btn)return;
+  legalCurrentTab=btn.getAttribute('data-legal');
+  renderLegalContent();
+});
+var loginLegalLinkEl=document.getElementById('loginLegalLink');
+if(loginLegalLinkEl)loginLegalLinkEl.addEventListener('click',function(ev){
+  ev.preventDefault();
+  openLegalModal('impressum');
 });
 
 function renderParentKidList(){
@@ -2100,7 +2340,7 @@ onAuthStateChanged(auth,function(user){
     sessionMode='kid';parentPinVerified=false;pendingParentPin=null;pendingParentAuth=false;
     if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
     try{localStorage.setItem('mylife_last_logout',Date.now())}catch(e){}
-    if(fabMenu)fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();spClose();closeLangModal();closeKidSwitcher();
+    if(fabMenu)fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();spClose();closeLangModal();closeKidSwitcher();closeLegalModal();
     var ls=document.getElementById('loginScreen');if(ls)ls.style.display='flex';
     var ap=document.getElementById('app');if(ap)ap.style.display='none';
     var le=document.getElementById('loginEmail'),lp=document.getElementById('loginPassword'),lpin=document.getElementById('loginPin');
