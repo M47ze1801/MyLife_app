@@ -74,6 +74,10 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .login-screen{position:fixed;inset:0;background:var(--bg);background-image:radial-gradient(circle at 20% 10%,rgba(176,38,255,.15) 0%,transparent 40%),radial-gradient(circle at 80% 90%,rgba(0,245,255,.12) 0%,transparent 40%);display:flex;align-items:flex-start;justify-content:center;padding:20px;z-index:500;overflow-y:auto}
 .login-box{width:100%;max-width:380px;background:var(--card);border-radius:28px;border:1px solid rgba(0,245,255,.15);padding:28px 24px;margin:auto}
 .login-box h2{font-size:1.3rem;font-weight:900;text-align:center;letter-spacing:2px;background-image:linear-gradient(90deg,var(--cyan),var(--pink),var(--purple));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px}
+.login-modes{display:flex;gap:8px;margin-bottom:16px}
+.login-mode{flex:1;padding:11px 8px;border-radius:12px;background:var(--card2);border:1px solid rgba(0,245,255,.15);color:var(--dim);font-family:inherit;font-weight:800;font-size:.8rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.login-mode.active{background:rgba(0,245,255,.1);border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 15px rgba(0,245,255,.3)}
+.login-mode:active{transform:scale(.97)}
 .login-box input{width:100%;padding:14px 16px;background:var(--card2);border:1px solid rgba(0,245,255,.2);border-radius:12px;color:var(--text);font-size:.9rem;margin-bottom:12px;outline:none;font-family:inherit}
 .login-msg{font-size:.78rem;text-align:center;margin-top:12px;color:var(--dim);min-height:18px}
 .login-msg.error{color:#ff4466}
@@ -145,11 +149,13 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .settings-box.rewards{border-color:rgba(0,245,255,.25)}
 .settings-box.pending{border-color:rgba(255,0,229,.3)}
 .settings-box.suggest{border-color:rgba(0,255,136,.35)}
+.settings-box.lang{border-color:rgba(0,245,255,.35)}
 .settings-title{font-size:.7rem;font-weight:800;color:var(--yellow);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
 .settings-box.kids .settings-title{color:var(--purple)}
 .settings-box.rewards .settings-title{color:var(--cyan)}
 .settings-box.pending .settings-title{color:var(--pink)}
 .settings-box.suggest .settings-title{color:var(--green)}
+.settings-box.lang .settings-title{color:var(--cyan)}
 .setting-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 .setting-row label{font-size:.82rem;color:var(--text);font-weight:600}
 .setting-row .input-wrap{display:flex;align-items:center;gap:4px}
@@ -322,6 +328,8 @@ body.light .login-screen{background-color:#f5f0e8;background-image:radial-gradie
 body.light .login-box{background:#fdfbf7;border-color:rgba(140,120,220,.3)}
 body.light .login-box h2{background-image:linear-gradient(90deg,#0088a8,#c40088,#7a1fc4);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 body.light .login-box input{background:#f5f0e8;border-color:rgba(140,120,220,.25);color:#1a1a2e}
+body.light .login-mode{background:#f5f0e8;border-color:rgba(140,120,220,.25);color:#6a6a80}
+body.light .login-mode.active{background:rgba(0,180,220,.12);border-color:#0088a8;color:#0088a8}
 body.light .lang-pill{background:#f5f0e8;border-color:rgba(140,120,220,.25)}
 body.light .lang-pill.active{background:rgba(0,180,220,.12);border-color:#0088a8;color:#0088a8}
 body.light .fab-dots{background:#ffffff;border-color:rgba(140,120,220,.35)}
@@ -356,11 +364,13 @@ body.light .settings-box.kids{border-color:rgba(140,60,200,.4)}
 body.light .settings-box.rewards{border-color:rgba(0,180,220,.35)}
 body.light .settings-box.pending{border-color:rgba(200,0,140,.35)}
 body.light .settings-box.suggest{border-color:rgba(0,160,90,.4)}
+body.light .settings-box.lang{border-color:rgba(0,180,220,.4)}
 body.light .settings-title{color:#8a6800}
 body.light .settings-box.kids .settings-title{color:#8a1fd6}
 body.light .settings-box.rewards .settings-title{color:#0088a8}
 body.light .settings-box.pending .settings-title{color:#c40088}
 body.light .settings-box.suggest .settings-title{color:#00a05a}
+body.light .settings-box.lang .settings-title{color:#0088a8}
 body.light .setting-row input{background:#ffffff;border-color:rgba(140,120,220,.25);color:#1a1a2e}
 body.light .preset-row button{background:#ffffff;border-color:rgba(140,120,220,.25);color:#0088a8}
 body.light .preset-row button.active{background:rgba(0,180,220,.15);border-color:#0088a8;color:#005f7a}
@@ -405,12 +415,17 @@ body.light .lang-opt.active .lang-name{color:#0088a8}
 <div class="login-screen" id="loginScreen">
 <div class="login-box">
 <h2>BETTER LIFE</h2>
+<div class="login-modes" id="loginModes">
+<button class="login-mode active" data-mode="kid" type="button" id="loginModeKid">👶 <span>Kind</span></button>
+<button class="login-mode" data-mode="parent" type="button" id="loginModeParent">👨‍👩‍👧 <span>Eltern</span></button>
+</div>
 <div class="lang-pills" id="loginLangPills">
 <button class="lang-pill" data-lang="de" type="button"><span class="lang-flag">🇩🇪</span><span class="lang-code">DE</span></button>
 <button class="lang-pill" data-lang="en" type="button"><span class="lang-flag">🇬🇧</span><span class="lang-code">EN</span></button>
 </div>
 <input type="email" id="loginEmail" placeholder="E-Mail" autocomplete="email">
 <input type="password" id="loginPassword" placeholder="Passwort" autocomplete="current-password">
+<input type="password" id="loginPin" class="pin-input" inputmode="numeric" maxlength="6" placeholder="Eltern-PIN" autocomplete="off" style="display:none">
 <button class="btn" id="loginBtn" type="button">Anmelden</button>
 <button class="btn btn-reset" id="signupBtn" type="button" style="margin-top:8px">Neues Konto erstellen</button>
 <div class="login-msg" id="loginMsg"></div>
@@ -486,9 +501,17 @@ body.light .lang-opt.active .lang-name{color:#0088a8}
 </div>
 <div id="parentPanel" style="display:none;flex:1;flex-direction:column;overflow:hidden">
 <div class="parent-scroll">
+<div class="settings-box lang">
+<div class="settings-title" id="parentLangTitle">🌐 Sprache (Eltern-Bereich)</div>
+<div class="modal-hint" id="parentLangHint" style="margin:0 0 10px">Nur für den Eltern-Bereich – Kinder behalten ihre eigene Sprache.</div>
+<div class="lang-list" id="parentLangList" style="margin:0">
+<button class="lang-opt" data-parent-lang="de" type="button"><span class="lang-flag">🇩🇪</span><span class="lang-name">Deutsch</span></button>
+<button class="lang-opt" data-parent-lang="en" type="button"><span class="lang-flag">🇬🇧</span><span class="lang-name">English</span></button>
+</div>
+</div>
 <div class="settings-box kids">
 <div class="settings-title" id="parentKidsTitle">👶 Kinder verwalten</div>
-<div class="modal-hint" id="kidHint" style="margin:0 0 10px">Bis zu 5 Kinder pro Konto</div>
+<div class="modal-hint" id="kidHint" style="margin:0 0 10px">Bis zu 5 Kindern pro Konto</div>
 <div class="kid-list" id="parentKidList"></div>
 <div class="add-row">
 <input type="text" id="newKidName" placeholder="Name des Kindes" maxlength="20">
@@ -627,7 +650,6 @@ const firebaseConfig = {
 };
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
 
-/* ===== Übersetzungen (nur DE / EN) ===== */
 var T={
   de:{subtitle:'Ordnung - Haushalt - Routinen',email:'E-Mail',password:'Passwort',login:'Anmelden',signup:'Neues Konto erstellen',
     lvlLevel:'Level',lvlPoints:'Punkte',lvlEarned:'Verdient',tasksOf:'{0} von {1} Aufgaben erledigt',
@@ -677,6 +699,14 @@ var T={
     spChooseSubj:'Fach wählen',spEmpty:'— leer —',spCustomGroup:'Eigene Fächer',
     spSubjectAdded:'FACH HINZUGEFÜGT: {0}',spSubjectExists:'FACH EXISTIERT BEREITS',spCodeNeeded:'KÜRZEL EINGEBEN',spOwnSubject:'Eigenes Fach',
     langTitle:'Sprache',langHint:'Sprache auswählen',langClose:'Schließen',langName:'Deutsch',logout:'Abmelden',
+    parentLangTitle:'🌐 Sprache (Eltern-Bereich)',
+    parentLangHint:'Nur für den Eltern-Bereich – Kinder behalten ihre eigene Sprache.',
+    kidLangBtn:'🌐 Sprache Kind',
+    langSwitch:'SPRACHE GESPEICHERT',
+    loginAsKid:'Kind',loginAsParent:'Eltern',loginBtnParent:'Als Eltern anmelden',
+    pinPlaceholder:'Eltern-PIN',
+    errNoPinSet:'Für dieses Konto ist noch kein Eltern-PIN gesetzt. Bitte zuerst als Kind anmelden und den PIN im Eltern-Bereich festlegen.',
+    errWrongPinLogin:'Falsche PIN. Bitte erneut versuchen.',
     errTooMany:'Zu viele Anmeldeversuche. Bitte warte 10 Minuten oder setze dein Passwort in der Firebase Console zurück.',
     errWrongPw:'Falsches Passwort.',errNoUser:'Kein Konto mit dieser E-Mail gefunden.',errBadEmail:'Ungültige E-Mail-Adresse.',
     errNetwork:'Netzwerkfehler – bitte Internetverbindung prüfen.',errEmailInUse:'Diese E-Mail wird bereits verwendet.',
@@ -738,6 +768,14 @@ var T={
     spChooseSubj:'Choose subject',spEmpty:'— empty —',spCustomGroup:'Custom subjects',
     spSubjectAdded:'SUBJECT ADDED: {0}',spSubjectExists:'SUBJECT ALREADY EXISTS',spCodeNeeded:'ENTER CODE',spOwnSubject:'Custom subject',
     langTitle:'Language',langHint:'Choose language',langClose:'Close',langName:'English',logout:'Sign out',
+    parentLangTitle:'🌐 Language (Parent area)',
+    parentLangHint:'Only for the parent area – children keep their own language.',
+    kidLangBtn:'🌐 Child language',
+    langSwitch:'LANGUAGE SAVED',
+    loginAsKid:'Child',loginAsParent:'Parents',loginBtnParent:'Sign in as parent',
+    pinPlaceholder:'Parent PIN',
+    errNoPinSet:'No parent PIN set for this account yet. Please sign in as child first and set the PIN in the parent area.',
+    errWrongPinLogin:'Wrong PIN. Please try again.',
     errTooMany:'Too many login attempts. Please wait 10 minutes or reset your password in the Firebase Console.',
     errWrongPw:'Wrong password.',errNoUser:'No account found with this email.',errBadEmail:'Invalid email address.',
     errNetwork:'Network error – please check your internet connection.',errEmailInUse:'This email is already in use.',
@@ -783,6 +821,11 @@ var SP_SUBJECT_GROUPS=[
 ];
 
 var accountData=null,currentUser=null,currentTab='tasks',unsubscribeRef=null;
+var sessionMode='kid';
+var parentPinVerified=false;
+var pendingParentPin=null;
+var pendingParentAuth=false;
+var currentLoginMode='kid';
 var editingKidId=null,editingEmoji='🧒',editingPhoto='';
 var loginLockedUntil=0;
 var spCurrentDay='mo';
@@ -791,10 +834,15 @@ function todayKey(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)
 function currentWeekday(){return new Date().getDay()}
 function clone(o){return JSON.parse(JSON.stringify(o))}
 function genId(p){return p+'_'+Date.now()+'_'+Math.floor(Math.random()*100000)}
+function getDeviceActiveKid(uid){
+  try{return localStorage.getItem('mylife_active_kid_'+uid)||null}catch(e){return null}
+}
+function setDeviceActiveKid(uid,kidId){
+  try{localStorage.setItem('mylife_active_kid_'+uid,kidId)}catch(e){}
+}
 function calcLevel(tp){if(!tp||tp<LEVEL_BASE)return 1;return Math.floor(tp/LEVEL_BASE)}
 function fmtEur(n){var s=String(n);if(s.indexOf('.')>-1)s=s.replace('.',',');return s+'€'}
 
-/* ===== Sprache (nur de/en) ===== */
 function detectBrowserLang(){
   try{
     var l=(navigator.language||navigator.userLanguage||'de').toLowerCase();
@@ -808,9 +856,13 @@ function getSavedLang(){
 }
 function getLang(){
   try{
-    if(accountData&&accountData.settings&&accountData.settings.language){
-      var l=accountData.settings.language;
-      if(l==='de'||l==='en')return l;
+    if(parentModal && parentModal.classList.contains('show') && accountData){
+      var pl=accountData.parentSettings && accountData.parentSettings.language;
+      if(pl==='de'||pl==='en')return pl;
+    }
+    if(accountData && accountData.kids){
+      var k=accountData.kids[accountData.activeKid];
+      if(k && k.data && (k.data.language==='de'||k.data.language==='en'))return k.data.language;
     }
   }catch(e){}
   return getSavedLang();
@@ -830,12 +882,18 @@ function dayLong(i){var d=(getLang()==='en')?T.en:T.de;return (d.daysLong||T.de.
 function dayShort(i){var d=(getLang()==='en')?T.en:T.de;return (d.daysShort||T.de.daysShort)[i]||T.de.daysShort[i]}
 function monthName(i){var d=(getLang()==='en')?T.en:T.de;return (d.months||T.de.months)[i]||T.de.months[i]}
 
-function setLang(code){
+function setLang(code, target){
   if(code!=='de'&&code!=='en')return;
+  target=target||'kid';
   try{localStorage.setItem('mylife_lang',code)}catch(e){}
   if(accountData){
-    if(!accountData.settings)accountData.settings={};
-    accountData.settings.language=code;
+    if(target==='parent'){
+      if(!accountData.parentSettings)accountData.parentSettings={};
+      accountData.parentSettings.language=code;
+    }else{
+      var k=getKid();
+      if(k&&k.data){k.data.language=code}
+    }
     try{saveToFirebase()}catch(e){}
   }
   try{applyStaticTranslations()}catch(e){console.error('applyStaticTranslations:',e)}
@@ -846,9 +904,9 @@ function setLang(code){
       if(typeof spOverlay!=='undefined'&&spOverlay&&spOverlay.classList.contains('show'))spRefreshOpen();
     }catch(e){}
   }
-  try{refreshLangOptions();refreshLoginLangPills()}catch(e){}
+  try{refreshLangOptions();refreshLoginLangPills();refreshParentLangOptions()}catch(e){}
   try{closeLangModal()}catch(e){}
-  try{showToast((code==='en')?'English ✓':'Deutsch ✓')}catch(e){}
+  try{showToast(t('langSwitch'))}catch(e){}
 }
 function openLangModal(){
   try{fabMenu.classList.remove('show')}catch(e){}
@@ -868,8 +926,16 @@ function refreshLangOptions(){
     else opts[i].classList.remove('active');
   }
 }
+function refreshParentLangOptions(){
+  var cur=(accountData&&accountData.parentSettings&&accountData.parentSettings.language)||'de';
+  var opts=document.querySelectorAll('#parentLangList .lang-opt');
+  for(var i=0;i<opts.length;i++){
+    if(opts[i].getAttribute('data-parent-lang')===cur)opts[i].classList.add('active');
+    else opts[i].classList.remove('active');
+  }
+}
 function refreshLoginLangPills(){
-  var cur=getLang();
+  var cur=getSavedLang();
   var pills=document.querySelectorAll('#loginLangPills .lang-pill');
   for(var i=0;i<pills.length;i++){
     if(pills[i].getAttribute('data-lang')===cur)pills[i].classList.add('active');
@@ -887,15 +953,15 @@ function renderAvatar(kid,size){
   return '<div class="kid-avatar" style="width:'+size+'px;height:'+size+'px;font-size:'+(size*0.55)+'px">'+em+'</div>';
 }
 function defaultStundenplan(){var wd=currentWeekday();var dayId=(wd>=1&&wd<=5)?SP_DAYS[wd-1].id:'mo';return {cells:{},custom:[],day:dayId}}
-function buildKidData(templates){
+function buildKidData(templates, initLang){
   var wd=currentWeekday(),tasks=[];
   if(Array.isArray(templates)){for(var i=0;i<templates.length;i++){var tpl=templates[i];if(tpl&&Array.isArray(tpl.days)&&tpl.days.indexOf(wd)!==-1)tasks.push({id:tpl.id,title:tpl.title,cat:tpl.cat,important:!!tpl.important,done:false})}}
-  return {tasks:tasks,today:todayKey(),points:0,totalPoints:0,level:1,earned:0,history:[],pointsToday:0,pendingRewards:[],rewardHistory:[],suggestedRewards:[]};
+  return {tasks:tasks,today:todayKey(),points:0,totalPoints:0,level:1,earned:0,history:[],pointsToday:0,pendingRewards:[],rewardHistory:[],suggestedRewards:[],language:(initLang==='en'?'en':'de')};
 }
 function defaultAccount(){
   var id=genId('kid'),templates=clone(DEFAULT_TEMPLATES),kids={};
-  kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:buildKidData(templates)};
-  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK,language:getSavedLang()},rewards:[],stundenplan:defaultStundenplan()};
+  kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:buildKidData(templates, getSavedLang())};
+  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},rewards:[],stundenplan:defaultStundenplan(),parentSettings:{language:getSavedLang()}};
 }
 function getKid(){if(!accountData||!accountData.activeKid||!accountData.kids)return null;return accountData.kids[accountData.activeKid]||null}
 function getKidData(){var k=getKid();return k?k.data:null}
@@ -907,6 +973,7 @@ function needsRepair(d){
   if(!Array.isArray(d.rewards))return true;
   if(!d.settings||typeof d.settings!=='object')return true;
   if(!d.stundenplan||typeof d.stundenplan!=='object')return true;
+  if(!d.parentSettings||typeof d.parentSettings!=='object')return true;
   return false;
 }
 function processKidDay(kid){
@@ -928,6 +995,7 @@ function processKidDay(kid){
   if(!Array.isArray(d.pendingRewards))d.pendingRewards=[];
   if(!Array.isArray(d.rewardHistory))d.rewardHistory=[];
   if(!Array.isArray(d.suggestedRewards))d.suggestedRewards=[];
+  if(d.language!=='de'&&d.language!=='en')d.language='de';
   d.level=calcLevel(d.totalPoints);
 }
 function migrate(data){
@@ -945,7 +1013,10 @@ function migrate(data){
     if(!data.settings||typeof data.settings!=='object')data.settings={};
     if(typeof data.settings.dailyReward!=='number'||data.settings.dailyReward<0)data.settings.dailyReward=DEFAULT_DAILY_REWARD;
     if(typeof data.settings.pointsPerTask!=='number'||data.settings.pointsPerTask<1)data.settings.pointsPerTask=DEFAULT_POINTS_PER_TASK;
-    if(data.settings.language!=='de'&&data.settings.language!=='en')data.settings.language=getSavedLang();
+    var legacyLang=(data.settings.language==='en')?'en':'de';
+    if(!data.parentSettings||typeof data.parentSettings!=='object')data.parentSettings={};
+    if(data.parentSettings.language!=='de'&&data.parentSettings.language!=='en')data.parentSettings.language=legacyLang;
+    delete data.settings.language;
     if(!Array.isArray(data.rewards))data.rewards=[];
     if(!data.stundenplan||typeof data.stundenplan!=='object')data.stundenplan=defaultStundenplan();
     if(!data.stundenplan.cells||typeof data.stundenplan.cells!=='object')data.stundenplan.cells={};
@@ -964,6 +1035,7 @@ function migrate(data){
         if(!Array.isArray(kid.data.rewardHistory))kid.data.rewardHistory=[];
         if(!Array.isArray(kid.data.suggestedRewards))kid.data.suggestedRewards=[];
         if(!Array.isArray(kid.data.history))kid.data.history=[];
+        if(kid.data.language!=='de'&&kid.data.language!=='en')kid.data.language=legacyLang;
       }
     }
     if(!data.kids[data.activeKid]&&data.kidOrder.length)data.activeKid=data.kidOrder[0];
@@ -978,7 +1050,7 @@ function migrate(data){
     if(data.tasks&&data.tasks.length)oldData.tasks=data.tasks;
   }
   var kids={};kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:oldData};
-  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK,language:getSavedLang()},rewards:[],stundenplan:defaultStundenplan()};
+  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},rewards:[],stundenplan:defaultStundenplan(),parentSettings:{language:getSavedLang()}};
 }
 function startListener(uid){
   if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
@@ -990,10 +1062,18 @@ function startListener(uid){
       if(!data){
         var fresh=defaultAccount();
         accountData=fresh;
+        setDeviceActiveKid(uid, fresh.activeKid);
         set(userRef,fresh);
+        if(pendingParentAuth){
+          pendingParentPin=null;pendingParentAuth=false;
+          signOut(auth);
+          setTimeout(function(){showLoginMsg(t('errNoPinSet'),true)},400);
+          return;
+        }
         applyTheme(accountData.theme||getSavedTheme());
         applyStaticTranslations();
         render();
+        updateParentButtonVisibility();
         return;
       }
       var wasBroken=needsRepair(data);
@@ -1002,9 +1082,43 @@ function startListener(uid){
       if(!acc.kids[acc.activeKid]&&acc.kidOrder.length)acc.activeKid=acc.kidOrder[0];
       accountData=acc;
       if(wasBroken)set(userRef,acc);
+
+      var deviceKid=getDeviceActiveKid(uid);
+      if(deviceKid && acc.kids[deviceKid]){
+        acc.activeKid=deviceKid;
+      }else if(acc.kidOrder.length){
+        setDeviceActiveKid(uid, acc.activeKid);
+      }
+
+      if(pendingParentAuth && pendingParentPin!==null){
+        if(!acc.pinSet){
+          pendingParentPin=null;pendingParentAuth=false;
+          signOut(auth);
+          setTimeout(function(){showLoginMsg(t('errNoPinSet'),true)},400);
+          return;
+        }
+        if(acc.pin===pendingParentPin){
+          sessionMode='parent';
+          parentPinVerified=true;
+          pendingParentPin=null;pendingParentAuth=false;
+          applyTheme(accountData.theme||getSavedTheme());
+          applyStaticTranslations();
+          render();
+          updateParentButtonVisibility();
+          setTimeout(function(){openParentFlow()},400);
+          return;
+        }else{
+          pendingParentPin=null;pendingParentAuth=false;
+          signOut(auth);
+          setTimeout(function(){showLoginMsg(t('errWrongPinLogin'),true)},400);
+          return;
+        }
+      }
+
       applyTheme(accountData.theme||getSavedTheme());
       applyStaticTranslations();
       render();
+      updateParentButtonVisibility();
       if(parentPanelEl&&parentPanelEl.style.display==='flex')refreshParentPanel();
       if(typeof spOverlay!=='undefined'&&spOverlay&&spOverlay.classList.contains('show'))spRefreshOpen();
     }catch(err){
@@ -1044,7 +1158,13 @@ function applyStaticTranslations(){
   setTxt('appSubtitle',t('subtitle'));
   setPh('loginEmail',t('email'));
   setPh('loginPassword',t('password'));
-  setTxt('loginBtn',t('login'));
+  setTxt('loginBtn',(currentLoginMode==='parent')?t('loginBtnParent'):t('login'));
+  var lmk=document.getElementById('loginModeKid');
+  if(lmk){var lmkS=lmk.querySelector('span');if(lmkS)lmkS.textContent=t('loginAsKid')}
+  var lmp=document.getElementById('loginModeParent');
+  if(lmp){var lmpS=lmp.querySelector('span');if(lmpS)lmpS.textContent=t('loginAsParent')}
+  var lpin=document.getElementById('loginPin');
+  if(lpin)lpin.placeholder=t('pinPlaceholder');
   setTxt('signupBtn',t('signup'));
   setTxt('lblLevel',t('lvlLevel'));
   setTxt('lblPoints',t('lvlPoints'));
@@ -1055,7 +1175,7 @@ function applyStaticTranslations(){
   setTxt('tabWeek',t('tabWeek'));
   setTxt('parentBtn',t('parentTitle'));
   setTxt('logoutBtn',t('logout'));
-  setTxt('langBtn','🌐 '+t('langName'));
+  setTxt('langBtn','🌐 '+(getLang()==='en'?'Language':'Deutsch'));
   var themeBtn=document.getElementById('themeBtn');
   if(themeBtn)themeBtn.textContent=(getSavedTheme()==='light')?t('tThemeDark'):t('tThemeLight');
   setTxt('kidEditHint',t('kidEditSym'));
@@ -1071,6 +1191,8 @@ function applyStaticTranslations(){
   setTxt('pinEntryHint',t('pinEnter'));
   setTxt('pinCheckBtn',t('pinUnlock'));
   setTxt('pinEntryCancel',t('cancel'));
+  setTxt('parentLangTitle',t('parentLangTitle'));
+  setTxt('parentLangHint',t('parentLangHint'));
   setTxt('parentKidsTitle',t('kidsManage'));
   setPh('newKidName',t('kidName'));
   setTxt('parentSettingsTitle',t('rewardPoints'));
@@ -1102,9 +1224,9 @@ function applyStaticTranslations(){
   setTxt('gameNew',t('gameNew'));
   setTxt('gameResultBtn',t('gameAgain'));
   refreshLoginLangPills();
+  refreshParentLangOptions();
 }
 
-/* ===== Auth Fehler ===== */
 function formatAuthError(err){
   var c=(err&&err.code)||'';
   if(c==='auth/too-many-requests')return t('errTooMany');
@@ -1122,15 +1244,48 @@ function showLoginMsg(msg,isError){
   el.textContent=msg;
   el.className='login-msg'+(isError?' error':' success');
 }
+function setLoginMode(mode){
+  currentLoginMode=(mode==='parent')?'parent':'kid';
+  var modes=document.querySelectorAll('#loginModes .login-mode');
+  for(var i=0;i<modes.length;i++){
+    if(modes[i].getAttribute('data-mode')===currentLoginMode)modes[i].classList.add('active');
+    else modes[i].classList.remove('active');
+  }
+  var pinEl=document.getElementById('loginPin');
+  if(pinEl){
+    pinEl.style.display=(currentLoginMode==='parent')?'block':'none';
+    if(currentLoginMode!=='parent')pinEl.value='';
+    pinEl.placeholder=t('pinPlaceholder');
+  }
+  updateLoginBtnLabel();
+  showLoginMsg('',false);
+}
+function updateLoginBtnLabel(){
+  var btn=document.getElementById('loginBtn');if(!btn)return;
+  btn.textContent=(currentLoginMode==='parent')?t('loginBtnParent'):t('login');
+}
 function doLogin(){
   var emailEl=document.getElementById('loginEmail');
   var pwEl=document.getElementById('loginPassword');
+  var pinEl=document.getElementById('loginPin');
   if(!emailEl||!pwEl)return;
   var email=emailEl.value.trim(),pw=pwEl.value;
   if(!email||!pw){showLoginMsg(t('errNeedEmailPw'),true);return}
+
+  if(currentLoginMode==='parent'){
+    var pin=pinEl?pinEl.value.trim():'';
+    if(!/^\d{6}$/.test(pin)){showLoginMsg(t('pinMust6'),true);return}
+    pendingParentPin=pin;
+    pendingParentAuth=true;
+  }else{
+    pendingParentPin=null;
+    pendingParentAuth=false;
+  }
+
   if(Date.now()<loginLockedUntil){showLoginMsg(t('errTooMany'),true);return}
   showLoginMsg(t('loginProgress'),false);
   signInWithEmailAndPassword(auth,email,pw).catch(function(err){
+    pendingParentPin=null;pendingParentAuth=false;
     showLoginMsg(formatAuthError(err),true);
     if(err&&err.code==='auth/too-many-requests')loginLockedUntil=Date.now()+600000;
   });
@@ -1142,13 +1297,14 @@ function doSignup(){
   var email=emailEl.value.trim(),pw=pwEl.value;
   if(!email||!pw){showLoginMsg(t('errNeedEmailPw'),true);return}
   if(pw.length<6){showLoginMsg(t('errPwLen'),true);return}
+  pendingParentPin=null;pendingParentAuth=false;
   showLoginMsg(t('signupProgress'),false);
   createUserWithEmailAndPassword(auth,email,pw).catch(function(err){showLoginMsg(formatAuthError(err),true)});
 }
 
-/* ===== Init + Handler (alles geschützt) ===== */
 try{applyTheme(getSavedTheme())}catch(e){console.error('Theme init:',e)}
 try{applyStaticTranslations()}catch(e){console.error('Trans init:',e)}
+try{setLoginMode('kid')}catch(e){}
 
 var loginBtnEl=document.getElementById('loginBtn');
 if(loginBtnEl)loginBtnEl.addEventListener('click',doLogin);
@@ -1156,6 +1312,16 @@ var signupBtnEl=document.getElementById('signupBtn');
 if(signupBtnEl)signupBtnEl.addEventListener('click',doSignup);
 var loginPwEl=document.getElementById('loginPassword');
 if(loginPwEl)loginPwEl.addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();doLogin()}});
+var loginPinEl=document.getElementById('loginPin');
+if(loginPinEl)loginPinEl.addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();doLogin()}});
+
+var loginModesEl=document.getElementById('loginModes');
+if(loginModesEl){
+  loginModesEl.addEventListener('click',function(ev){
+    var btn=ev.target.closest('.login-mode');if(!btn)return;
+    setLoginMode(btn.getAttribute('data-mode'));
+  });
+}
 
 var loginLangPillsEl=document.getElementById('loginLangPills');
 if(loginLangPillsEl){
@@ -1163,7 +1329,11 @@ if(loginLangPillsEl){
     var btn=ev.target.closest('.lang-pill');
     if(!btn)return;
     var code=btn.getAttribute('data-lang');
-    if(code==='de'||code==='en')setLang(code);
+    if(code==='de'||code==='en'){
+      try{localStorage.setItem('mylife_lang',code)}catch(e){}
+      refreshLoginLangPills();
+      applyStaticTranslations();
+    }
   });
 }
 
@@ -1177,11 +1347,20 @@ if(langBtnEl)langBtnEl.addEventListener('click',function(ev){ev.stopPropagation(
 var langModalEl=document.getElementById('langModal');
 if(langModalEl)langModalEl.addEventListener('click',function(ev){
   var opt=ev.target.closest('.lang-opt');
-  if(opt){var code=opt.getAttribute('data-lang');if(code==='de'||code==='en')setLang(code);return}
+  if(opt){var code=opt.getAttribute('data-lang');if(code==='de'||code==='en')setLang(code,'kid');return}
   if(ev.target===langModalEl)closeLangModal();
 });
 var langCloseEl=document.getElementById('langClose');
 if(langCloseEl)langCloseEl.addEventListener('click',closeLangModal);
+
+var parentLangListEl=document.getElementById('parentLangList');
+if(parentLangListEl)parentLangListEl.addEventListener('click',function(ev){
+  var btn=ev.target.closest('.lang-opt');
+  if(!btn)return;
+  var code=btn.getAttribute('data-parent-lang');
+  if(code==='de'||code==='en')setLang(code,'parent');
+});
+
 var themeBtnEl=document.getElementById('themeBtn');
 if(themeBtnEl)themeBtnEl.addEventListener('click',function(){
   if(fabMenu)fabMenu.classList.remove('show');
@@ -1191,7 +1370,6 @@ if(themeBtnEl)themeBtnEl.addEventListener('click',function(){
   showToast(next==='light'?t('tLightDesign'):t('tDarkDesign'));
 });
 
-/* ===== Parent-Bereich ===== */
 var parentModal=document.getElementById('parentModal');
 var pinSetupEl=document.getElementById('pinSetup');
 var pinEntryEl=document.getElementById('pinEntry');
@@ -1199,17 +1377,32 @@ var parentPanelEl=document.getElementById('parentPanel');
 var parentTitleEl=document.getElementById('parentTitle');
 var kidEditModal=document.getElementById('kidEditModal');
 
+function updateParentButtonVisibility(){
+  var btn=document.getElementById('parentBtn');if(!btn)return;
+  if(!accountData){btn.style.display='none';return}
+  var show=(sessionMode==='parent')||(!accountData.pinSet);
+  btn.style.display=show?'block':'none';
+}
 function openParentFlow(){
   if(fabMenu)fabMenu.classList.remove('show');
   if(!accountData)return;
   if(parentModal)parentModal.classList.add('show');
-  if(!accountData.pinSet)showPinSetup(false);else showPinEntry();
+  try{applyStaticTranslations()}catch(e){}
+  if(!accountData.pinSet){
+    showPinSetup(false);
+  }else if(parentPinVerified){
+    showParentPanel();
+  }else{
+    showPinEntry();
+  }
 }
 function closeParentFlow(){
   if(parentModal)parentModal.classList.remove('show');
   if(pinSetupEl)pinSetupEl.style.display='none';
   if(pinEntryEl)pinEntryEl.style.display='none';
   if(parentPanelEl)parentPanelEl.style.display='none';
+  try{applyStaticTranslations()}catch(e){}
+  try{render()}catch(e){}
 }
 var parentBtnEl=document.getElementById('parentBtn');
 if(parentBtnEl)parentBtnEl.addEventListener('click',openParentFlow);
@@ -1234,7 +1427,15 @@ function showPinEntry(){
   var i=document.getElementById('pinInput');if(i)i.value='';
   setTimeout(function(){if(i)i.focus()},100);
 }
-function refreshParentPanel(){refreshSettingsUI();renderParentKidList();renderTaskEditor();renderRewardEditor();renderSuggestions();renderPendingRequests()}
+function refreshParentPanel(){
+  refreshSettingsUI();
+  renderParentKidList();
+  renderTaskEditor();
+  renderRewardEditor();
+  renderSuggestions();
+  renderPendingRequests();
+  refreshParentLangOptions();
+}
 function showParentPanel(){
   if(pinSetupEl)pinSetupEl.style.display='none';
   if(pinEntryEl)pinEntryEl.style.display='none';
@@ -1250,7 +1451,10 @@ if(pinSaveBtnEl)pinSaveBtnEl.addEventListener('click',function(){
   var p1=i1.value.trim(),p2=i2.value.trim();
   if(!/^\d{6}$/.test(p1)){m.textContent=t('pinMust6');m.className='login-msg error';return}
   if(p1!==p2){m.textContent=t('pinMismatch');m.className='login-msg error';return}
-  accountData.pin=p1;accountData.pinSet=true;saveToFirebase();showToast(t('tPinSaved'));showParentPanel();
+  accountData.pin=p1;accountData.pinSet=true;saveToFirebase();
+  parentPinVerified=true;
+  showToast(t('tPinSaved'));showParentPanel();
+  updateParentButtonVisibility();
 });
 var psc=document.getElementById('pinSetupCancel');if(psc)psc.addEventListener('click',closeParentFlow);
 ['pinNew1','pinNew2'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();if(pinSaveBtnEl)pinSaveBtnEl.click()}})});
@@ -1260,6 +1464,7 @@ if(pinCheckBtnEl)pinCheckBtnEl.addEventListener('click',function(){
   if(!inp||!m)return;
   var p=inp.value.trim();
   if(p!==accountData.pin){m.textContent=t('pinWrongFull');m.className='login-msg error';inp.value='';return}
+  parentPinVerified=true;
   showParentPanel();
 });
 var pec=document.getElementById('pinEntryCancel');if(pec)pec.addEventListener('click',closeParentFlow);
@@ -1267,7 +1472,10 @@ var pinInputEl=document.getElementById('pinInput');
 if(pinInputEl)pinInputEl.addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();if(pinCheckBtnEl)pinCheckBtnEl.click()}});
 var pcb=document.getElementById('parentCloseBtn');if(pcb)pcb.addEventListener('click',closeParentFlow);
 var cpb=document.getElementById('changePinBtn');if(cpb)cpb.addEventListener('click',function(){showPinSetup(true)});
-var kb=document.getElementById('kidBadge');if(kb)kb.addEventListener('click',openParentFlow);
+var kb=document.getElementById('kidBadge');if(kb)kb.addEventListener('click',function(){
+  if(!accountData)return;
+  openParentFlow();
+});
 
 function renderParentKidList(){
   var list=document.getElementById('parentKidList'),hint=document.getElementById('kidHint');
@@ -1295,7 +1503,10 @@ function renderParentKidList(){
 }
 function switchKid(id){
   if(!accountData.kids[id])return;
-  accountData.activeKid=id;saveToFirebase();render();
+  accountData.activeKid=id;
+  if(currentUser)setDeviceActiveKid(currentUser.uid,id);
+  try{applyStaticTranslations()}catch(e){}
+  render();
   showToast(t('tSwitchTo',(accountData.kids[id].name||'').toUpperCase()));
 }
 function deleteKid(id){
@@ -1306,6 +1517,7 @@ function deleteKid(id){
   delete accountData.kids[id];
   var idx=accountData.kidOrder.indexOf(id);if(idx>-1)accountData.kidOrder.splice(idx,1);
   if(accountData.activeKid===id&&accountData.kidOrder.length)accountData.activeKid=accountData.kidOrder[0];
+  if(currentUser)setDeviceActiveKid(currentUser.uid,accountData.activeKid);
   saveToFirebase();renderParentKidList();render();showToast(t('tDeletedKid',name.toUpperCase()));
 }
 var addKidBtnEl=document.getElementById('addKidBtn');
@@ -1608,7 +1820,6 @@ function rejectReward(kidId,reqId){
   saveToFirebase();render();renderPendingRequests();showToast(t('tReqRejected'));
 }
 
-/* ===== Stundenplan ===== */
 var spOverlay=document.getElementById('spOverlay');
 var spSettingsModal=document.getElementById('spSettingsModal');
 
@@ -1765,7 +1976,6 @@ if(spClearBtn)spClearBtn.addEventListener('click',function(){
   var sd=spGetData();sd.cells={};saveToFirebase();spRenderList();if(spSettingsModal)spSettingsModal.classList.remove('show');
 });
 
-/* ===== Auth State ===== */
 onAuthStateChanged(auth,function(user){
   if(user){
     currentUser=user;
@@ -1774,14 +1984,14 @@ onAuthStateChanged(auth,function(user){
     startListener(user.uid);
   }else{
     currentUser=null;accountData=null;
+    sessionMode='kid';parentPinVerified=false;pendingParentPin=null;pendingParentAuth=false;
     if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
     try{localStorage.setItem('mylife_last_logout',Date.now())}catch(e){}
     if(fabMenu)fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();spClose();closeLangModal();
     var ls=document.getElementById('loginScreen');if(ls)ls.style.display='flex';
     var ap=document.getElementById('app');if(ap)ap.style.display='none';
-    var le=document.getElementById('loginEmail'),lp=document.getElementById('loginPassword');
-    if(le)le.value='';if(lp)lp.value='';
-    showLoginMsg('',false);
+    var le=document.getElementById('loginEmail'),lp=document.getElementById('loginPassword'),lpin=document.getElementById('loginPin');
+    if(lp)lp.value='';if(lpin)lpin.value='';
     try{applyStaticTranslations()}catch(e){}
   }
 });
@@ -1955,7 +2165,6 @@ function fireConfetti(count){
   for(var i=0;i<count;i++){(function(){var el=document.createElement('div');el.className='confetti';el.style.left=Math.random()*100+'vw';el.style.top='-20px';el.style.background=colors[Math.floor(Math.random()*colors.length)];el.style.animationDelay=(Math.random()*0.5)+'s';document.body.appendChild(el);setTimeout(function(){el.remove()},3500)})()}
 }
 
-/* ===== Minigame ===== */
 var MG_CODE_LENGTH=6,MG_TIMER_DURATION=180,MG_MAX_HINTS=6;
 var mgState={code:[],input:[],timeLeft:MG_TIMER_DURATION,hints:MG_MAX_HINTS,active:false,over:false,success:false,lastSecondTick:0,nextTickAt:0,hintRevealUntil:0,hintRevealIndex:-1};
 var mgAudioCtx=null,mgAudioReady=false,mgRaf=null;
