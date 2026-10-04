@@ -20,8 +20,10 @@ header h1:active{transform:scale(.95)}
 @keyframes shine{to{background-position:200% center}}
 header p{opacity:.7;font-size:.75rem;margin-top:4px;color:var(--cyan)}
 header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-spacing:1px;text-transform:uppercase}
-.kid-badge{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:4px 14px 4px 4px;background:rgba(0,245,255,.1);border:1px solid rgba(0,245,255,.4);border-radius:20px;font-size:.72rem;font-weight:800;color:var(--cyan);letter-spacing:1.5px;text-transform:uppercase;cursor:pointer}
+.kid-badge{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:4px 14px 4px 4px;background:rgba(0,245,255,.1);border:1px solid rgba(0,245,255,.4);border-radius:20px;font-size:.72rem;font-weight:800;color:var(--cyan);letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.kid-badge:active{background:rgba(0,245,255,.2)}
 .kid-badge .kid-avatar{width:24px;height:24px;font-size:.9rem}
+.kid-badge::after{content:'▾';margin-left:2px;font-size:.7rem;opacity:.85}
 .stats{display:flex;justify-content:space-around;padding:14px 12px;background:var(--card2);border-bottom:1px solid rgba(0,245,255,.1);flex-shrink:0}
 .stat{text-align:center;flex:1}
 .stat .value{font-size:1.3rem;font-weight:800}
@@ -296,6 +298,27 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .lang-flag{font-size:1.4rem;line-height:1}
 .lang-name{flex:1}
 .lang-opt.active .lang-name{color:var(--cyan)}
+.kid-switcher-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1500;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+.kid-switcher-overlay.show{opacity:1;visibility:visible}
+.kid-switcher-wrap{position:fixed;top:0;left:0;right:0;z-index:1510;display:flex;justify-content:center;pointer-events:none}
+.kid-switcher{width:100%;max-width:500px;background:var(--card);border-radius:0 0 24px 24px;border:1px solid rgba(0,245,255,.25);border-top:none;box-shadow:0 12px 48px rgba(0,0,0,.65);max-height:80vh;display:flex;flex-direction:column;transform:translateY(-105%);transition:transform .3s cubic-bezier(.2,.9,.3,1.2);pointer-events:auto;overflow:hidden}
+.kid-switcher-wrap.show .kid-switcher{transform:translateY(0)}
+.kid-switcher-head{padding:16px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,245,255,.15);flex-shrink:0}
+.kid-switcher-title{font-size:.72rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--cyan)}
+.kid-switcher-close{width:32px;height:32px;border-radius:50%;background:transparent;border:1px solid rgba(255,68,102,.5);color:#ff4466;cursor:pointer;font-weight:900;line-height:1;font-size:.9rem;font-family:inherit;display:flex;align-items:center;justify-content:center}
+.kid-switcher-close:active{transform:scale(.93)}
+.kid-switcher-list{padding:10px 14px 16px;display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+.kid-switcher-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--card2);border:1px solid rgba(0,245,255,.15);cursor:pointer;transition:all .15s}
+.kid-switcher-item:active{transform:scale(.98)}
+.kid-switcher-item.active{border-color:var(--cyan);background:rgba(0,245,255,.08);box-shadow:0 0 20px rgba(0,245,255,.25)}
+.kid-switcher-item .name{flex:1;font-weight:800;font-size:.92rem}
+.kid-switcher-item.active .name{color:var(--cyan)}
+.kid-switcher-item .check{font-size:1rem;color:var(--cyan);opacity:0;transition:opacity .15s}
+.kid-switcher-item.active .check{opacity:1}
+.parent-kid-switch-btn{width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--card2);border:1px solid rgba(0,245,255,.25);cursor:pointer;font-family:inherit;color:var(--text);text-align:left;transition:all .15s}
+.parent-kid-switch-btn:active{transform:scale(.98)}
+.parent-kid-switch-btn .parent-kid-switch-name{flex:1;font-weight:800;font-size:.92rem;color:var(--text)}
+.parent-kid-switch-btn .parent-kid-switch-chevron{color:var(--cyan);font-size:.9rem;opacity:.8}
 body.light{--cyan:#0099b8;--pink:#d6009c;--purple:#8a1fd6;--green:#00a05a;--yellow:#b08000;--bg:#f5f0e8;--card:#fdfbf7;--card2:#f0ebe3;--text:#1a1a2e;--dim:#6a6a80;background-color:#f5f0e8;background-image:radial-gradient(circle at 15% 10%,rgba(210,180,255,.45) 0%,transparent 45%),radial-gradient(circle at 85% 15%,rgba(180,235,255,.45) 0%,transparent 45%),radial-gradient(circle at 50% 85%,rgba(255,200,235,.40) 0%,transparent 50%),radial-gradient(circle at 10% 95%,rgba(200,255,225,.35) 0%,transparent 45%),radial-gradient(circle at 90% 70%,rgba(255,235,180,.30) 0%,transparent 45%),linear-gradient(135deg,#faf7f2 0%,#f2ece3 50%,#faf7f2 100%);color:#1a1a2e}
 body.light .app{background:#fdfbf7;border-color:rgba(180,160,255,.35)}
 body.light header{background:linear-gradient(135deg,#efe6ff,#e6f5ff);border-bottom-color:rgba(140,120,220,.25)}
@@ -408,6 +431,16 @@ body.light .sp-custom-item{background:#f5f0e8;border-color:rgba(140,120,220,.15)
 body.light .lang-opt{background:#f5f0e8;border-color:rgba(140,120,220,.2)}
 body.light .lang-opt.active{background:rgba(0,180,220,.12);border-color:#0088a8}
 body.light .lang-opt.active .lang-name{color:#0088a8}
+body.light .kid-switcher{background:#fdfbf7;border-color:rgba(140,120,220,.3)}
+body.light .kid-switcher-head{border-bottom-color:rgba(140,120,220,.2)}
+body.light .kid-switcher-title{color:#0088a8}
+body.light .kid-switcher-item{background:#f5f0e8;border-color:rgba(140,120,220,.15)}
+body.light .kid-switcher-item.active{background:rgba(0,180,220,.10);border-color:#0088a8}
+body.light .kid-switcher-item.active .name{color:#0088a8}
+body.light .kid-switcher-item.active .check{color:#0088a8}
+body.light .parent-kid-switch-btn{background:#f5f0e8;border-color:rgba(0,180,220,.3)}
+body.light .parent-kid-switch-btn .parent-kid-switch-name{color:#1a1a2e}
+body.light .parent-kid-switch-btn .parent-kid-switch-chevron{color:#0088a8}
 </style>
 </head>
 <body>
@@ -466,6 +499,17 @@ body.light .lang-opt.active .lang-name{color:#0088a8}
 </div>
 </div>
 
+<div class="kid-switcher-overlay" id="kidSwitcherOverlay"></div>
+<div class="kid-switcher-wrap" id="kidSwitcherWrap">
+<div class="kid-switcher">
+<div class="kid-switcher-head">
+<div class="kid-switcher-title" id="kidSwitcherTitle">Kind auswählen</div>
+<button class="kid-switcher-close" id="kidSwitcherClose" type="button">✕</button>
+</div>
+<div class="kid-switcher-list" id="kidSwitcherList"></div>
+</div>
+</div>
+
 <div class="modal-overlay" id="kidEditModal">
 <div class="modal">
 <h3 id="kidEditTitle">Kind bearbeiten</h3>
@@ -501,6 +545,15 @@ body.light .lang-opt.active .lang-name{color:#0088a8}
 </div>
 <div id="parentPanel" style="display:none;flex:1;flex-direction:column;overflow:hidden">
 <div class="parent-scroll">
+<div class="settings-box kids" style="border-color:rgba(0,245,255,.5)">
+<div class="settings-title" id="parentActiveKidTitle" style="color:var(--cyan)">👶 Aktives Kind</div>
+<button class="parent-kid-switch-btn" id="parentKidSwitchBtn" type="button">
+<span id="parentActiveKidAvatar"></span>
+<span class="parent-kid-switch-name" id="parentActiveKidName">Kind</span>
+<span class="parent-kid-switch-chevron">▾</span>
+</button>
+<div class="modal-hint" id="parentActiveKidHint" style="margin:8px 0 0;text-align:left;font-size:.66rem">Antippen, um auf ein anderes Kind zu wechseln.</div>
+</div>
 <div class="settings-box lang">
 <div class="settings-title" id="parentLangTitle">🌐 Sprache (Eltern-Bereich)</div>
 <div class="modal-hint" id="parentLangHint" style="margin:0 0 10px">Nur für den Eltern-Bereich – Kinder behalten ihre eigene Sprache.</div>
@@ -703,6 +756,9 @@ var T={
     parentLangHint:'Nur für den Eltern-Bereich – Kinder behalten ihre eigene Sprache.',
     kidLangBtn:'🌐 Sprache Kind',
     langSwitch:'SPRACHE GESPEICHERT',
+    kidSwitcherTitle:'Kind auswählen',
+    parentActiveKidTitle:'👶 Aktives Kind',
+    parentActiveKidHint:'Antippen, um auf ein anderes Kind zu wechseln.',
     loginAsKid:'Kind',loginAsParent:'Eltern',loginBtnParent:'Als Eltern anmelden',
     pinPlaceholder:'Eltern-PIN',
     errNoPinSet:'Für dieses Konto ist noch kein Eltern-PIN gesetzt. Bitte zuerst als Kind anmelden und den PIN im Eltern-Bereich festlegen.',
@@ -772,6 +828,9 @@ var T={
     parentLangHint:'Only for the parent area – children keep their own language.',
     kidLangBtn:'🌐 Child language',
     langSwitch:'LANGUAGE SAVED',
+    kidSwitcherTitle:'Choose child',
+    parentActiveKidTitle:'👶 Active child',
+    parentActiveKidHint:'Tap to switch to another child.',
     loginAsKid:'Child',loginAsParent:'Parents',loginBtnParent:'Sign in as parent',
     pinPlaceholder:'Parent PIN',
     errNoPinSet:'No parent PIN set for this account yet. Please sign in as child first and set the PIN in the parent area.',
@@ -1223,6 +1282,9 @@ function applyStaticTranslations(){
   setTxt('gameReset',t('gameReset'));
   setTxt('gameNew',t('gameNew'));
   setTxt('gameResultBtn',t('gameAgain'));
+  setTxt('kidSwitcherTitle',t('kidSwitcherTitle'));
+  setTxt('parentActiveKidTitle',t('parentActiveKidTitle'));
+  setTxt('parentActiveKidHint',t('parentActiveKidHint'));
   refreshLoginLangPills();
   refreshParentLangOptions();
 }
@@ -1429,6 +1491,7 @@ function showPinEntry(){
 }
 function refreshParentPanel(){
   refreshSettingsUI();
+  refreshParentActiveKid();
   renderParentKidList();
   renderTaskEditor();
   renderRewardEditor();
@@ -1474,7 +1537,56 @@ var pcb=document.getElementById('parentCloseBtn');if(pcb)pcb.addEventListener('c
 var cpb=document.getElementById('changePinBtn');if(cpb)cpb.addEventListener('click',function(){showPinSetup(true)});
 var kb=document.getElementById('kidBadge');if(kb)kb.addEventListener('click',function(){
   if(!accountData)return;
-  openParentFlow();
+  openKidSwitcher();
+});
+
+/* ===== Kind-Umschalter ===== */
+var kidSwitcherOverlay=document.getElementById('kidSwitcherOverlay');
+var kidSwitcherWrap=document.getElementById('kidSwitcherWrap');
+var kidSwitcherList=document.getElementById('kidSwitcherList');
+var kidSwitcherCloseEl=document.getElementById('kidSwitcherClose');
+
+function openKidSwitcher(){
+  if(!accountData||!accountData.kidOrder||!accountData.kidOrder.length)return;
+  try{fabMenu.classList.remove('show')}catch(e){}
+  renderKidSwitcherList();
+  if(kidSwitcherOverlay)kidSwitcherOverlay.classList.add('show');
+  if(kidSwitcherWrap)kidSwitcherWrap.classList.add('show');
+}
+function closeKidSwitcher(){
+  if(kidSwitcherOverlay)kidSwitcherOverlay.classList.remove('show');
+  if(kidSwitcherWrap)kidSwitcherWrap.classList.remove('show');
+}
+function renderKidSwitcherList(){
+  if(!kidSwitcherList||!accountData)return;
+  var html='';
+  for(var i=0;i<accountData.kidOrder.length;i++){
+    var id=accountData.kidOrder[i],kid=accountData.kids[id];
+    if(!kid)continue;
+    var active=(id===accountData.activeKid)?' active':'';
+    html+='<div class="kid-switcher-item'+active+'" data-id="'+id+'">'+renderAvatar(kid,42)+'<span class="name">'+escapeHtml(kid.name||'')+'</span><span class="check">✓</span></div>';
+  }
+  kidSwitcherList.innerHTML=html;
+  var items=kidSwitcherList.querySelectorAll('.kid-switcher-item');
+  for(var i=0;i<items.length;i++)items[i].addEventListener('click',function(){
+    var id=this.getAttribute('data-id');
+    closeKidSwitcher();
+    switchKid(id);
+  });
+}
+function refreshParentActiveKid(){
+  if(!accountData)return;
+  var kid=getKid();
+  var avEl=document.getElementById('parentActiveKidAvatar');
+  var nmEl=document.getElementById('parentActiveKidName');
+  if(avEl)avEl.innerHTML=kid?renderAvatar(kid,34):'';
+  if(nmEl)nmEl.textContent=kid?(kid.name||''):'';
+}
+if(kidSwitcherOverlay)kidSwitcherOverlay.addEventListener('click',closeKidSwitcher);
+if(kidSwitcherCloseEl)kidSwitcherCloseEl.addEventListener('click',closeKidSwitcher);
+var parentKidSwitchBtnEl=document.getElementById('parentKidSwitchBtn');
+if(parentKidSwitchBtnEl)parentKidSwitchBtnEl.addEventListener('click',function(){
+  openKidSwitcher();
 });
 
 function renderParentKidList(){
@@ -1507,6 +1619,7 @@ function switchKid(id){
   if(currentUser)setDeviceActiveKid(currentUser.uid,id);
   try{applyStaticTranslations()}catch(e){}
   render();
+  if(parentPanelEl&&parentPanelEl.style.display==='flex')refreshParentPanel();
   showToast(t('tSwitchTo',(accountData.kids[id].name||'').toUpperCase()));
 }
 function deleteKid(id){
@@ -1987,7 +2100,7 @@ onAuthStateChanged(auth,function(user){
     sessionMode='kid';parentPinVerified=false;pendingParentPin=null;pendingParentAuth=false;
     if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
     try{localStorage.setItem('mylife_last_logout',Date.now())}catch(e){}
-    if(fabMenu)fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();spClose();closeLangModal();
+    if(fabMenu)fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();spClose();closeLangModal();closeKidSwitcher();
     var ls=document.getElementById('loginScreen');if(ls)ls.style.display='flex';
     var ap=document.getElementById('app');if(ap)ap.style.display='none';
     var le=document.getElementById('loginEmail'),lp=document.getElementById('loginPassword'),lpin=document.getElementById('loginPin');
