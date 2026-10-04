@@ -65,6 +65,7 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .task-title{font-weight:700;font-size:.88rem;margin-bottom:3px}
 .task-meta{font-size:.68rem;color:var(--dim)}
 .btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;border:none;border-radius:14px;font-size:.85rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;box-shadow:0 0 25px rgba(176,38,255,.4);cursor:pointer}
+.btn:disabled{opacity:.35;cursor:not-allowed;box-shadow:none;background:rgba(136,136,170,.25)}
 .btn-reset{background:transparent;border:2px solid rgba(255,0,229,.5);color:var(--pink);box-shadow:0 0 15px rgba(255,0,229,.2)}
 .money-card{background:linear-gradient(135deg,rgba(0,255,136,.08),rgba(0,245,255,.05));border:1px solid rgba(0,255,136,.3);border-radius:18px;padding:24px 20px;margin-bottom:16px;text-align:center}
 .money-total{font-size:2.8rem;font-weight:900;background-image:linear-gradient(135deg,var(--green),var(--cyan));background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:8px 0}
@@ -116,6 +117,7 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 #kidEditModal{z-index:900}
 #spSettingsModal{z-index:970}
 #legalModal{z-index:980}
+#consentModal{z-index:990}
 .modal{width:100%;max-width:420px;max-height:88vh;background:var(--card);border-radius:24px;border:1px solid rgba(0,245,255,.25);padding:22px 18px;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1}
 .modal h3{font-size:1rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);text-align:center;margin-bottom:8px}
 .modal-hint{font-size:.7rem;color:var(--dim);text-align:center;margin-bottom:14px}
@@ -346,6 +348,12 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .legal-body li{margin-bottom:3px}
 .legal-body strong{color:var(--cyan);font-weight:800}
 .legal-body .legal-note{background:rgba(255,234,0,.08);border-left:3px solid var(--yellow);padding:8px 10px;border-radius:6px;font-size:.75rem;color:var(--dim);margin:10px 0}
+.consent-check-label{display:flex;align-items:flex-start;gap:10px;background:var(--card2);border:1px solid rgba(0,245,255,.2);border-radius:12px;padding:12px 14px;margin-top:12px;cursor:pointer;font-size:.78rem;line-height:1.5;color:var(--text);transition:border-color .2s,background .2s}
+.consent-check-label:active{transform:scale(.995)}
+.consent-check-label.checked{border-color:var(--cyan);background:rgba(0,245,255,.06)}
+.consent-check-label input[type=checkbox]{appearance:none;-webkit-appearance:none;width:22px;height:22px;flex-shrink:0;border-radius:6px;border:2px solid rgba(0,245,255,.45);background:rgba(0,245,255,.05);cursor:pointer;position:relative;margin-top:1px;transition:all .15s}
+.consent-check-label input[type=checkbox]:checked{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 12px rgba(0,245,255,.5)}
+.consent-check-label input[type=checkbox]:checked::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:14px;line-height:1}
 body.light{--cyan:#0099b8;--pink:#d6009c;--purple:#8a1fd6;--green:#00a05a;--yellow:#b08000;--bg:#f5f0e8;--card:#fdfbf7;--card2:#f0ebe3;--text:#1a1a2e;--dim:#6a6a80;background-color:#f5f0e8;background-image:radial-gradient(circle at 15% 10%,rgba(210,180,255,.45) 0%,transparent 45%),radial-gradient(circle at 85% 15%,rgba(180,235,255,.45) 0%,transparent 45%),radial-gradient(circle at 50% 85%,rgba(255,200,235,.40) 0%,transparent 50%),radial-gradient(circle at 10% 95%,rgba(200,255,225,.35) 0%,transparent 45%),radial-gradient(circle at 90% 70%,rgba(255,235,180,.30) 0%,transparent 45%),linear-gradient(135deg,#faf7f2 0%,#f2ece3 50%,#faf7f2 100%);color:#1a1a2e}
 body.light .app{background:#fdfbf7;border-color:rgba(180,160,255,.35)}
 body.light header{background:linear-gradient(135deg,#efe6ff,#e6f5ff);border-bottom-color:rgba(140,120,220,.25)}
@@ -475,6 +483,10 @@ body.light .legal-body h4{color:#0088a8}
 body.light .legal-body a{color:#0088a8}
 body.light .legal-body strong{color:#0088a8}
 body.light .legal-body .legal-note{background:rgba(180,140,0,.08);border-left-color:#b08000;color:#6a6a80}
+body.light .consent-check-label{background:#f5f0e8;border-color:rgba(0,180,220,.3)}
+body.light .consent-check-label.checked{border-color:#0088a8;background:rgba(0,180,220,.08)}
+body.light .consent-check-label input[type=checkbox]{border-color:rgba(0,180,220,.6);background:#fff}
+body.light .consent-check-label input[type=checkbox]:checked{background:#0088a8;border-color:#0088a8}
 </style>
 </head>
 <body>
@@ -704,6 +716,24 @@ body.light .legal-body .legal-note{background:rgba(180,140,0,.08);border-left-co
 </div>
 </div>
 
+<div class="modal-overlay" id="consentModal">
+<div class="modal" style="max-width:520px">
+<h3 id="consentTitle">📄 Zustimmung zur Nutzung</h3>
+<div class="modal-hint" id="consentHint">Bitte lies Datenschutz und Nutzungsbedingungen und setze das Häkchen, um fortzufahren.</div>
+<div class="legal-tabs" id="consentTabs">
+<button class="legal-tab active" data-consent="datenschutz" type="button">Datenschutz</button>
+<button class="legal-tab" data-consent="nutzung" type="button">Nutzung</button>
+</div>
+<div class="legal-body" id="consentBody" style="max-height:38vh"></div>
+<label class="consent-check-label" id="consentCheckLabel">
+<input type="checkbox" id="consentCheck">
+<span id="consentCheckText">Ich stimme der Datenschutzerklärung und den Nutzungsbedingungen zu.</span>
+</label>
+<button class="btn" id="consentConfirm" disabled style="margin-top:12px">Konto erstellen</button>
+<button class="modal-close" id="consentCancel">Abbrechen</button>
+</div>
+</div>
+
 <div class="game-overlay" id="gameOverlay">
 <div class="game-app" id="gameApp">
 <div class="game-header">
@@ -809,10 +839,16 @@ var T={
     parentActiveKidTitle:'👶 Aktives Kind',
     parentActiveKidHint:'Antippen, um auf ein anderes Kind zu wechseln.',
     legalBtn:'📄 Rechtliches',
+    consentTitle:'📄 Zustimmung zur Nutzung',
+    consentHint:'Bitte lies Datenschutz und Nutzungsbedingungen und setze das Häkchen, um fortzufahren.',
+    consentCheckText:'Ich stimme der Datenschutzerklärung und den Nutzungsbedingungen zu. Ich bin volljährig und – falls ich Daten von Kindern eintrage – als Erziehungsberechtigte/r dazu berechtigt.',
+    consentConfirm:'Konto erstellen',
+    consentCancel:'Abbrechen',
     loginAsKid:'Kind',loginAsParent:'Eltern',loginBtnParent:'Als Eltern anmelden',
     pinPlaceholder:'Eltern-PIN',
     errNoPinSet:'Für dieses Konto ist noch kein Eltern-PIN gesetzt. Bitte zuerst als Kind anmelden und den PIN im Eltern-Bereich festlegen.',
     errWrongPinLogin:'Falsche PIN. Bitte erneut versuchen.',
+    errConsentNeeded:'Bitte stimme zuerst Datenschutz und Nutzung zu.',
     errTooMany:'Zu viele Anmeldeversuche. Bitte warte 10 Minuten oder setze dein Passwort in der Firebase Console zurück.',
     errWrongPw:'Falsches Passwort.',errNoUser:'Kein Konto mit dieser E-Mail gefunden.',errBadEmail:'Ungültige E-Mail-Adresse.',
     errNetwork:'Netzwerkfehler – bitte Internetverbindung prüfen.',errEmailInUse:'Diese E-Mail wird bereits verwendet.',
@@ -882,10 +918,16 @@ var T={
     parentActiveKidTitle:'👶 Active child',
     parentActiveKidHint:'Tap to switch to another child.',
     legalBtn:'📄 Legal',
+    consentTitle:'📄 Consent to use',
+    consentHint:'Please read the privacy policy and terms of use and check the box to continue.',
+    consentCheckText:'I agree to the privacy policy and terms of use. I am of legal age and – if I enter data of children – am authorized as a legal guardian.',
+    consentConfirm:'Create account',
+    consentCancel:'Cancel',
     loginAsKid:'Child',loginAsParent:'Parents',loginBtnParent:'Sign in as parent',
     pinPlaceholder:'Parent PIN',
     errNoPinSet:'No parent PIN set for this account yet. Please sign in as child first and set the PIN in the parent area.',
     errWrongPinLogin:'Wrong PIN. Please try again.',
+    errConsentNeeded:'Please agree to the privacy policy and terms first.',
     errTooMany:'Too many login attempts. Please wait 10 minutes or reset your password in the Firebase Console.',
     errWrongPw:'Wrong password.',errNoUser:'No account found with this email.',errBadEmail:'Invalid email address.',
     errNetwork:'Network error – please check your internet connection.',errEmailInUse:'This email is already in use.',
@@ -1042,6 +1084,7 @@ Germany</p>
   }
 };
 var legalCurrentTab='impressum';
+var consentCurrentTab='datenschutz';
 
 var DEFAULT_TEMPLATES=[
 {id:'zähne',title:'Zähne putzen',cat:'Hygiene',days:[0,1,2,3,4,5,6],important:true},
@@ -1081,6 +1124,8 @@ var currentLoginMode='kid';
 var editingKidId=null,editingEmoji='🧒',editingPhoto='';
 var loginLockedUntil=0;
 var spCurrentDay='mo';
+var pendingSignupEmail=null,pendingSignupPw=null;
+var pendingConsentTimestamp=null;
 
 function todayKey(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
 function currentWeekday(){return new Date().getDay()}
@@ -1315,6 +1360,10 @@ function startListener(uid){
       var data=snapshot.val();
       if(!data){
         var fresh=defaultAccount();
+        if(pendingConsentTimestamp){
+          fresh.consentAcceptedAt=pendingConsentTimestamp;
+          pendingConsentTimestamp=null;
+        }
         accountData=fresh;
         setDeviceActiveKid(uid, fresh.activeKid);
         set(userRef,fresh);
@@ -1431,6 +1480,11 @@ function applyStaticTranslations(){
   setTxt('logoutBtn',t('logout'));
   setTxt('langBtn','🌐 '+(getLang()==='en'?'Language':'Deutsch'));
   setTxt('legalBtn',t('legalBtn'));
+  setTxt('consentTitle',t('consentTitle'));
+  setTxt('consentHint',t('consentHint'));
+  setTxt('consentCheckText',t('consentCheckText'));
+  setTxt('consentConfirm',t('consentConfirm'));
+  setTxt('consentCancel',t('consentCancel'));
   var themeBtn=document.getElementById('themeBtn');
   if(themeBtn)themeBtn.textContent=(getSavedTheme()==='light')?t('tThemeDark'):t('tThemeLight');
   setTxt('kidEditHint',t('kidEditSym'));
@@ -1484,6 +1538,7 @@ function applyStaticTranslations(){
   refreshLoginLangPills();
   refreshParentLangOptions();
   if(typeof renderLegalContent==='function' && legalModalEl && legalModalEl.classList.contains('show')){renderLegalContent()}
+  if(typeof renderConsentContent==='function' && consentModalEl && consentModalEl.classList.contains('show')){renderConsentContent()}
 }
 
 function formatAuthError(err){
@@ -1556,9 +1611,36 @@ function doSignup(){
   var email=emailEl.value.trim(),pw=pwEl.value;
   if(!email||!pw){showLoginMsg(t('errNeedEmailPw'),true);return}
   if(pw.length<6){showLoginMsg(t('errPwLen'),true);return}
+  pendingSignupEmail=email;
+  pendingSignupPw=pw;
+  var chk=document.getElementById('consentCheck');
+  if(chk)chk.checked=false;
+  var lbl=document.getElementById('consentCheckLabel');
+  if(lbl)lbl.classList.remove('checked');
+  var btn=document.getElementById('consentConfirm');
+  if(btn)btn.disabled=true;
+  consentCurrentTab='datenschutz';
+  renderConsentContent();
+  if(consentModalEl)consentModalEl.classList.add('show');
+}
+function doSignupFinal(){
+  if(!pendingSignupEmail||!pendingSignupPw)return;
+  var email=pendingSignupEmail,pw=pendingSignupPw;
+  var chk=document.getElementById('consentCheck');
+  if(!chk||!chk.checked){showLoginMsg(t('errConsentNeeded'),true);return}
+  pendingSignupEmail=null;pendingSignupPw=null;
+  pendingConsentTimestamp=new Date().toISOString();
+  if(consentModalEl)consentModalEl.classList.remove('show');
   pendingParentPin=null;pendingParentAuth=false;
   showLoginMsg(t('signupProgress'),false);
-  createUserWithEmailAndPassword(auth,email,pw).catch(function(err){showLoginMsg(formatAuthError(err),true)});
+  createUserWithEmailAndPassword(auth,email,pw).catch(function(err){
+    pendingConsentTimestamp=null;
+    showLoginMsg(formatAuthError(err),true);
+  });
+}
+function closeConsentModal(){
+  if(consentModalEl)consentModalEl.classList.remove('show');
+  pendingSignupEmail=null;pendingSignupPw=null;
 }
 
 try{applyTheme(getSavedTheme())}catch(e){console.error('Theme init:',e)}
@@ -1829,6 +1911,44 @@ if(loginLegalLinkEl)loginLegalLinkEl.addEventListener('click',function(ev){
   ev.preventDefault();
   openLegalModal('impressum');
 });
+
+/* ===== Consent Modal ===== */
+var consentModalEl=document.getElementById('consentModal');
+var consentBodyEl=document.getElementById('consentBody');
+var consentCheckEl=document.getElementById('consentCheck');
+var consentConfirmEl=document.getElementById('consentConfirm');
+var consentCancelEl=document.getElementById('consentCancel');
+var consentTabsEl=document.getElementById('consentTabs');
+var consentCheckLabelEl=document.getElementById('consentCheckLabel');
+
+function renderConsentContent(){
+  if(!consentBodyEl)return;
+  var lang=(typeof getLang==='function')?getLang():'de';
+  var texts=LEGAL_TEXTS[consentCurrentTab];
+  if(!texts){consentBodyEl.innerHTML='';return}
+  consentBodyEl.innerHTML=texts[lang]||texts.de;
+  consentBodyEl.scrollTop=0;
+  var tabs=document.querySelectorAll('#consentTabs .legal-tab');
+  for(var i=0;i<tabs.length;i++){
+    if(tabs[i].getAttribute('data-consent')===consentCurrentTab)tabs[i].classList.add('active');
+    else tabs[i].classList.remove('active');
+  }
+}
+if(consentTabsEl)consentTabsEl.addEventListener('click',function(ev){
+  var btn=ev.target.closest('.legal-tab');if(!btn)return;
+  consentCurrentTab=btn.getAttribute('data-consent');
+  renderConsentContent();
+});
+if(consentCheckEl)consentCheckEl.addEventListener('change',function(){
+  if(consentConfirmEl)consentConfirmEl.disabled=!this.checked;
+  if(consentCheckLabelEl){
+    if(this.checked)consentCheckLabelEl.classList.add('checked');
+    else consentCheckLabelEl.classList.remove('checked');
+  }
+});
+if(consentConfirmEl)consentConfirmEl.addEventListener('click',doSignupFinal);
+if(consentCancelEl)consentCancelEl.addEventListener('click',closeConsentModal);
+if(consentModalEl)consentModalEl.addEventListener('click',function(ev){if(ev.target===consentModalEl)closeConsentModal()});
 
 function renderParentKidList(){
   var list=document.getElementById('parentKidList'),hint=document.getElementById('kidHint');
@@ -2339,9 +2459,10 @@ onAuthStateChanged(auth,function(user){
   }else{
     currentUser=null;accountData=null;
     sessionMode='kid';parentPinVerified=false;pendingParentPin=null;pendingParentAuth=false;
+    pendingSignupEmail=null;pendingSignupPw=null;pendingConsentTimestamp=null;
     if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
     try{localStorage.setItem('mylife_last_logout',Date.now())}catch(e){}
-    if(fabMenu)fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();spClose();closeLangModal();closeKidSwitcher();closeLegalModal();
+    if(fabMenu)fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();spClose();closeLangModal();closeKidSwitcher();closeLegalModal();closeConsentModal();
     var ls=document.getElementById('loginScreen');if(ls)ls.style.display='flex';
     var ap=document.getElementById('app');if(ap)ap.style.display='none';
     var le=document.getElementById('loginEmail'),lp=document.getElementById('loginPassword'),lpin=document.getElementById('loginPin');
