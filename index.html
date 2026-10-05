@@ -1485,7 +1485,12 @@ function needsRepair(d){
 function processKidDay(kid){
   if(!kid||!kid.data)return;
   var d=kid.data;
-  if(!Array.isArray(d.taskTemplates)||d.taskTemplates.length===0)d.taskTemplates=clone(DEFAULT_TEMPLATES);
+  
+  // NEU: Wenn taskTemplates leer ist, Standard-Aufgaben wiederherstellen
+  if(!Array.isArray(d.taskTemplates) || d.taskTemplates.length === 0){
+      d.taskTemplates = clone(DEFAULT_TEMPLATES);
+  }
+  
   if(!Array.isArray(d.rewards))d.rewards=[];
   if(!Array.isArray(d.messages))d.messages=[];
   if(d.today!==todayKey()){
@@ -2414,17 +2419,23 @@ function renderTaskEditor(){
   var list=document.getElementById('taskEditList');if(!list)return;
   if(!accountData){list.innerHTML='';return}
   var k=getKid();if(!k||!k.data){list.innerHTML='';return}
-  if(!Array.isArray(k.data.taskTemplates))k.data.taskTemplates=clone(DEFAULT_TEMPLATES);
-  if(!k.data.taskTemplates.length){list.innerHTML='<div class="pending-empty">'+t('noTasksYet')+'</div>';return}
+  
+  // NEU: Wenn taskTemplates leer ist, Standard-Aufgaben verwenden
+  if(!Array.isArray(k.data.taskTemplates) || k.data.taskTemplates.length === 0){
+      k.data.taskTemplates = clone(DEFAULT_TEMPLATES);
+  }
   
   // Prüfen ob der globale Foto-Schalter aktiv ist
-  var globalPhotoOn = accountData.settings && accountData.settings.globalPhotoRequired;
+  var globalPhotoOn = false;
+  if(accountData.settings && accountData.settings.globalPhotoRequired) globalPhotoOn = true;
   
   var html='';
   for(var i=0;i<k.data.taskTemplates.length;i++){
     var tpl=k.data.taskTemplates[i];
     var isDisabled = globalPhotoOn ? ' disabled' : '';
     var toggleClass = globalPhotoOn ? ' disabled' : '';
+    // Absicherung für tpl.days
+    var tplDays = Array.isArray(tpl.days) ? tpl.days : [1,2,3,4,5];
     
     html+='<div class="task-edit" data-id="'+tpl.id+'">';
     html+='<div class="row"><input type="text" class="edit-title" value="'+escapeHtml(tpl.title)+'" maxlength="40"><button class="del" data-del="'+tpl.id+'">✕</button></div>';
@@ -2441,7 +2452,7 @@ function renderTaskEditor(){
     html+='</div>';
     html+='</div>';
     html+='<div class="days">';
-    for(var kk=0;kk<DAY_ORDER.length;kk++){var d=DAY_ORDER[kk],on=tpl.days.indexOf(d)!==-1;html+='<button class="day-toggle'+(on?' on':'')+'" data-day="'+d+'">'+dayShort(d)+'</button>'}
+    for(var kk=0;kk<DAY_ORDER.length;kk++){var d=DAY_ORDER[kk],on=tplDays.indexOf(d)!==-1;html+='<button class="day-toggle'+(on?' on':'')+'" data-day="'+d+'">'+dayShort(d)+'</button>'}
     html+='</div></div>';
   }
   list.innerHTML=html;
