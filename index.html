@@ -735,6 +735,11 @@ body.light .message-meta .from{color:#0088a8}
 <div class="preset-row" id="dailyPresets"><button data-val="1">1 €</button><button data-val="2">2 €</button><button data-val="5">5 €</button><button data-val="10">10 €</button></div>
 <div class="setting-row"><label id="lblPointsPerTask">Punkte pro Aufgabe</label><div class="input-wrap"><input type="number" id="setPoints" min="1" step="1" value="10"></div></div>
 <div class="preset-row" id="pointsPresets"><button data-val="5">5</button><button data-val="10">10</button><button data-val="20">20</button><button data-val="50">50</button></div>
+<!-- NEU: Globaler Foto-Schalter -->
+<div class="setting-row" style="margin-top:10px; border-top:1px solid rgba(0,245,255,.1); padding-top:10px;">
+    <label id="lblGlobalPhoto">Foto-Nachweis für alle Aufgaben</label>
+    <input type="checkbox" id="setGlobalPhoto" style="width:22px;height:22px;accent-color:var(--cyan);cursor:pointer">
+</div>
 </div>
 <div class="settings-box rewards">
 <div class="settings-title" id="parentRewardsTitle">🎁 Belohnungen (nur dieses Kind)</div>
@@ -930,6 +935,7 @@ var T={
     pinMust6:'PIN muss genau 6 Ziffern haben.',pinMismatch:'PINs stimmen nicht überein.',pinWrongFull:'Falsche PIN.',
     kidsManage:'👶 Kinder verwalten',kidsMax:'Bis zu 5 Kindern pro Konto',kidName:'Name des Kindes',
     rewardPoints:'💰 Belohnung & Punkte',dailyMoney:'Tagesgeld',pointsPerTask:'Punkte pro Aufgabe',
+    globalPhotoLbl:'Foto-Nachweis für alle Aufgaben', // NEU
     rewardsManage:'🎁 Belohnungen (nur dieses Kind)',rewardNew:'Belohnung (z.B. Freizeitpark)',points:'Punkte',
     addReward:'+ Belohnung hinzufügen',suggestionsFromKids:'💡 Vorschläge von Kindern',
     pendingRequests:'📥 Offene Anfragen',taskEditHint:'Aufgaben – nur für das aktive Kind',
@@ -1038,6 +1044,7 @@ var T={
     pinMust6:'PIN must be exactly 6 digits.',pinMismatch:'PINs do not match.',pinWrongFull:'Wrong PIN.',
     kidsManage:'👶 Manage children',kidsMax:'Up to 5 children per account',kidName:'Child name',
     rewardPoints:'💰 Reward & points',dailyMoney:'Daily money',pointsPerTask:'Points per task',
+    globalPhotoLbl:'Photo proof for all tasks', // NEU
     rewardsManage:'🎁 Rewards (only this child)',rewardNew:'Reward (e.g. Theme park)',points:'Points',
     addReward:'+ Add reward',suggestionsFromKids:'💡 Suggestions from children',
     pendingRequests:'📥 Pending requests',taskEditHint:'Tasks – only for the active child',
@@ -1439,7 +1446,7 @@ function buildKidData(initLang){
 function defaultAccount(){
   var id=genId('kid'),kids={};
   kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:buildKidData(getSavedLang())};
-  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},parentSettings:{language:getSavedLang()}};
+  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK,globalPhotoRequired:false},parentSettings:{language:getSavedLang()}};
 }
 function getKid(){if(!accountData||!accountData.activeKid||!accountData.kids)return null;return accountData.kids[accountData.activeKid]||null}
 function getKidData(){var k=getKid();return k?k.data:null}
@@ -1496,6 +1503,9 @@ function migrate(data){
     if(!data.settings||typeof data.settings!=='object')data.settings={};
     if(typeof data.settings.dailyReward!=='number'||data.settings.dailyReward<0)data.settings.dailyReward=DEFAULT_DAILY_REWARD;
     if(typeof data.settings.pointsPerTask!=='number'||data.settings.pointsPerTask<1)data.settings.pointsPerTask=DEFAULT_POINTS_PER_TASK;
+    // NEU: Migration für globalPhotoRequired
+    if(typeof data.settings.globalPhotoRequired!=='boolean')data.settings.globalPhotoRequired=false;
+    
     var legacyLang=(data.settings.language==='en')?'en':'de';
     if(!data.parentSettings||typeof data.parentSettings!=='object')data.parentSettings={};
     if(data.parentSettings.language!=='de'&&data.parentSettings.language!=='en')data.parentSettings.language=legacyLang;
@@ -1572,7 +1582,7 @@ function migrate(data){
     if(data.tasks&&data.tasks.length)oldData.tasks=data.tasks;
   }
   var kids={};kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:oldData};
-  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},parentSettings:{language:getSavedLang()}};
+  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK,globalPhotoRequired:false},parentSettings:{language:getSavedLang()}};
 }
 function startListener(uid){
   if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
@@ -1691,6 +1701,7 @@ function applyStaticTranslations(){
   setTxt('parentLangTitle',t('parentLangTitle'));setTxt('parentLangHint',t('parentLangHint'));
   setTxt('parentKidsTitle',t('kidsManage'));setPh('newKidName',t('kidName'));
   setTxt('parentSettingsTitle',t('rewardPoints'));setTxt('lblDailyMoney',t('dailyMoney'));setTxt('lblPointsPerTask',t('pointsPerTask'));
+  setTxt('lblGlobalPhoto',t('globalPhotoLbl')); // NEU: Übersetzung für Schalter
   setTxt('parentRewardsTitle',t('rewardsManage'));setPh('newRewardTitle',t('rewardNew'));setPh('newRewardCost',t('points'));
   setTxt('addRewardBtn',t('addReward'));setTxt('parentSuggestTitle',t('suggestionsFromKids'));setTxt('parentPendingTitle',t('pendingRequests'));
   setTxt('parentTaskEditHint',t('taskEditHint'));setPh('newTaskTitle',t('newTask'));setPh('newTaskCat',t('category'));
@@ -2444,6 +2455,11 @@ function refreshSettingsUI(){
   var dr=getDailyReward(),pp=getPointsPerTask();
   var drIn=document.getElementById('setDailyReward'),ppIn=document.getElementById('setPoints');
   if(drIn)drIn.value=dr;if(ppIn)ppIn.value=pp;
+  
+  // NEU: Globalen Foto-Schalter aktualisieren
+  var gpIn=document.getElementById('setGlobalPhoto');
+  if(gpIn)gpIn.checked=!!(accountData.settings && accountData.settings.globalPhotoRequired);
+
   var dps=document.querySelectorAll('#dailyPresets button');
   for(var i=0;i<dps.length;i++){var v=parseFloat(dps[i].getAttribute('data-val'));if(v===dr)dps[i].classList.add('active');else dps[i].classList.remove('active')}
   var pps=document.querySelectorAll('#pointsPresets button');
@@ -2464,6 +2480,17 @@ var dps=document.querySelectorAll('#dailyPresets button');
 for(var i=0;i<dps.length;i++)dps[i].addEventListener('click',function(){saveSettings(parseFloat(this.getAttribute('data-val')),null)});
 var pps=document.querySelectorAll('#pointsPresets button');
 for(var i=0;i<pps.length;i++)pps[i].addEventListener('click',function(){saveSettings(null,parseInt(this.getAttribute('data-val'),10))});
+
+// NEU: Event-Listener für den globalen Foto-Schalter
+var gpEl=document.getElementById('setGlobalPhoto');
+if(gpEl)gpEl.addEventListener('change',function(){
+  if(!accountData)return;
+  if(!accountData.settings)accountData.settings={};
+  accountData.settings.globalPhotoRequired=this.checked;
+  saveToFirebase();
+  render(); // Aufgaben neu rendern, um das 📷-Symbol anzuzeigen
+  showToast(t('tSettingSaved'));
+});
 
 /* ===== Belohnungs-Editor (mit Foto) ===== */
 function renderRewardEditor(){
@@ -2803,11 +2830,18 @@ function renderTask(tk){
   var cls='task';
   if(tk.pendingApproval)cls+=' photo-pending';
   else if(tk.done)cls+=' done';
+  
+  // NEU: Globalen Foto-Schalter prüfen
+  var needsPhoto = tk.requiresPhoto || (accountData && accountData.settings && accountData.settings.globalPhotoRequired);
+  
   var html='<div class="'+cls+'" data-id="'+tk.id+'">';
   html+='<div class="task-check">&#10003;</div>';
   if(tk.photo&&tk.pendingApproval)html+='<img class="task-photo-thumb" data-photo-view="'+tk.id+'" src="'+tk.photo+'" alt="">';
   html+='<div class="task-info"><div class="task-title">'+escapeHtml(tk.title);
-  if(tk.requiresPhoto&&!tk.done)html+=' <span class="task-photo-required-tag">📷</span>';
+  
+  // NEU: needsPhoto anstelle von tk.requiresPhoto verwenden
+  if(needsPhoto&&!tk.done)html+=' <span class="task-photo-required-tag">📷</span>';
+  
   html+='</div><div class="task-meta">'+escapeHtml(tk.cat)+'</div>';
   if(tk.pendingApproval)html+='<div class="task-photo-badge">📸 '+t('tPhotoPendingShort')+'</div>';
   html+='</div></div>';
@@ -2835,14 +2869,20 @@ function toggleTask(id){
   var pts=getPointsPerTask(),task=null;
   for(var i=0;i<d.tasks.length;i++)if(d.tasks[i].id===id){task=d.tasks[i];break}
   if(!task)return;
+  
   /* Wenn Aufgabe auf Bestätigung wartet: nicht änderbar */
   if(task.pendingApproval){showToast(t('tPhotoPendingShort'));return}
+  
+  // NEU: Globalen Foto-Schalter prüfen
+  var needsPhoto = task.requiresPhoto || (accountData && accountData.settings && accountData.settings.globalPhotoRequired);
+
   /* Wenn Foto erforderlich und noch nicht erledigt: Foto-Aufnahme starten */
-  if(task.requiresPhoto&&!task.done){
+  if(needsPhoto && !task.done){ // NEU: needsPhoto verwenden
     pendingTaskPhotoId=task.id;
     if(taskPhotoInputEl)taskPhotoInputEl.click();
     return;
   }
+  
   var wasAll=true;
   for(var i=0;i<d.tasks.length;i++)if(!d.tasks[i].done){wasAll=false;break}
   task.done=!task.done;
