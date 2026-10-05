@@ -30,10 +30,18 @@ header h1:active{transform:scale(.95)}
 @keyframes shine{to{background-position:200% center}}
 header p{opacity:.7;font-size:.75rem;margin-top:4px;color:var(--cyan)}
 header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-spacing:1px;text-transform:uppercase}
-.kid-badge{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:4px 14px 4px 4px;background:rgba(0,245,255,.1);border:1px solid rgba(0,245,255,.4);border-radius:20px;font-size:.72rem;font-weight:800;color:var(--cyan);letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.kid-row{display:inline-flex;align-items:center;gap:10px;margin-top:8px}
+.kid-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 14px 4px 4px;background:rgba(0,245,255,.1);border:1px solid rgba(0,245,255,.4);border-radius:20px;font-size:.72rem;font-weight:800;color:var(--cyan);letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .2s}
 .kid-badge:active{background:rgba(0,245,255,.2)}
 .kid-badge .kid-avatar{width:24px;height:24px;font-size:.9rem}
 .kid-badge::after{content:'▾';margin-left:2px;font-size:.7rem;opacity:.85}
+.mail-badge{position:relative;width:40px;height:40px;border-radius:50%;background:rgba(0,245,255,.1);border:1px solid rgba(0,245,255,.4);display:inline-flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:all .2s;color:var(--cyan)}
+.mail-badge:active{transform:scale(.93);background:rgba(0,245,255,.2)}
+.mail-badge .mail-count{position:absolute;top:-2px;right:-2px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--pink);color:#fff;font-size:.62rem;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(255,0,229,.8);border:1.5px solid var(--card)}
+.mail-badge.blink{animation:mailBlink 1s ease-in-out infinite}
+.mail-badge.blink .mail-icon{animation:mailShake 1s ease-in-out infinite}
+@keyframes mailBlink{0%,100%{box-shadow:0 0 0 rgba(255,0,229,0);border-color:rgba(0,245,255,.4)}50%{box-shadow:0 0 20px rgba(255,0,229,.85);border-color:var(--pink)}}
+@keyframes mailShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
 .stats{display:flex;justify-content:space-around;padding:14px 12px;background:var(--card2);border-bottom:1px solid rgba(0,245,255,.1);flex-shrink:0}
 .stat{text-align:center;flex:1}
 .stat .value{font-size:1.3rem;font-weight:800}
@@ -118,9 +126,21 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 #spSettingsModal{z-index:970}
 #legalModal{z-index:980}
 #consentModal{z-index:990}
+#mailModal{z-index:995}
 .modal{width:100%;max-width:420px;max-height:88vh;background:var(--card);border-radius:24px;border:1px solid rgba(0,245,255,.25);padding:22px 18px;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1}
 .modal h3{font-size:1rem;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);text-align:center;margin-bottom:8px}
 .modal-hint{font-size:.7rem;color:var(--dim);text-align:center;margin-bottom:14px}
+.quote-box{background:linear-gradient(135deg,rgba(255,234,0,.12),rgba(255,107,0,.08));border:1px solid rgba(255,234,0,.4);border-radius:16px;padding:16px 18px;margin-bottom:16px;text-align:center;position:relative}
+.quote-box::before{display:none}
+.quote-label{font-size:.62rem;font-weight:800;color:var(--yellow);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.quote-text{font-size:.92rem;font-weight:700;color:var(--text);line-height:1.5;font-style:italic}
+.messages-list{overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:10px}
+.message-item{background:var(--card2);border-radius:14px;padding:12px 14px;border-left:3px solid var(--cyan);position:relative}
+.message-item.unread{border-left-color:var(--pink);background:linear-gradient(90deg,rgba(255,0,229,.08),var(--card2) 60%)}
+.message-text{font-size:.85rem;color:var(--text);line-height:1.5;word-break:break-word}
+.message-meta{font-size:.65rem;color:var(--dim);margin-top:6px;display:flex;justify-content:space-between;align-items:center;text-transform:uppercase;letter-spacing:1px}
+.message-meta .from{color:var(--cyan);font-weight:800}
+.message-meta .unread-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--pink);box-shadow:0 0 8px var(--pink);margin-left:6px;vertical-align:middle}
 .kid-list{overflow-y:auto;margin-bottom:10px}
 .kid-item{display:flex;align-items:center;gap:10px;background:var(--card2);border-radius:14px;padding:10px 12px;margin-bottom:8px;border:1px solid rgba(0,245,255,.12);cursor:pointer}
 .kid-item.active{border-color:var(--cyan);background:rgba(0,245,255,.06)}
@@ -156,6 +176,7 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .day-toggle.on{background:rgba(0,245,255,.15);border-color:var(--cyan);color:var(--cyan)}
 .add-task-form{background:rgba(0,0,0,.2);border-radius:12px;padding:10px;margin-bottom:10px;border:1px dashed rgba(0,245,255,.25)}
 .add-task-form input{width:100%;padding:9px 12px;background:var(--card2);border:1px solid rgba(0,245,255,.2);border-radius:8px;color:var(--text);font-size:.82rem;outline:none;font-family:inherit;margin-bottom:6px}
+.add-task-form textarea{width:100%;padding:9px 12px;background:var(--card2);border:1px solid rgba(0,245,255,.2);border-radius:8px;color:var(--text);font-size:.82rem;outline:none;font-family:inherit;margin-bottom:6px;resize:vertical;min-height:70px;user-select:text;-webkit-user-select:text}
 .add-task-form button{width:100%;padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-weight:900;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
 .add-task-inline{display:flex;gap:6px;margin-bottom:6px}
 .add-task-inline input{flex:1;margin-bottom:0}
@@ -167,12 +188,14 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .settings-box.pending{border-color:rgba(255,0,229,.3)}
 .settings-box.suggest{border-color:rgba(0,255,136,.35)}
 .settings-box.lang{border-color:rgba(0,245,255,.35)}
+.settings-box.messages{border-color:rgba(255,234,0,.55)}
 .settings-title{font-size:.7rem;font-weight:800;color:var(--yellow);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
 .settings-box.kids .settings-title{color:var(--purple)}
 .settings-box.rewards .settings-title{color:var(--cyan)}
 .settings-box.pending .settings-title{color:var(--pink)}
 .settings-box.suggest .settings-title{color:var(--green)}
 .settings-box.lang .settings-title{color:var(--cyan)}
+.settings-box.messages .settings-title{color:var(--yellow)}
 .setting-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 .setting-row label{font-size:.82rem;color:var(--text);font-weight:600}
 .setting-row .input-wrap{display:flex;align-items:center;gap:4px}
@@ -373,6 +396,8 @@ body.light .task{background:#ffffff;border-color:rgba(140,120,220,.18);box-shado
 body.light .task-check{background:rgba(0,180,220,.08);border-color:rgba(0,180,220,.45)}
 body.light .section-title{color:#c40088;text-shadow:none}
 body.light .kid-badge{background:rgba(0,180,220,.12);border-color:rgba(0,180,220,.45);color:#0088a8}
+body.light .mail-badge{background:rgba(0,180,220,.12);border-color:rgba(0,180,220,.45);color:#0088a8}
+body.light .mail-badge .mail-count{background:#d6009c;border-color:#fdfbf7}
 body.light .kid-avatar{background:rgba(0,180,220,.1);border-color:rgba(0,180,220,.35)}
 body.light .kid-item .edit{border-color:rgba(0,180,220,.5);color:#0088a8}
 body.light .money-card{background:linear-gradient(135deg,rgba(140,255,190,.18),rgba(150,235,255,.15));border-color:rgba(0,180,120,.4)}
@@ -411,7 +436,7 @@ body.light .task-edit .row input{background:#ffffff;border-color:rgba(140,120,22
 body.light .day-toggle{background:#ffffff;border-color:rgba(120,120,140,.3);color:#6a6a80}
 body.light .day-toggle.on{background:rgba(0,180,220,.15);border-color:#0088a8;color:#0088a8}
 body.light .add-task-form{background:rgba(255,255,255,.6);border-color:rgba(0,180,220,.35)}
-body.light .add-task-form input{background:#f5f0e8;border-color:rgba(140,120,220,.25);color:#1a1a2e}
+body.light .add-task-form input,body.light .add-task-form textarea{background:#f5f0e8;border-color:rgba(140,120,220,.25);color:#1a1a2e}
 body.light .pin-links button{border-color:rgba(120,120,140,.4);color:#6a6a80}
 body.light .toast{background:#fdfbf7;color:#0088a8;border-color:#0088a8}
 body.light .empty{color:#6a6a80}
@@ -423,12 +448,14 @@ body.light .settings-box.rewards{border-color:rgba(0,180,220,.35)}
 body.light .settings-box.pending{border-color:rgba(200,0,140,.35)}
 body.light .settings-box.suggest{border-color:rgba(0,160,90,.4)}
 body.light .settings-box.lang{border-color:rgba(0,180,220,.4)}
+body.light .settings-box.messages{border-color:rgba(180,140,0,.55)}
 body.light .settings-title{color:#8a6800}
 body.light .settings-box.kids .settings-title{color:#8a1fd6}
 body.light .settings-box.rewards .settings-title{color:#0088a8}
 body.light .settings-box.pending .settings-title{color:#c40088}
 body.light .settings-box.suggest .settings-title{color:#00a05a}
 body.light .settings-box.lang .settings-title{color:#0088a8}
+body.light .settings-box.messages .settings-title{color:#8a6800}
 body.light .setting-row input{background:#ffffff;border-color:rgba(140,120,220,.25);color:#1a1a2e}
 body.light .preset-row button{background:#ffffff;border-color:rgba(140,120,220,.25);color:#0088a8}
 body.light .preset-row button.active{background:rgba(0,180,220,.15);border-color:#0088a8;color:#005f7a}
@@ -487,6 +514,11 @@ body.light .consent-check-label{background:#f5f0e8;border-color:rgba(0,180,220,.
 body.light .consent-check-label.checked{border-color:#0088a8;background:rgba(0,180,220,.08)}
 body.light .consent-check-label input[type=checkbox]{border-color:rgba(0,180,220,.6);background:#fff}
 body.light .consent-check-label input[type=checkbox]:checked{background:#0088a8;border-color:#0088a8}
+body.light .quote-box{background:linear-gradient(135deg,rgba(255,220,80,.25),rgba(255,190,90,.15));border-color:rgba(180,140,0,.5)}
+body.light .quote-label{color:#8a6800}
+body.light .message-item{background:#f5f0e8;border-left-color:#0088a8}
+body.light .message-item.unread{background:linear-gradient(90deg,rgba(214,0,156,.10),#f5f0e8 60%);border-left-color:#d6009c}
+body.light .message-meta .from{color:#0088a8}
 </style>
 </head>
 <body>
@@ -518,7 +550,13 @@ body.light .consent-check-label input[type=checkbox]:checked{background:#0088a8;
 <h1 id="gameLogo">BETTER LIFE</h1>
 <p id="appSubtitle">Ordnung - Haushalt - Routinen</p>
 <div class="date" id="headerDate"></div>
+<div class="kid-row">
 <div class="kid-badge" id="kidBadge"></div>
+<button class="mail-badge" id="mailBadge" type="button" aria-label="Mitteilungen">
+<span class="mail-icon">✉️</span>
+<span class="mail-count" id="mailCount" style="display:none">0</span>
+</button>
+</div>
 </header>
 <div class="stats">
 <div class="stat"><div class="value" id="statLevel">1</div><div class="label" id="lblLevel">Level</div></div>
@@ -555,6 +593,19 @@ body.light .consent-check-label input[type=checkbox]:checked{background:#0088a8;
 <button class="kid-switcher-close" id="kidSwitcherClose" type="button">✕</button>
 </div>
 <div class="kid-switcher-list" id="kidSwitcherList"></div>
+</div>
+</div>
+
+<div class="modal-overlay" id="mailModal">
+<div class="modal" style="max-width:460px">
+<h3 id="mailTitle">✉️ Mitteilungen</h3>
+<div class="quote-box">
+<div class="quote-label" id="quoteLabel">Spruch des Tages</div>
+<div class="quote-text" id="quoteText">—</div>
+</div>
+<div class="section-title" id="mailSectionTitle" style="margin:14px 0 8px 0">Nachrichten von Mama & Papa</div>
+<div class="messages-list" id="messagesList"></div>
+<button class="modal-close" id="mailClose" style="margin-top:12px">Schließen</button>
 </div>
 </div>
 
@@ -601,6 +652,14 @@ body.light .consent-check-label input[type=checkbox]:checked{background:#0088a8;
 <span class="parent-kid-switch-chevron">▾</span>
 </button>
 <div class="modal-hint" id="parentActiveKidHint" style="margin:8px 0 0;text-align:left;font-size:.66rem">Antippen, um auf ein anderes Kind zu wechseln.</div>
+</div>
+<div class="settings-box messages">
+<div class="settings-title" id="parentMessagesTitle">✉️ Mitteilungen an dieses Kind</div>
+<div class="add-task-form" style="margin-bottom:8px">
+<textarea id="newMessageText" placeholder="Nachricht an das Kind..." maxlength="500"></textarea>
+<button id="sendMessageBtn">Nachricht senden</button>
+</div>
+<div id="parentMessageList"></div>
 </div>
 <div class="settings-box lang">
 <div class="settings-title" id="parentLangTitle">🌐 Sprache (Eltern-Bereich)</div>
@@ -846,6 +905,19 @@ var T={
     consentCancel:'Abbrechen',
     loginAsKid:'Kind',loginAsParent:'Eltern',loginBtnParent:'Als Eltern anmelden',
     pinPlaceholder:'Eltern-PIN',
+    mailTitle:'✉️ Mitteilungen',
+    mailSectionTitle:'Nachrichten von Mama & Papa',
+    parentMessagesTitle:'✉️ Mitteilungen an dieses Kind',
+    newMessagePlaceholder:'Nachricht an das Kind...',
+    sendMessageBtn:'Nachricht senden',
+    noMessages:'Noch keine Nachrichten.',
+    quoteLabel:'Spruch des Tages',
+    fromParents:'Mama & Papa',
+    sentOn:'Gesendet am',
+    tMessageSent:'NACHRICHT GESENDET ✉️',
+    tConfirmDeleteMessage:'Diese Nachricht löschen?',
+    tMessageDeleted:'NACHRICHT GELÖSCHT',
+    tMessageEmpty:'BITTE TEXT EINGEBEN',
     errNoPinSet:'Für dieses Konto ist noch kein Eltern-PIN gesetzt. Bitte zuerst als Kind anmelden und den PIN im Eltern-Bereich festlegen.',
     errWrongPinLogin:'Falsche PIN. Bitte erneut versuchen.',
     errConsentNeeded:'Bitte stimme zuerst Datenschutz und Nutzung zu.',
@@ -925,6 +997,19 @@ var T={
     consentCancel:'Cancel',
     loginAsKid:'Child',loginAsParent:'Parents',loginBtnParent:'Sign in as parent',
     pinPlaceholder:'Parent PIN',
+    mailTitle:'✉️ Messages',
+    mailSectionTitle:'Messages from Mom & Dad',
+    parentMessagesTitle:'✉️ Messages to this child',
+    newMessagePlaceholder:'Message to child...',
+    sendMessageBtn:'Send message',
+    noMessages:'No messages yet.',
+    quoteLabel:'Quote of the day',
+    fromParents:'Mom & Dad',
+    sentOn:'Sent on',
+    tMessageSent:'MESSAGE SENT ✉️',
+    tConfirmDeleteMessage:'Delete this message?',
+    tMessageDeleted:'MESSAGE DELETED',
+    tMessageEmpty:'PLEASE ENTER TEXT',
     errNoPinSet:'No parent PIN set for this account yet. Please sign in as child first and set the PIN in the parent area.',
     errWrongPinLogin:'Wrong PIN. Please try again.',
     errConsentNeeded:'Please agree to the privacy policy and terms first.',
@@ -1086,6 +1171,186 @@ Germany</p>
 var legalCurrentTab='impressum';
 var consentCurrentTab='datenschutz';
 
+var QUOTES=[
+"Der frühe Vogel fängt den Wurm.",
+"Wer zuletzt lacht, lacht am besten.",
+"Übung macht den Meister.",
+"Morgenstund hat Gold im Mund.",
+"Aller Anfang ist schwer.",
+"Ende gut, alles gut.",
+"Wer nicht wagt, der nicht gewinnt.",
+"Ein Schritt nach dem anderen – auch der längste Weg beginnt mit dem ersten.",
+"Wer rastet, der rostet.",
+"Was du heute kannst besorgen, das verschiebe nicht auf morgen.",
+"Auch kleine Schritte führen ans Ziel.",
+"Der Weg ist das Ziel.",
+"Erfolg ist die Summe kleiner Schritte.",
+"Hab keine Angst zu wachsen – auch Bäume tun das.",
+"Wer lächelt, hat mehr vom Tag.",
+"Manchmal ist Aufgeben keine Option, sondern eine Pause.",
+"Jeder Tag ist ein neuer Anfang.",
+"Sei die Energie, die du in der Welt sehen willst.",
+"Gute Laune ist ansteckend – verbreite sie!",
+"Es ist nie zu spät, heute besser zu werden.",
+"Fehler sind Beweise, dass du es versucht hast.",
+"Nicht jeder Tag ist perfekt, aber jeder Tag hat etwas Gutes.",
+"Wer sein Ziel kennt, findet den Weg.",
+"Der beste Zeitpunkt für einen neuen Start ist jetzt.",
+"Lächle – morgen wird es vielleicht noch besser.",
+"Was gestern war, ist vorbei. Heute zählt.",
+"Ein Tag ohne Lachen ist ein verlorener Tag.",
+"Kleine Schritte sind auch Schritte.",
+"Du musst nicht perfekt sein, nur du selbst.",
+"Sei stolz auf jeden Fortschritt.",
+"Wer mutig ist, hat mehr vom Leben.",
+"Träume groß, aber fang klein an.",
+"Der Wind weht nicht immer in die richtige Richtung – aber du kannst die Segel setzen.",
+"Alles Gute kommt zu denen, die geduldig sind.",
+"Zwei Dinge sind unendlich: das Universum und dein Potenzial.",
+"Heute ist ein guter Tag, um großartig zu sein.",
+"Streng dich an – aber vergiss nicht zu atmen.",
+"Wenn du fällst, steh wieder auf. Das nennt man Leben.",
+"Manchmal ist ein Lächeln die beste Medizin.",
+"Die Sonne scheint auch hinter den Wolken.",
+"Wer zu spät kommt, den bestraft das Leben – also sei pünktlich!",
+"Sei wie ein Keks – ein bisschen süß und immer gut drauf.",
+"Was dich nicht umbringt, macht dich stärker.",
+"Ein Löwe jagt nicht, wenn er satt ist – aber du darfst trotzdem träumen.",
+"Erfolg ist, wenn Vorbereitung auf Gelegenheit trifft.",
+"Wer nicht neugierig ist, lernt nichts Neues.",
+"Sei der Grund, warum jemand heute lächelt.",
+"Manchmal sind die kleinsten Dinge die wichtigsten.",
+"Wenn das Leben dir Zitronen gibt, mach Limonade draus.",
+"Sei mutig, sei wild, sei du.",
+"Der beste Weg, die Zukunft vorauszusagen, ist, sie zu gestalten.",
+"Wer sein Bestes gibt, hat schon gewonnen.",
+"Du bist stärker, als du denkst.",
+"Eine gute Tat am Morgen macht den ganzen Tag heller.",
+"Vergleiche dich nicht mit anderen – vergleiche dich mit gestern.",
+"Es ist okay, langsamer zu gehen, aber geh weiter.",
+"Atme tief durch und lächele – du schaffst das.",
+"Der Weg zum Erfolg ist mit Fehlern gepflastert.",
+"Der Mut wächst mit jeder Angst, die du überwindest.",
+"Tag für Tag, Schritt für Schritt.",
+"Vertraue dir selbst – du kennst den Weg.",
+"Wer nicht träumt, verpasst das Beste.",
+"Wenn du denkst, du kannst es, dann kannst du es.",
+"Es gibt nichts Gutes, außer man tut es.",
+"Ein freundliches Wort kostet nichts und bedeutet viel.",
+"Sei geduldig – auch der längste Tag geht vorbei.",
+"Sei neugierig wie ein Kind – die Welt ist voller Wunder.",
+"Jeder Erfolg beginnt mit dem Entschluss, es zu versuchen.",
+"Lebe, liebe, lache – mehr braucht es nicht.",
+"Der einzige Mensch, mit dem du dich vergleichen solltest, bist du selbst.",
+"Wer freundlich ist, ist niemals allein.",
+"Sei die Sonne an einem grauen Tag.",
+"Man wächst an seinen Aufgaben.",
+"Die schönsten Dinge im Leben sind nicht Dinge.",
+"Was du säst, wirst du ernten.",
+"Denk positiv – morgen wird es besser.",
+"Sei kein Mitläufer – geh deinen eigenen Weg.",
+"Ein Kompliment kostet nichts und wirkt Wunder.",
+"Du schaffst mehr, als du glaubst.",
+"Wer heute lernt, ist morgen klüger.",
+"Gönn dir eine Pause – auch Helden ruhen sich aus.",
+"Wenn du denkst, es geht nicht mehr, kommt oft von irgendwo ein Lichtlein her.",
+"Man muss auch mal Fünfe gerade sein lassen.",
+"Wer im Glashaus sitzt, sollte nicht mit Steinen werfen.",
+"Der Krug geht so lange zum Brunnen, bis er bricht – also sei vorsichtig.",
+"Reden ist Silber, Schweigen ist Gold.",
+"Morgen, morgen, nur nicht heute, sagen alle faulen Leute.",
+"Was Hänschen nicht lernt, lernt Hans nimmermehr – aber du bist ja noch jung!",
+"Ohne Fleiß kein Preis.",
+"Wo ein Wille ist, ist auch ein Weg.",
+"Wer eine Grube gräbt, fällt selbst hinein – also bau Brücken!",
+"Frisch gewagt ist halb gewonnen.",
+"In der Ruhe liegt die Kraft.",
+"Alle Wege führen nach Rom – aber du darfst dir deinen eigenen suchen.",
+"Es ist noch kein Meister vom Himmel gefallen.",
+"Hunde, die bellen, beißen nicht.",
+"Der Apfel fällt nicht weit vom Stamm – aber du kannst wachsen, wohin du willst.",
+"Ein blindes Huhn findet auch mal ein Korn – also einfach ausprobieren!",
+"Wer anderen eine Grube gräbt, fällt selbst hinein – sei also freundlich.",
+"Der Ball muss ins Tor – und du auf dein Sofa, nach getaner Arbeit.",
+"Pünktlichkeit ist die Höflichkeit der Könige.",
+"Viele Köche verderben den Brei – aber du hast ja einen Kopf zum Selberdenken.",
+"Erst die Arbeit, dann das Vergnügen.",
+"Eine Schwalbe macht noch keinen Sommer.",
+"Der frühe Wurm wird vom Vogel gefressen – aber der späte Wurm lebt länger!",
+"Wenn zwei sich streiten, freut sich der Dritte.",
+"Die Katze lässt das Mausen nicht – aber du darfst dich ändern.",
+"Das Leben ist wie eine Schachtel Pralinen – man weiß nie, was man bekommt.",
+"Das Gras auf der anderen Seite ist immer grüner – aber auch dort muss gemäht werden.",
+"Wenn du schnell gehen willst, geh allein. Wenn du weit gehen willst, geh mit anderen.",
+"Ein Traum wird wahr, wenn du dran arbeitest.",
+"Zwischen Himmel und Erde gibt es mehr Dinge, als du dir vorstellen kannst.",
+"Jeder Tag bringt eine neue Chance.",
+"Sei wie eine Blume – sonnig, freundlich und stark.",
+"Der Klügere gibt nach – aber manchmal ist Durchhalten besser.",
+"Es gibt keine dummen Fragen, nur dumme Antworten.",
+"Wer zuletzt lacht, hat es bis dahin oft nicht leicht gehabt.",
+"Besser spät als nie.",
+"Der Weg ist steinig, aber das Ziel ist schön.",
+"Nur wer sein Ziel kennt, findet den Weg.",
+"Wenn du etwas wirklich willst, findest du einen Weg. Wenn nicht, findest du eine Ausrede.",
+"Fange an, wo du bist. Nutze, was du hast. Tu, was du kannst.",
+"Lächle, auch wenn dir nicht danach ist – dein Gehirn merkt es sich.",
+"Ein kleiner Schritt heute ist besser als ein großer Schritt nie.",
+"Auch der dunkelste Tag hat 24 Stunden – und dann kommt die Nacht.",
+"Wer aufhört, besser zu werden, hat aufgehört, gut zu sein.",
+"Man sieht nur mit dem Herzen gut.",
+"Die Zeit heilt alle Wunden.",
+"Zeit ist das, was man aus ihr macht.",
+"Jeder Anfang ist auch ein Abschied – aber das Gute wartet schon.",
+"Wenn du glaubst, es geht nicht mehr, dann kommt der Berg zum Propheten – oder du zum Berg.",
+"Positiv denken ist die halbe Miete.",
+"Deine Gedanken erschaffen deine Welt.",
+"Sei der Grund, warum jemand glaubt, dass es noch gute Menschen gibt.",
+"Wer das Gute sucht, findet es auch.",
+"Immer der Sonne nach.",
+"Der Weg entsteht, indem du ihn gehst.",
+"Das Beste kommt erst noch.",
+"Sei heute 1 % besser als gestern.",
+"Manchmal muss man das Alte loslassen, damit das Neue kommen kann.",
+"Irgendwo im Unmöglichen liegt das Wunderbare.",
+"Wer die Sterne sehen will, muss die Dunkelheit aushalten können.",
+"Zwei Dinge sind unendlich: Das Universum und die menschliche Dummheit – aber beim Universum bin ich mir nicht sicher.",
+"Wer zu viel nachdenkt, kommt nicht ins Handeln.",
+"Mach dir keine Sorgen, die du nicht ändern kannst.",
+"Lebe jeden Tag, als wäre es der letzte – aber spar noch für die Rente.",
+"Das Leben ist zu kurz für schlechte Laune.",
+"Wer im Jetzt lebt, hat weniger zu bereuen.",
+"Vertraue dem Prozess – auch wenn er holprig ist.",
+"Sei ein Vorbild, nicht ein Abbild.",
+"Wenn es einfach wäre, würde es jeder machen.",
+"Erfolg hat viele Väter, Misserfolg ist ein Waisenkind.",
+"Wer die Vergangenheit nicht kennt, kann die Zukunft nicht gestalten.",
+"Der klügste Kopf ist nicht der, der alles weiß, sondern der, der dazulernt.",
+"Wer sich selbst kennt, ist der wahre Meister.",
+"Ein gesundes Selbstvertrauen ist besser als ein gut gefüllter Geldsack.",
+"Wer sein Bestes gibt, hat immer Erfolg – auch wenn das Ergebnis anders aussieht.",
+"Es gibt keinen falschen Weg, nur Umwege.",
+"Wer aufhört, Neues zu lernen, wird alt – egal in welchem Alter.",
+"Die schönste Freude ist die, die man teilt.",
+"Wer Ziele hat, kennt keinen Stillstand.",
+"Mut ist, wenn du weißt, dass es schwer wird, und trotzdem anfängst.",
+"Der Unterschied zwischen Träumern und Machern ist die Umsetzung.",
+"Wenn du etwas verändern willst, dann fang bei dir selbst an.",
+"Man kann nicht alles im Kopf lösen – manchmal muss man es einfach tun.",
+"Übung ist nicht die Mutter des Erfolgs – Ausdauer ist es.",
+"Erfolg ist kein Zufall, sondern das Ergebnis harter Arbeit.",
+"Es gibt keine Abkürzung zum Erfolg – nur den geraden Weg.",
+"Wer im Leben stehen will, muss auch mal hinfallen dürfen.",
+"Du bist der Autor deiner eigenen Geschichte.",
+"Schreibe heute ein Kapitel, das du morgen gerne liest.",
+"Wer nicht an sich glaubt, hat schon verloren – also glaub du an dich!",
+"Manchmal ist weniger mehr.",
+"Einfach mal durchatmen – es wird schon.",
+"Der beste Tag ist heute.",
+"Gestern kannst du nicht ändern, morgen nicht planen – aber heute kannst du leben.",
+"Sei freundlich zu dir selbst – du bist dein längster Begleiter."
+];
+
 var DEFAULT_TEMPLATES=[
 {id:'zähne',title:'Zähne putzen',cat:'Hygiene',days:[0,1,2,3,4,5,6],important:true},
 {id:'gesicht',title:'Gesicht waschen',cat:'Hygiene',days:[0,1,2,3,4,5,6],important:true},
@@ -1139,6 +1404,12 @@ function setDeviceActiveKid(uid,kidId){
 }
 function calcLevel(tp){if(!tp||tp<LEVEL_BASE)return 1;return Math.floor(tp/LEVEL_BASE)}
 function fmtEur(n){var s=String(n);if(s.indexOf('.')>-1)s=s.replace('.',',');return s+'€'}
+function dayOfYear(d){d=d||new Date();var start=new Date(d.getFullYear(),0,0);var diff=d-start;return Math.floor(diff/86400000)}
+function getTodayQuote(){
+  if(!QUOTES.length)return '';
+  var idx=dayOfYear()%QUOTES.length;
+  return QUOTES[idx];
+}
 
 function detectBrowserLang(){
   try{
@@ -1249,6 +1520,17 @@ function getRewards(){
   if(k&&k.data&&Array.isArray(k.data.rewards))return k.data.rewards;
   return [];
 }
+function getMessages(){
+  var k=getKid();
+  if(k&&k.data&&Array.isArray(k.data.messages))return k.data.messages;
+  return [];
+}
+function getUnreadCount(){
+  var msgs=getMessages();
+  var n=0;
+  for(var i=0;i<msgs.length;i++)if(!msgs[i].read)n++;
+  return n;
+}
 function renderAvatar(kid,size){
   size=size||38;
   if(kid&&kid.photo)return '<div class="kid-avatar" style="width:'+size+'px;height:'+size+'px"><img src="'+kid.photo+'"></div>';
@@ -1276,6 +1558,7 @@ function buildKidData(initLang){
     points:0,totalPoints:0,level:1,earned:0,
     history:[],pointsToday:0,
     pendingRewards:[],rewardHistory:[],suggestedRewards:[],
+    messages:[],
     language:(initLang==='en'?'en':'de'),
     stundenplan:defaultStundenplan(),
     taskTemplates: templates,
@@ -1308,6 +1591,7 @@ function needsRepair(d){
     if(!k.data.stundenplan||typeof k.data.stundenplan!=='object')return true;
     if(!Array.isArray(k.data.taskTemplates))return true;
     if(!Array.isArray(k.data.rewards))return true;
+    if(!Array.isArray(k.data.messages))return true;
   }
   return false;
 }
@@ -1316,6 +1600,7 @@ function processKidDay(kid){
   var d=kid.data;
   if(!Array.isArray(d.taskTemplates)||d.taskTemplates.length===0)d.taskTemplates=clone(DEFAULT_TEMPLATES);
   if(!Array.isArray(d.rewards))d.rewards=[];
+  if(!Array.isArray(d.messages))d.messages=[];
   if(d.today!==todayKey()){
     var allDone=true;
     if(d.tasks&&d.tasks.length){for(var i=0;i<d.tasks.length;i++){if(!d.tasks[i].done){allDone=false;break}}}else allDone=false;
@@ -1376,6 +1661,7 @@ function migrate(data){
       if(!Array.isArray(kd.rewardHistory))kd.rewardHistory=[];
       if(!Array.isArray(kd.suggestedRewards))kd.suggestedRewards=[];
       if(!Array.isArray(kd.history))kd.history=[];
+      if(!Array.isArray(kd.messages))kd.messages=[];
       if(kd.language!=='de'&&kd.language!=='en')kd.language=legacyLang;
 
       if(!Array.isArray(kd.taskTemplates)||kd.taskTemplates.length===0){
@@ -1487,7 +1773,7 @@ function startListener(uid){
         }else{
           pendingParentPin=null;pendingParentAuth=false;
           signOut(auth);
-          setTimeout(function(){showLoginMsg(t('errWrongPinLogin'),true)},400);
+          setTimeout(function(){showToast(t('errWrongPinLogin'))},400);
           return;
         }
       }
@@ -1561,6 +1847,13 @@ function applyStaticTranslations(){
   setTxt('consentCheckText',t('consentCheckText'));
   setTxt('consentConfirm',t('consentConfirm'));
   setTxt('consentCancel',t('consentCancel'));
+  setTxt('mailTitle',t('mailTitle'));
+  setTxt('mailSectionTitle',t('mailSectionTitle'));
+  setTxt('quoteLabel',t('quoteLabel'));
+  setTxt('mailClose',t('cancel'));
+  setTxt('parentMessagesTitle',t('parentMessagesTitle'));
+  var nm=document.getElementById('newMessageText');if(nm)nm.placeholder=t('newMessagePlaceholder');
+  setTxt('sendMessageBtn',t('sendMessageBtn'));
   var themeBtn=document.getElementById('themeBtn');
   if(themeBtn)themeBtn.textContent=(getSavedTheme()==='light')?t('tThemeDark'):t('tThemeLight');
   setTxt('kidEditHint',t('kidEditSym'));
@@ -1615,6 +1908,7 @@ function applyStaticTranslations(){
   refreshParentLangOptions();
   if(typeof renderLegalContent==='function' && legalModalEl && legalModalEl.classList.contains('show')){renderLegalContent()}
   if(typeof renderConsentContent==='function' && consentModalEl && consentModalEl.classList.contains('show')){renderConsentContent()}
+  if(typeof renderMessagesContent==='function' && mailModalEl && mailModalEl.classList.contains('show')){renderMessagesContent()}
 }
 
 function formatAuthError(err){
@@ -1852,6 +2146,7 @@ function refreshParentPanel(){
   renderRewardEditor();
   renderSuggestions();
   renderPendingRequests();
+  renderParentMessages();
   refreshParentLangOptions();
 }
 function showParentPanel(){
@@ -1942,6 +2237,132 @@ var parentKidSwitchBtnEl=document.getElementById('parentKidSwitchBtn');
 if(parentKidSwitchBtnEl)parentKidSwitchBtnEl.addEventListener('click',function(){
   openKidSwitcher();
 });
+
+/* ===== Mitteilungen ===== */
+var mailModalEl=document.getElementById('mailModal');
+var mailBadgeEl=document.getElementById('mailBadge');
+var mailCountEl=document.getElementById('mailCount');
+var messagesListEl=document.getElementById('messagesList');
+var mailCloseEl=document.getElementById('mailClose');
+
+function updateMailBadge(){
+  if(!mailBadgeEl||!mailCountEl)return;
+  var n=getUnreadCount();
+  if(n>0){
+    mailCountEl.textContent=n;
+    mailCountEl.style.display='flex';
+    mailBadgeEl.classList.add('blink');
+  }else{
+    mailCountEl.style.display='none';
+    mailBadgeEl.classList.remove('blink');
+  }
+}
+function openMailModal(){
+  if(!accountData)return;
+  renderMessagesContent();
+  if(mailModalEl)mailModalEl.classList.add('show');
+  setTimeout(function(){markAllMessagesRead()},1200);
+}
+function closeMailModal(){
+  if(mailModalEl)mailModalEl.classList.remove('show');
+  markAllMessagesRead();
+}
+function markAllMessagesRead(){
+  var k=getKid();
+  if(!k||!k.data||!Array.isArray(k.data.messages))return;
+  var changed=false;
+  for(var i=0;i<k.data.messages.length;i++){
+    if(!k.data.messages[i].read){k.data.messages[i].read=true;changed=true}
+  }
+  if(changed){saveToFirebase();updateMailBadge()}
+}
+function renderMessagesContent(){
+  var qEl=document.getElementById('quoteText');
+  if(qEl)qEl.textContent='„'+getTodayQuote()+'“';
+  var lbl=document.getElementById('quoteLabel');
+  if(lbl)lbl.textContent=t('quoteLabel');
+  var sec=document.getElementById('mailSectionTitle');
+  if(sec)sec.textContent=t('mailSectionTitle');
+  var ttl=document.getElementById('mailTitle');
+  if(ttl)ttl.textContent=t('mailTitle');
+  if(!messagesListEl)return;
+  var msgs=getMessages();
+  if(!msgs.length){
+    messagesListEl.innerHTML='<div class="empty" style="padding:20px 10px">'+t('noMessages')+'</div>';
+    return;
+  }
+  var html='';
+  for(var i=0;i<msgs.length;i++){
+    var m=msgs[i];
+    var unreadCls=m.read?'':' unread';
+    var dot=m.read?'':'<span class="unread-dot"></span>';
+    html+='<div class="message-item'+unreadCls+'">'+
+      '<div class="message-text">'+escapeHtml(m.text||'').replace(/\n/g,'<br>')+'</div>'+
+      '<div class="message-meta"><span class="from">💌 '+t('fromParents')+'</span><span>'+formatDate(m.date)+dot+'</span></div>'+
+    '</div>';
+  }
+  messagesListEl.innerHTML=html;
+}
+if(mailBadgeEl)mailBadgeEl.addEventListener('click',openMailModal);
+if(mailCloseEl)mailCloseEl.addEventListener('click',closeMailModal);
+if(mailModalEl)mailModalEl.addEventListener('click',function(ev){if(ev.target===mailModalEl)closeMailModal()});
+
+function renderParentMessages(){
+  var list=document.getElementById('parentMessageList');if(!list)return;
+  var k=getKid();
+  if(!k||!k.data){list.innerHTML='';return}
+  if(!Array.isArray(k.data.messages))k.data.messages=[];
+  if(!k.data.messages.length){
+    list.innerHTML='<div class="pending-empty">'+t('noMessages')+'</div>';
+    return;
+  }
+  var html='';
+  for(var i=0;i<k.data.messages.length;i++){
+    var m=k.data.messages[i];
+    html+='<div class="pending-item" style="border-color:rgba(255,234,0,.4)">'+
+      '<div class="info">'+
+        '<div class="who">'+t('sentOn')+' '+formatDate(m.date)+(m.read?' • ✓ gelesen':' • neu')+'</div>'+
+        '<div class="what" style="font-weight:600;font-size:.82rem;white-space:pre-wrap">'+escapeHtml(m.text||'')+'</div>'+
+      '</div>'+
+      '<div class="actions"><button class="reject" data-msg="'+m.id+'">✕</button></div>'+
+    '</div>';
+  }
+  list.innerHTML=html;
+  var dels=list.querySelectorAll('.reject');
+  for(var i=0;i<dels.length;i++)dels[i].addEventListener('click',function(){
+    deleteParentMessage(this.getAttribute('data-msg'));
+  });
+}
+function sendParentMessage(){
+  var k=getKid();
+  if(!k||!k.data)return;
+  var ta=document.getElementById('newMessageText');
+  if(!ta)return;
+  var txt=ta.value.trim();
+  if(!txt){showToast(t('tMessageEmpty'));return}
+  if(!Array.isArray(k.data.messages))k.data.messages=[];
+  k.data.messages.unshift({id:genId('msg'),text:txt,date:todayKey(),read:false,ts:Date.now()});
+  ta.value='';
+  saveToFirebase();
+  renderParentMessages();
+  updateMailBadge();
+  showToast(t('tMessageSent'));
+}
+var sendMessageBtnEl=document.getElementById('sendMessageBtn');
+if(sendMessageBtnEl)sendMessageBtnEl.addEventListener('click',sendParentMessage);
+function deleteParentMessage(msgId){
+  var k=getKid();
+  if(!k||!k.data||!Array.isArray(k.data.messages))return;
+  var idx=-1;
+  for(var i=0;i<k.data.messages.length;i++)if(k.data.messages[i].id===msgId){idx=i;break}
+  if(idx<0)return;
+  if(!confirm(t('tConfirmDeleteMessage')))return;
+  k.data.messages.splice(idx,1);
+  saveToFirebase();
+  renderParentMessages();
+  updateMailBadge();
+  showToast(t('tMessageDeleted'));
+}
 
 var legalModalEl=document.getElementById('legalModal');
 var legalBodyEl=document.getElementById('legalBody');
@@ -2549,7 +2970,7 @@ onAuthStateChanged(auth,function(user){
     pendingSignupEmail=null;pendingSignupPw=null;pendingConsentTimestamp=null;
     if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
     try{localStorage.setItem('mylife_last_logout',Date.now())}catch(e){}
-    if(fabMenu)fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();spClose();closeLangModal();closeKidSwitcher();closeLegalModal();closeConsentModal();
+    if(fabMenu)fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();spClose();closeLangModal();closeKidSwitcher();closeLegalModal();closeConsentModal();closeMailModal();
     var ls=document.getElementById('loginScreen');if(ls)ls.style.display='flex';
     var ap=document.getElementById('app');if(ap)ap.style.display='none';
     var le=document.getElementById('loginEmail'),lp=document.getElementById('loginPassword'),lpin=document.getElementById('loginPin');
@@ -2567,6 +2988,7 @@ function renderHeader(){
     if(kid)badge.innerHTML=renderAvatar(kid,24)+'<span>'+escapeHtml(kid.name||'')+'</span>';
     else badge.innerHTML='';
   }
+  updateMailBadge();
 }
 function renderStats(){
   var d=getKidData();if(!d)return;
