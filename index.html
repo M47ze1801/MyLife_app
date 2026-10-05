@@ -627,7 +627,7 @@ body.light .consent-check-label input[type=checkbox]:checked{background:#0088a8;
 <div class="preset-row" id="pointsPresets"><button data-val="5">5</button><button data-val="10">10</button><button data-val="20">20</button><button data-val="50">50</button></div>
 </div>
 <div class="settings-box rewards">
-<div class="settings-title" id="parentRewardsTitle">🎁 Belohnungen verwalten</div>
+<div class="settings-title" id="parentRewardsTitle">🎁 Belohnungen (nur dieses Kind)</div>
 <div id="rewardEditList"></div>
 <div class="add-task-form" style="margin-bottom:0">
 <input type="text" id="newRewardTitle" placeholder="Belohnung (z.B. Freizeitpark)" maxlength="40">
@@ -646,7 +646,7 @@ body.light .consent-check-label input[type=checkbox]:checked{background:#0088a8;
 <div class="settings-title" id="parentPendingTitle">📥 Offene Anfragen</div>
 <div id="pendingRequestsList"></div>
 </div>
-<div class="modal-hint" id="parentTaskEditHint">Aufgaben anpassen – gilt für alle Kinder</div>
+<div class="modal-hint" id="parentTaskEditHint">Aufgaben – nur für das aktive Kind</div>
 <div id="taskEditList"></div>
 </div>
 <div class="add-task-form">
@@ -818,9 +818,9 @@ var T={
     pinMust6:'PIN muss genau 6 Ziffern haben.',pinMismatch:'PINs stimmen nicht überein.',pinWrongFull:'Falsche PIN.',
     kidsManage:'👶 Kinder verwalten',kidsMax:'Bis zu 5 Kindern pro Konto',kidName:'Name des Kindes',
     rewardPoints:'💰 Belohnung & Punkte',dailyMoney:'Tagesgeld',pointsPerTask:'Punkte pro Aufgabe',
-    rewardsManage:'🎁 Belohnungen verwalten',rewardNew:'Belohnung (z.B. Freizeitpark)',points:'Punkte',
+    rewardsManage:'🎁 Belohnungen (nur dieses Kind)',rewardNew:'Belohnung (z.B. Freizeitpark)',points:'Punkte',
     addReward:'+ Belohnung hinzufügen',suggestionsFromKids:'💡 Vorschläge von Kindern',
-    pendingRequests:'📥 Offene Anfragen',taskEditHint:'Aufgaben anpassen – gilt für alle Kinder',
+    pendingRequests:'📥 Offene Anfragen',taskEditHint:'Aufgaben – nur für das aktive Kind',
     newTask:'Neue Aufgabe',category:'Kategorie (z.B. Küche)',addTask:'+ Aufgabe hinzufügen',
     noRewardsYet:'Noch keine Belohnungen angelegt',noTasksYet:'Noch keine Aufgaben angelegt',
     noSuggestions:'Keine Vorschläge',noRequests:'Keine offenen Anfragen',setPointsLbl:'Punkte festlegen',important:'Wichtig',
@@ -897,9 +897,9 @@ var T={
     pinMust6:'PIN must be exactly 6 digits.',pinMismatch:'PINs do not match.',pinWrongFull:'Wrong PIN.',
     kidsManage:'👶 Manage children',kidsMax:'Up to 5 children per account',kidName:'Child name',
     rewardPoints:'💰 Reward & points',dailyMoney:'Daily money',pointsPerTask:'Points per task',
-    rewardsManage:'🎁 Manage rewards',rewardNew:'Reward (e.g. Theme park)',points:'Points',
+    rewardsManage:'🎁 Rewards (only this child)',rewardNew:'Reward (e.g. Theme park)',points:'Points',
     addReward:'+ Add reward',suggestionsFromKids:'💡 Suggestions from children',
-    pendingRequests:'📥 Pending requests',taskEditHint:'Adjust tasks – applies to all children',
+    pendingRequests:'📥 Pending requests',taskEditHint:'Tasks – only for the active child',
     newTask:'New task',category:'Category (e.g. Kitchen)',addTask:'+ Add task',
     noRewardsYet:'No rewards created yet',noTasksYet:'No tasks created yet',
     noSuggestions:'No suggestions',noRequests:'No pending requests',setPointsLbl:'Set points',important:'Important',
@@ -1244,7 +1244,11 @@ function refreshLoginLangPills(){
 
 function getDailyReward(){if(accountData&&accountData.settings&&typeof accountData.settings.dailyReward==='number'&&accountData.settings.dailyReward>=0)return accountData.settings.dailyReward;return DEFAULT_DAILY_REWARD}
 function getPointsPerTask(){if(accountData&&accountData.settings&&typeof accountData.settings.pointsPerTask==='number'&&accountData.settings.pointsPerTask>=1)return accountData.settings.pointsPerTask;return DEFAULT_POINTS_PER_TASK}
-function getRewards(){if(accountData&&accountData.rewards&&Array.isArray(accountData.rewards))return accountData.rewards;return[]}
+function getRewards(){
+  var k=getKid();
+  if(k&&k.data&&Array.isArray(k.data.rewards))return k.data.rewards;
+  return [];
+}
 function renderAvatar(kid,size){
   size=size||38;
   if(kid&&kid.photo)return '<div class="kid-avatar" style="width:'+size+'px;height:'+size+'px"><img src="'+kid.photo+'"></div>';
@@ -1252,37 +1256,71 @@ function renderAvatar(kid,size){
   return '<div class="kid-avatar" style="width:'+size+'px;height:'+size+'px;font-size:'+(size*0.55)+'px">'+em+'</div>';
 }
 function defaultStundenplan(){var wd=currentWeekday();var dayId=(wd>=1&&wd<=5)?SP_DAYS[wd-1].id:'mo';return {cells:{},custom:[],day:dayId}}
-function buildKidData(templates, initLang){
+function buildTasksForDay(templates){
   var wd=currentWeekday(),tasks=[];
-  if(Array.isArray(templates)){for(var i=0;i<templates.length;i++){var tpl=templates[i];if(tpl&&Array.isArray(tpl.days)&&tpl.days.indexOf(wd)!==-1)tasks.push({id:tpl.id,title:tpl.title,cat:tpl.cat,important:!!tpl.important,done:false})}}
-  return {tasks:tasks,today:todayKey(),points:0,totalPoints:0,level:1,earned:0,history:[],pointsToday:0,pendingRewards:[],rewardHistory:[],suggestedRewards:[],language:(initLang==='en'?'en':'de')};
+  if(Array.isArray(templates)){
+    for(var i=0;i<templates.length;i++){
+      var tpl=templates[i];
+      if(tpl&&Array.isArray(tpl.days)&&tpl.days.indexOf(wd)!==-1){
+        tasks.push({id:tpl.id,title:tpl.title,cat:tpl.cat,important:!!tpl.important,done:false});
+      }
+    }
+  }
+  return tasks;
+}
+function buildKidData(initLang){
+  var templates=clone(DEFAULT_TEMPLATES);
+  return {
+    tasks: buildTasksForDay(templates),
+    today: todayKey(),
+    points:0,totalPoints:0,level:1,earned:0,
+    history:[],pointsToday:0,
+    pendingRewards:[],rewardHistory:[],suggestedRewards:[],
+    language:(initLang==='en'?'en':'de'),
+    stundenplan:defaultStundenplan(),
+    taskTemplates: templates,
+    rewards:[]
+  };
 }
 function defaultAccount(){
-  var id=genId('kid'),templates=clone(DEFAULT_TEMPLATES),kids={};
-  kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:buildKidData(templates, getSavedLang())};
-  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},rewards:[],stundenplan:defaultStundenplan(),parentSettings:{language:getSavedLang()}};
+  var id=genId('kid'),kids={};
+  kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:buildKidData(getSavedLang())};
+  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},parentSettings:{language:getSavedLang()}};
 }
 function getKid(){if(!accountData||!accountData.activeKid||!accountData.kids)return null;return accountData.kids[accountData.activeKid]||null}
 function getKidData(){var k=getKid();return k?k.data:null}
-function getTemplates(){if(accountData&&Array.isArray(accountData.taskTemplates)&&accountData.taskTemplates.length)return accountData.taskTemplates;return clone(DEFAULT_TEMPLATES)}
+function getTemplates(){
+  var k=getKid();
+  if(k&&k.data&&Array.isArray(k.data.taskTemplates)&&k.data.taskTemplates.length)return k.data.taskTemplates;
+  return clone(DEFAULT_TEMPLATES);
+}
 function isNewFormat(d){return !!(d&&typeof d==='object'&&d.kids&&d.kidOrder&&Array.isArray(d.kidOrder)&&d.activeKid&&d.kids[d.activeKid])}
 function needsRepair(d){
   if(!isNewFormat(d))return true;
-  if(!Array.isArray(d.taskTemplates)||d.taskTemplates.length===0)return true;
-  if(!Array.isArray(d.rewards))return true;
   if(!d.settings||typeof d.settings!=='object')return true;
-  if(!d.stundenplan||typeof d.stundenplan!=='object')return true;
   if(!d.parentSettings||typeof d.parentSettings!=='object')return true;
+  if(d.stundenplan)return true;
+  if(d.taskTemplates)return true;
+  if(d.rewards)return true;
+  for(var i=0;i<d.kidOrder.length;i++){
+    var k=d.kids[d.kidOrder[i]];
+    if(!k||!k.data)return true;
+    if(!k.data.stundenplan||typeof k.data.stundenplan!=='object')return true;
+    if(!Array.isArray(k.data.taskTemplates))return true;
+    if(!Array.isArray(k.data.rewards))return true;
+  }
   return false;
 }
 function processKidDay(kid){
   if(!kid||!kid.data)return;
   var d=kid.data;
+  if(!Array.isArray(d.taskTemplates)||d.taskTemplates.length===0)d.taskTemplates=clone(DEFAULT_TEMPLATES);
+  if(!Array.isArray(d.rewards))d.rewards=[];
   if(d.today!==todayKey()){
     var allDone=true;
     if(d.tasks&&d.tasks.length){for(var i=0;i<d.tasks.length;i++){if(!d.tasks[i].done){allDone=false;break}}}else allDone=false;
     if(allDone&&d.tasks&&d.tasks.length){var r=getDailyReward();d.earned=(d.earned||0)+r;d.history=d.history||[];d.history.unshift({date:d.today,amount:r})}
-    d.tasks=buildKidData(getTemplates()).tasks;
+    d.tasks=buildTasksForDay(d.taskTemplates);
     d.today=todayKey();d.pointsToday=0;
   }
   if(typeof d.pointsToday!=='number')d.pointsToday=0;
@@ -1290,25 +1328,19 @@ function processKidDay(kid){
   if(typeof d.points!=='number')d.points=0;
   if(typeof d.earned!=='number')d.earned=0;
   if(!d.history||!Array.isArray(d.history))d.history=[];
-  if(!d.tasks||!d.tasks.length)d.tasks=buildKidData(getTemplates()).tasks;
+  if(!d.tasks||!d.tasks.length)d.tasks=buildTasksForDay(d.taskTemplates);
   if(!Array.isArray(d.pendingRewards))d.pendingRewards=[];
   if(!Array.isArray(d.rewardHistory))d.rewardHistory=[];
   if(!Array.isArray(d.suggestedRewards))d.suggestedRewards=[];
   if(d.language!=='de'&&d.language!=='en')d.language='de';
+  if(!d.stundenplan||typeof d.stundenplan!=='object')d.stundenplan=defaultStundenplan();
+  if(!d.stundenplan.cells||typeof d.stundenplan.cells!=='object')d.stundenplan.cells={};
+  if(!Array.isArray(d.stundenplan.custom))d.stundenplan.custom=[];
+  if(typeof d.stundenplan.day!=='string')d.stundenplan.day='mo';
   d.level=calcLevel(d.totalPoints);
 }
 function migrate(data){
   if(isNewFormat(data)){
-    if(!Array.isArray(data.taskTemplates)||data.taskTemplates.length===0){data.taskTemplates=clone(DEFAULT_TEMPLATES)}
-    var cleaned=[];
-    for(var i=0;i<data.taskTemplates.length;i++){
-      var tpl=data.taskTemplates[i];
-      if(tpl&&typeof tpl==='object'&&tpl.title){cleaned.push({id:tpl.id||genId('tpl'),title:String(tpl.title),cat:tpl.cat||'Sonstiges',days:Array.isArray(tpl.days)?tpl.days:[1,2,3,4,5],important:!!tpl.important})}
-    }
-    data.taskTemplates=cleaned.length?cleaned:clone(DEFAULT_TEMPLATES);
-    if(typeof data.pinSet!=='boolean')data.pinSet=false;
-    if(typeof data.pin!=='string')data.pin='';
-    if(typeof data.theme!=='string')data.theme='dark';
     if(!data.settings||typeof data.settings!=='object')data.settings={};
     if(typeof data.settings.dailyReward!=='number'||data.settings.dailyReward<0)data.settings.dailyReward=DEFAULT_DAILY_REWARD;
     if(typeof data.settings.pointsPerTask!=='number'||data.settings.pointsPerTask<1)data.settings.pointsPerTask=DEFAULT_POINTS_PER_TASK;
@@ -1316,31 +1348,73 @@ function migrate(data){
     if(!data.parentSettings||typeof data.parentSettings!=='object')data.parentSettings={};
     if(data.parentSettings.language!=='de'&&data.parentSettings.language!=='en')data.parentSettings.language=legacyLang;
     delete data.settings.language;
-    if(!Array.isArray(data.rewards))data.rewards=[];
-    if(!data.stundenplan||typeof data.stundenplan!=='object')data.stundenplan=defaultStundenplan();
-    if(!data.stundenplan.cells||typeof data.stundenplan.cells!=='object')data.stundenplan.cells={};
-    if(!Array.isArray(data.stundenplan.custom))data.stundenplan.custom=[];
-    if(typeof data.stundenplan.day!=='string')data.stundenplan.day='mo';
+
+    if(typeof data.pinSet!=='boolean')data.pinSet=false;
+    if(typeof data.pin!=='string')data.pin='';
+    if(typeof data.theme!=='string')data.theme='dark';
     if(!Array.isArray(data.kidOrder))data.kidOrder=[];
+
+    var legacyTemplates=(Array.isArray(data.taskTemplates)&&data.taskTemplates.length)?data.taskTemplates:null;
+    var legacyRewards=Array.isArray(data.rewards)?data.rewards:null;
+    var legacySp=data.stundenplan||null;
+    delete data.taskTemplates;
+    delete data.rewards;
+    delete data.stundenplan;
+
+    var legacySpAssigned=false;
     for(var i=0;i<data.kidOrder.length;i++){
       var kid=data.kids[data.kidOrder[i]];
-      if(kid){
-        if(!kid.name)kid.name='Kind '+(i+1);
-        if(!kid.emoji)kid.emoji=EMOJI_SET[i%EMOJI_SET.length];
-        if(typeof kid.photo!=='string')kid.photo='';
-        if(!kid.data)kid.data=buildKidData(data.taskTemplates);
-        if(!Array.isArray(kid.data.tasks))kid.data.tasks=buildKidData(data.taskTemplates).tasks;
-        if(!Array.isArray(kid.data.pendingRewards))kid.data.pendingRewards=[];
-        if(!Array.isArray(kid.data.rewardHistory))kid.data.rewardHistory=[];
-        if(!Array.isArray(kid.data.suggestedRewards))kid.data.suggestedRewards=[];
-        if(!Array.isArray(kid.data.history))kid.data.history=[];
-        if(kid.data.language!=='de'&&kid.data.language!=='en')kid.data.language=legacyLang;
+      if(!kid)continue;
+      if(!kid.name)kid.name='Kind '+(i+1);
+      if(!kid.emoji)kid.emoji=EMOJI_SET[i%EMOJI_SET.length];
+      if(typeof kid.photo!=='string')kid.photo='';
+      if(!kid.data)kid.data=buildKidData(legacyLang);
+      var kd=kid.data;
+
+      if(!Array.isArray(kd.tasks))kd.tasks=[];
+      if(!Array.isArray(kd.pendingRewards))kd.pendingRewards=[];
+      if(!Array.isArray(kd.rewardHistory))kd.rewardHistory=[];
+      if(!Array.isArray(kd.suggestedRewards))kd.suggestedRewards=[];
+      if(!Array.isArray(kd.history))kd.history=[];
+      if(kd.language!=='de'&&kd.language!=='en')kd.language=legacyLang;
+
+      if(!Array.isArray(kd.taskTemplates)||kd.taskTemplates.length===0){
+        if(legacyTemplates){
+          var cleaned=[];
+          for(var x=0;x<legacyTemplates.length;x++){
+            var tpl=legacyTemplates[x];
+            if(tpl&&typeof tpl==='object'&&tpl.title){cleaned.push({id:tpl.id||genId('tpl'),title:String(tpl.title),cat:tpl.cat||'Sonstiges',days:Array.isArray(tpl.days)?tpl.days:[1,2,3,4,5],important:!!tpl.important})}
+          }
+          kd.taskTemplates=cleaned.length?cleaned:clone(DEFAULT_TEMPLATES);
+        } else {
+          kd.taskTemplates=clone(DEFAULT_TEMPLATES);
+        }
       }
+
+      if(!Array.isArray(kd.rewards)||kd.rewards.length===0){
+        if(legacyRewards){
+          kd.rewards=clone(legacyRewards);
+        } else {
+          kd.rewards=[];
+        }
+      }
+
+      if(!kd.stundenplan||typeof kd.stundenplan!=='object'){
+        if(legacySp && (data.kidOrder[i]===data.activeKid || !legacySpAssigned)){
+          kd.stundenplan=legacySp;
+          legacySpAssigned=true;
+        } else {
+          kd.stundenplan=defaultStundenplan();
+        }
+      }
+      if(!kd.stundenplan.cells||typeof kd.stundenplan.cells!=='object')kd.stundenplan.cells={};
+      if(!Array.isArray(kd.stundenplan.custom))kd.stundenplan.custom=[];
+      if(typeof kd.stundenplan.day!=='string')kd.stundenplan.day='mo';
     }
     if(!data.kids[data.activeKid]&&data.kidOrder.length)data.activeKid=data.kidOrder[0];
     return data;
   }
-  var id=genId('kid'),templates=clone(DEFAULT_TEMPLATES),oldData=buildKidData(templates);
+  var id=genId('kid'),oldData=buildKidData();
   if(data){
     oldData.today=data.today||todayKey();oldData.points=data.points||0;oldData.totalPoints=data.totalPoints||0;
     oldData.level=data.level||1;oldData.earned=data.earned||0;
@@ -1349,7 +1423,7 @@ function migrate(data){
     if(data.tasks&&data.tasks.length)oldData.tasks=data.tasks;
   }
   var kids={};kids[id]={name:'Kind 1',emoji:'🧒',photo:'',data:oldData};
-  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',taskTemplates:templates,theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},rewards:[],stundenplan:defaultStundenplan(),parentSettings:{language:getSavedLang()}};
+  return {kids:kids,kidOrder:[id],activeKid:id,pinSet:false,pin:'',theme:'dark',settings:{dailyReward:DEFAULT_DAILY_REWARD,pointsPerTask:DEFAULT_POINTS_PER_TASK},parentSettings:{language:getSavedLang()}};
 }
 function startListener(uid){
   if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
@@ -1432,20 +1506,22 @@ function startListener(uid){
 }
 function saveToFirebase(){
   if(!currentUser||!accountData)return;
-  if(!Array.isArray(accountData.taskTemplates)||accountData.taskTemplates.length===0)return;
   set(ref(db,'users/'+currentUser.uid),accountData);
 }
 function applyTemplateChanges(){
   if(!accountData)return;
+  var k=getKid();
+  if(!k||!k.data)return;
+  if(!Array.isArray(k.data.taskTemplates))k.data.taskTemplates=clone(DEFAULT_TEMPLATES);
   var wd=currentWeekday();
-  for(var i=0;i<accountData.kidOrder.length;i++){
-    var kid=accountData.kids[accountData.kidOrder[i]];
-    if(!kid||!kid.data)continue;
-    var doneMap={};if(kid.data.tasks)for(var j=0;j<kid.data.tasks.length;j++)doneMap[kid.data.tasks[j].id]=kid.data.tasks[j].done;
-    var newTasks=[];
-    for(var j=0;j<accountData.taskTemplates.length;j++){var tpl=accountData.taskTemplates[j];if(tpl.days.indexOf(wd)!==-1)newTasks.push({id:tpl.id,title:tpl.title,cat:tpl.cat,important:!!tpl.important,done:!!doneMap[tpl.id]})}
-    kid.data.tasks=newTasks;
+  var doneMap={};
+  if(k.data.tasks)for(var j=0;j<k.data.tasks.length;j++)doneMap[k.data.tasks[j].id]=k.data.tasks[j].done;
+  var newTasks=[];
+  for(var j=0;j<k.data.taskTemplates.length;j++){
+    var tpl=k.data.taskTemplates[j];
+    if(tpl.days.indexOf(wd)!==-1)newTasks.push({id:tpl.id,title:tpl.title,cat:tpl.cat,important:!!tpl.important,done:!!doneMap[tpl.id]});
   }
+  k.data.tasks=newTasks;
 }
 function applyTheme(theme){
   if(theme==='light')document.body.classList.add('light');else document.body.classList.remove('light');
@@ -1819,7 +1895,6 @@ var kb=document.getElementById('kidBadge');if(kb)kb.addEventListener('click',fun
   openKidSwitcher();
 });
 
-/* ===== Kind-Umschalter ===== */
 var kidSwitcherOverlay=document.getElementById('kidSwitcherOverlay');
 var kidSwitcherWrap=document.getElementById('kidSwitcherWrap');
 var kidSwitcherList=document.getElementById('kidSwitcherList');
@@ -1868,7 +1943,6 @@ if(parentKidSwitchBtnEl)parentKidSwitchBtnEl.addEventListener('click',function()
   openKidSwitcher();
 });
 
-/* ===== Rechts-Modals ===== */
 var legalModalEl=document.getElementById('legalModal');
 var legalBodyEl=document.getElementById('legalBody');
 var legalBtnEl=document.getElementById('legalBtn');
@@ -1912,7 +1986,6 @@ if(loginLegalLinkEl)loginLegalLinkEl.addEventListener('click',function(ev){
   openLegalModal('impressum');
 });
 
-/* ===== Consent Modal ===== */
 var consentModalEl=document.getElementById('consentModal');
 var consentBodyEl=document.getElementById('consentBody');
 var consentCheckEl=document.getElementById('consentCheck');
@@ -2001,7 +2074,7 @@ if(addKidBtnEl)addKidBtnEl.addEventListener('click',function(){
   var input=document.getElementById('newKidName'),name=input?input.value.trim():'';
   if(!name){showToast(t('tNameNeeded'));return}
   var id=genId('kid');
-  accountData.kids[id]={name:name,emoji:EMOJI_SET[accountData.kidOrder.length%EMOJI_SET.length],photo:'',data:buildKidData(getTemplates())};
+  accountData.kids[id]={name:name,emoji:EMOJI_SET[accountData.kidOrder.length%EMOJI_SET.length],photo:'',data:buildKidData()};
   accountData.kidOrder.push(id);if(input)input.value='';
   saveToFirebase();renderParentKidList();render();showToast(t('tAddedKid',name.toUpperCase()));
   setTimeout(function(){openKidEdit(id)},200);
@@ -2079,25 +2152,28 @@ if(kes)kes.addEventListener('click',function(){
 function renderTaskEditor(){
   var list=document.getElementById('taskEditList');if(!list)return;
   if(!accountData){list.innerHTML='';return}
-  if(!Array.isArray(accountData.taskTemplates)||!accountData.taskTemplates.length){
+  var k=getKid();
+  if(!k||!k.data){list.innerHTML='';return}
+  if(!Array.isArray(k.data.taskTemplates))k.data.taskTemplates=clone(DEFAULT_TEMPLATES);
+  if(!k.data.taskTemplates.length){
     list.innerHTML='<div class="pending-empty">'+t('noTasksYet')+'</div>';
     return;
   }
   var html='';
-  for(var i=0;i<accountData.taskTemplates.length;i++){
-    var tpl=accountData.taskTemplates[i];
+  for(var i=0;i<k.data.taskTemplates.length;i++){
+    var tpl=k.data.taskTemplates[i];
     html+='<div class="task-edit" data-id="'+tpl.id+'">';
     html+='<div class="row"><input type="text" class="edit-title" value="'+escapeHtml(tpl.title)+'" maxlength="40"><button class="del" data-del="'+tpl.id+'">✕</button></div>';
     html+='<div class="row"><input type="text" class="edit-cat" value="'+escapeHtml(tpl.cat)+'" maxlength="20" style="max-width:110px"><label><input type="checkbox" class="edit-imp" '+(tpl.important?'checked':'')+'> '+t('important')+'</label></div>';
     html+='<div class="days">';
-    for(var k=0;k<DAY_ORDER.length;k++){var d=DAY_ORDER[k],on=tpl.days.indexOf(d)!==-1;html+='<button class="day-toggle'+(on?' on':'')+'" data-day="'+d+'">'+dayShort(d)+'</button>'}
+    for(var kk=0;kk<DAY_ORDER.length;kk++){var d=DAY_ORDER[kk],on=tpl.days.indexOf(d)!==-1;html+='<button class="day-toggle'+(on?' on':'')+'" data-day="'+d+'">'+dayShort(d)+'</button>'}
     html+='</div></div>';
   }
   list.innerHTML=html;
   var edits=list.querySelectorAll('.task-edit');
   for(var i=0;i<edits.length;i++){(function(el){
     var id=el.getAttribute('data-id'),tmpl=null;
-    for(var x=0;x<accountData.taskTemplates.length;x++)if(accountData.taskTemplates[x].id===id){tmpl=accountData.taskTemplates[x];break}
+    for(var x=0;x<k.data.taskTemplates.length;x++)if(k.data.taskTemplates[x].id===id){tmpl=k.data.taskTemplates[x];break}
     if(!tmpl)return;
     el.querySelector('.edit-title').addEventListener('change',function(){var v=this.value.trim();if(!v){this.value=tmpl.title;return}tmpl.title=v;applyTemplateChanges();saveToFirebase();render()});
     el.querySelector('.edit-cat').addEventListener('change',function(){var v=this.value.trim();if(!v){this.value=tmpl.cat;return}tmpl.cat=v;applyTemplateChanges();saveToFirebase();render()});
@@ -2110,7 +2186,7 @@ function renderTaskEditor(){
     });
     el.querySelector('.del').addEventListener('click',function(){
       if(!confirm(t('tConfirmDeleteTask',tmpl.title)))return;
-      var idx=accountData.taskTemplates.indexOf(tmpl);if(idx>-1)accountData.taskTemplates.splice(idx,1);
+      var idx=k.data.taskTemplates.indexOf(tmpl);if(idx>-1)k.data.taskTemplates.splice(idx,1);
       applyTemplateChanges();saveToFirebase();render();renderTaskEditor();showToast(t('tDeleted'));
     });
   })(edits[i])}
@@ -2118,11 +2194,12 @@ function renderTaskEditor(){
 var addTaskBtnEl=document.getElementById('addTaskBtn');
 if(addTaskBtnEl)addTaskBtnEl.addEventListener('click',function(){
   if(!accountData)return;
+  var k=getKid();if(!k||!k.data)return;
   var ti=document.getElementById('newTaskTitle'),ci=document.getElementById('newTaskCat');
   var title=ti?ti.value.trim():'',cat=(ci?ci.value.trim():'')||'Sonstiges';
   if(!title){showToast(t('tTitleNeeded'));return}
-  if(!Array.isArray(accountData.taskTemplates))accountData.taskTemplates=[];
-  accountData.taskTemplates.push({id:genId('custom'),title:title,cat:cat,days:[1,2,3,4,5],important:false,custom:true});
+  if(!Array.isArray(k.data.taskTemplates))k.data.taskTemplates=[];
+  k.data.taskTemplates.push({id:genId('custom'),title:title,cat:cat,days:[1,2,3,4,5],important:false,custom:true});
   if(ti)ti.value='';if(ci)ci.value='';
   applyTemplateChanges();saveToFirebase();render();renderTaskEditor();showToast(t('tAdded'));
 });
@@ -2157,25 +2234,28 @@ for(var i=0;i<pps.length;i++)pps[i].addEventListener('click',function(){saveSett
 
 function renderRewardEditor(){
   var list=document.getElementById('rewardEditList');if(!list)return;
-  if(!accountData||!accountData.rewards){list.innerHTML='';return}
-  if(accountData.rewards.length===0){list.innerHTML='<div class="pending-empty">'+t('noRewardsYet')+'</div>';return}
+  if(!accountData){list.innerHTML='';return}
+  var k=getKid();
+  if(!k||!k.data){list.innerHTML='';return}
+  if(!Array.isArray(k.data.rewards))k.data.rewards=[];
+  if(k.data.rewards.length===0){list.innerHTML='<div class="pending-empty">'+t('noRewardsYet')+'</div>';return}
   var html='';
-  for(var i=0;i<accountData.rewards.length;i++){
-    var r=accountData.rewards[i];
+  for(var i=0;i<k.data.rewards.length;i++){
+    var r=k.data.rewards[i];
     html+='<div class="reward-edit" data-id="'+r.id+'"><div class="row"><input type="text" class="e-emoji" value="'+escapeHtml(r.emoji||'🎁')+'" maxlength="4"><input type="text" class="e-title" value="'+escapeHtml(r.title||'')+'" maxlength="40"><input type="number" class="e-cost" value="'+(r.cost||0)+'" min="1" step="1"><button class="del">✕</button></div></div>';
   }
   list.innerHTML=html;
   var edits=list.querySelectorAll('.reward-edit');
   for(var i=0;i<edits.length;i++){(function(el){
     var id=el.getAttribute('data-id'),rw=null;
-    for(var x=0;x<accountData.rewards.length;x++)if(accountData.rewards[x].id===id){rw=accountData.rewards[x];break}
+    for(var x=0;x<k.data.rewards.length;x++)if(k.data.rewards[x].id===id){rw=k.data.rewards[x];break}
     if(!rw)return;
     el.querySelector('.e-emoji').addEventListener('change',function(){var v=this.value.trim()||'🎁';rw.emoji=v;this.value=v;saveToFirebase();render()});
     el.querySelector('.e-title').addEventListener('change',function(){var v=this.value.trim();if(!v){this.value=rw.title;return}rw.title=v;saveToFirebase();render()});
     el.querySelector('.e-cost').addEventListener('change',function(){var v=parseInt(this.value,10);if(isNaN(v)||v<1){this.value=rw.cost;return}rw.cost=v;saveToFirebase();render()});
     el.querySelector('.del').addEventListener('click',function(){
       if(!confirm(t('tConfirmDeleteReward',rw.title||'')))return;
-      var idx=accountData.rewards.indexOf(rw);if(idx>-1)accountData.rewards.splice(idx,1);
+      var idx=k.data.rewards.indexOf(rw);if(idx>-1)k.data.rewards.splice(idx,1);
       saveToFirebase();render();renderRewardEditor();showToast(t('tDeleted'));
     });
   })(edits[i])}
@@ -2183,14 +2263,15 @@ function renderRewardEditor(){
 var addRewardBtnEl=document.getElementById('addRewardBtn');
 if(addRewardBtnEl)addRewardBtnEl.addEventListener('click',function(){
   if(!accountData)return;
+  var k=getKid();if(!k||!k.data)return;
   var ti=document.getElementById('newRewardTitle'),ei=document.getElementById('newRewardEmoji'),ci=document.getElementById('newRewardCost');
   var title=ti?ti.value.trim():'';
   var emoji=(ei?ei.value.trim():'')||'🎁';
   var cost=ci?parseInt(ci.value,10):NaN;
   if(!title){showToast(t('tTitleNeeded'));return}
   if(isNaN(cost)||cost<1){showToast(t('tPointsNeeded'));return}
-  if(!accountData.rewards)accountData.rewards=[];
-  accountData.rewards.push({id:genId('rw'),title:title,emoji:emoji,cost:cost});
+  if(!Array.isArray(k.data.rewards))k.data.rewards=[];
+  k.data.rewards.push({id:genId('rw'),title:title,emoji:emoji,cost:cost});
   if(ti)ti.value='';if(ei)ei.value='';if(ci)ci.value='';
   saveToFirebase();render();renderRewardEditor();showToast(t('tRewardAdded'));
 });
@@ -2236,10 +2317,10 @@ function approveSuggestion(kidId,sugId){
   var input=document.querySelector('.sug-cost-input[data-kid="'+kidId+'"][data-sug="'+sugId+'"]');
   var cost=input?parseInt(input.value,10):NaN;
   if(isNaN(cost)||cost<1){showToast(t('tSetPoints'));if(input){input.focus();input.style.borderColor='#ff4466';setTimeout(function(){input.style.borderColor=''},1500)}return}
-  if(!accountData.rewards)accountData.rewards=[];
-  accountData.rewards.push({id:genId('rw'),title:sug.title,emoji:sug.emoji||'🎁',cost:cost});
+  if(!Array.isArray(kid.data.rewards))kid.data.rewards=[];
+  kid.data.rewards.push({id:genId('rw'),title:sug.title,emoji:sug.emoji||'🎁',cost:cost});
   kid.data.suggestedRewards.splice(idx,1);
-  saveToFirebase();render();renderRewardEditor();renderSuggestions();
+  saveToFirebase();render();if(kidId===accountData.activeKid){renderRewardEditor()}renderSuggestions();
   showToast(t('tSugAccepted',sug.title.toUpperCase()));fireConfetti(20);
 }
 function rejectSuggestion(kidId,sugId){
@@ -2301,16 +2382,22 @@ function spColorFor(str){var h=0;for(var i=0;i<str.length;i++)h=(h*31+str.charCo
 function spNameMap(){
   var m={};
   for(var g=0;g<SP_SUBJECT_GROUPS.length;g++){var items=SP_SUBJECT_GROUPS[g].items;for(var i=0;i<items.length;i++)m[items[i][0]]=items[i][1]}
-  if(accountData&&accountData.stundenplan&&Array.isArray(accountData.stundenplan.custom)){for(var i=0;i<accountData.stundenplan.custom.length;i++)m[accountData.stundenplan.custom[i]]=t('spOwnSubject')}
+  var k=getKid();
+  if(k&&k.data&&k.data.stundenplan&&Array.isArray(k.data.stundenplan.custom)){
+    for(var i=0;i<k.data.stundenplan.custom.length;i++)m[k.data.stundenplan.custom[i]]=t('spOwnSubject')
+  }
   return m;
 }
 function spGetData(){
   if(!accountData)return {cells:{},custom:[],day:'mo'};
-  if(!accountData.stundenplan)accountData.stundenplan=defaultStundenplan();
-  if(!accountData.stundenplan.cells)accountData.stundenplan.cells={};
-  if(!Array.isArray(accountData.stundenplan.custom))accountData.stundenplan.custom=[];
-  if(typeof accountData.stundenplan.day!=='string')accountData.stundenplan.day='mo';
-  return accountData.stundenplan;
+  var k=getKid();
+  if(!k){return {cells:{},custom:[],day:'mo'};}
+  if(!k.data)k.data=buildKidData();
+  if(!k.data.stundenplan||typeof k.data.stundenplan!=='object')k.data.stundenplan=defaultStundenplan();
+  if(!k.data.stundenplan.cells||typeof k.data.stundenplan.cells!=='object')k.data.stundenplan.cells={};
+  if(!Array.isArray(k.data.stundenplan.custom))k.data.stundenplan.custom=[];
+  if(typeof k.data.stundenplan.day!=='string')k.data.stundenplan.day='mo';
+  return k.data.stundenplan;
 }
 function spOptionsHTML(selected){
   var h='<option value=""'+(selected?'':' selected')+'>'+t('spEmpty')+'</option>';
@@ -2525,8 +2612,8 @@ function renderContent(){
   }else if(currentTab==='week'){
     var today=currentWeekday(),out='';
     var tpl=getTemplates();
-    for(var k=0;k<DAY_ORDER.length;k++){
-      var i=DAY_ORDER[k],tasks=[];
+    for(var kk=0;kk<DAY_ORDER.length;kk++){
+      var i=DAY_ORDER[kk],tasks=[];
       for(var j=0;j<tpl.length;j++)if(Array.isArray(tpl[j].days)&&tpl[j].days.indexOf(i)!==-1)tasks.push(tpl[j]);
       var lines='';
       if(tasks.length){for(var j=0;j<tasks.length;j++)lines+='<div class="task-line">'+escapeHtml(tasks[j].title)+'</div>'}
