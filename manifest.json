@@ -1,6 +1,6 @@
 {
-  "name": "BETTER LIFE",
-  "short_name": "BETTER LIFE",
+  "name": "chorecash",
+  "short_name": "chorecash",
   "description": "Ordnung - Haushalt - Routinen",
   "start_url": "./index.html",
   "scope": "./",
