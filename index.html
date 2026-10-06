@@ -62,6 +62,8 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .content{padding:14px;flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .section-title{font-size:.65rem;font-weight:800;color:var(--pink);text-transform:uppercase;letter-spacing:2px;margin:12px 0 10px 6px;text-shadow:0 0 10px rgba(255,0,229,.6)}
 .section-title:first-child{margin-top:0}
+.section-title.appt-section{color:var(--yellow);text-shadow:0 0 10px rgba(255,234,0,.6);animation:apptTitlePulse 1.6s ease-in-out infinite}
+@keyframes apptTitlePulse{0%,100%{opacity:1}50%{opacity:.65}}
 .task{background:var(--card2);border-radius:16px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:14px;border:1px solid rgba(0,245,255,.12);position:relative;overflow:hidden;cursor:pointer}
 .task::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--cyan),var(--purple));box-shadow:0 0 15px var(--cyan)}
 .task.done{opacity:.55;border-color:rgba(0,255,136,.3)}
@@ -79,6 +81,30 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .task-photo-badge{font-size:.65rem;color:var(--yellow);font-weight:800;letter-spacing:.5px;margin-top:4px;display:inline-flex;align-items:center;gap:4px}
 .task-photo-thumb{width:36px;height:36px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid rgba(0,245,255,.3);cursor:pointer}
 .task-photo-required-tag{font-size:.6rem;color:var(--cyan);font-weight:800;letter-spacing:1px;padding:1px 6px;border:1px solid rgba(0,245,255,.4);border-radius:8px;background:rgba(0,245,255,.08);flex-shrink:0}
+
+/* ===== TERMIN-AUFGABEN (im Heute-Tab, oben, blinken bis bestätigt) ===== */
+.task.appointment-task{border-color:rgba(255,234,0,.5);background:linear-gradient(90deg,rgba(255,234,0,.14),var(--card2) 60%)}
+.task.appointment-task::before{background:linear-gradient(180deg,var(--yellow),var(--pink));box-shadow:0 0 15px var(--yellow)}
+.task.appointment-task.done{opacity:.55;border-color:rgba(0,255,136,.3);background:linear-gradient(90deg,rgba(0,255,136,.08),var(--card2) 60%)}
+.task.appointment-task.done::before{background:linear-gradient(180deg,var(--green),var(--cyan));box-shadow:0 0 15px var(--green)}
+.task.appointment-task:not(.done){animation:apptPulse 1.6s ease-in-out infinite}
+.task.appointment-task:not(.done)::before{animation:apptBarPulse 1.6s ease-in-out infinite}
+.task.appointment-task:not(.done) .task-check{animation:apptCheckPulse 1.6s ease-in-out infinite;border-color:var(--yellow);background:rgba(255,234,0,.12)}
+@keyframes apptPulse{
+  0%,100%{box-shadow:0 0 0 rgba(255,234,0,0);border-color:rgba(255,234,0,.5)}
+  50%{box-shadow:0 0 28px rgba(255,234,0,.75);border-color:var(--yellow)}
+}
+@keyframes apptBarPulse{
+  0%,100%{box-shadow:0 0 15px var(--yellow)}
+  50%{box-shadow:0 0 32px var(--yellow)}
+}
+@keyframes apptCheckPulse{
+  0%,100%{border-color:rgba(255,234,0,.6);background:rgba(255,234,0,.12);box-shadow:0 0 0 rgba(255,234,0,0)}
+  50%{border-color:var(--yellow);background:rgba(255,234,0,.28);box-shadow:0 0 18px rgba(255,234,0,.7)}
+}
+.task.appointment-task .task-title{color:var(--yellow);font-weight:800}
+.task.appointment-task.done .task-title{color:var(--text)}
+
 .btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;border:none;border-radius:14px;font-size:.85rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;box-shadow:0 0 25px rgba(176,38,255,.4);cursor:pointer}
 .btn:disabled{opacity:.35;cursor:not-allowed;box-shadow:none;background:rgba(136,136,170,.25)}
 .btn-reset{background:transparent;border:2px solid rgba(255,0,229,.5);color:var(--pink);box-shadow:0 0 15px rgba(255,0,229,.2)}
@@ -405,7 +431,6 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .consent-check-label input[type=checkbox]{appearance:none;-webkit-appearance:none;width:22px;height:22px;flex-shrink:0;border-radius:6px;border:2px solid rgba(0,245,255,.45);background:rgba(0,245,255,.05);cursor:pointer;position:relative;margin-top:1px;transition:all .15s}
 .consent-check-label input[type=checkbox]:checked{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 12px rgba(0,245,255,.5)}
 .consent-check-label input[type=checkbox]:checked::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:14px;line-height:1}
-/* NEU: Toggle Switch Styles */
 .toggle-switch { position: relative; display: inline-block; width: 36px; height: 20px; flex-shrink: 0; }
 .toggle-switch input { opacity: 0; width: 0; height: 0; }
 .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(136,136,170,.3); transition: .3s; border-radius: 20px; border: 1px solid rgba(0,245,255,.2); }
@@ -413,6 +438,44 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 input:checked + .toggle-slider { background-color: rgba(0,245,255,.2); border-color: var(--cyan); }
 input:checked + .toggle-slider:before { transform: translateX(16px); background-color: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
 .toggle-switch.disabled { opacity: 0.4; pointer-events: none; }
+
+/* ===== TERMINKALENDER ===== */
+.cal-overlay{position:fixed;inset:0;background:var(--bg);background-image:radial-gradient(circle at 20% 10%,rgba(176,38,255,.15) 0%,transparent 40%),radial-gradient(circle at 80% 90%,rgba(0,245,255,.12) 0%,transparent 40%);z-index:962;display:none;align-items:center;justify-content:center;padding:12px;padding-top:calc(env(safe-area-inset-top,0px) + 12px);padding-bottom:12px}
+.cal-overlay.show{display:flex;animation:gfadeIn .25s ease}
+.cal-app{width:100%;max-width:500px;height:100%;max-height:100vh;background:var(--card);border-radius:28px;border:1px solid rgba(0,245,255,.15);box-shadow:0 0 60px rgba(176,38,255,.25);overflow:hidden;display:flex;flex-direction:column;position:relative}
+.cal-month-nav{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:var(--card2);border-bottom:1px solid rgba(0,245,255,.1);flex-shrink:0}
+.cal-month-label{font-weight:900;letter-spacing:2px;color:var(--cyan);font-size:.95rem;text-transform:uppercase}
+.cal-nav-btn{width:36px;height:36px;border-radius:50%;border:1px solid rgba(0,245,255,.4);background:rgba(0,245,255,.08);color:var(--cyan);font-size:1.2rem;font-weight:900;cursor:pointer;line-height:1;padding:0;font-family:inherit;display:flex;align-items:center;justify-content:center}
+.cal-nav-btn:active{transform:scale(.93);background:rgba(0,245,255,.2)}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);padding:8px 10px 4px;background:var(--card2);gap:3px;flex-shrink:0}
+.cal-weekday{text-align:center;font-size:.62rem;font-weight:800;letter-spacing:1px;color:var(--dim);text-transform:uppercase}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:4px 10px 10px;background:var(--card2);border-bottom:1px solid rgba(0,245,255,.15);flex-shrink:0}
+.cal-cell{aspect-ratio:1;border-radius:10px;background:rgba(0,0,0,.2);border:1px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;cursor:pointer;font-size:.82rem;font-weight:700;color:var(--text);padding:2px;font-family:inherit}
+.cal-cell.empty{background:transparent;cursor:default;border:none;pointer-events:none}
+.cal-cell.today{border-color:var(--cyan);background:rgba(0,245,255,.08)}
+.cal-cell.selected{border-color:var(--pink);background:rgba(255,0,229,.12);box-shadow:0 0 12px rgba(255,0,229,.3)}
+.cal-cell.has-appt::after{content:'';position:absolute;bottom:3px;width:6px;height:6px;border-radius:50%;background:var(--yellow);box-shadow:0 0 6px var(--yellow)}
+.cal-cell.has-appt-multi::after{content:'';position:absolute;bottom:3px;width:20px;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--yellow),var(--pink));box-shadow:0 0 6px var(--yellow)}
+.cal-day-header{padding:12px 18px 6px;font-size:.72rem;font-weight:900;letter-spacing:2px;color:var(--yellow);text-transform:uppercase;flex-shrink:0}
+.cal-day-list{flex:1;overflow-y:auto;padding:0 12px 12px;display:flex;flex-direction:column;gap:8px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.cal-appt{background:var(--card2);border-radius:12px;padding:10px 12px;border-left:3px solid var(--cyan);display:flex;align-items:center;gap:10px}
+.cal-appt.done{opacity:.55;border-left-color:var(--green)}
+.cal-appt.done .cal-appt-title{text-decoration:line-through;text-decoration-color:var(--green)}
+.cal-appt-check{width:28px;height:28px;border-radius:50%;border:2px solid rgba(0,245,255,.4);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:transparent;flex-shrink:0;background:rgba(0,245,255,.05);cursor:pointer;transition:all .25s}
+.cal-appt.done .cal-appt-check{background:var(--green);border-color:var(--green);color:#000;box-shadow:0 0 15px var(--green)}
+.cal-appt-info{flex:1;min-width:0}
+.cal-appt-title{font-weight:700;font-size:.86rem;word-break:break-word}
+.cal-appt-meta{font-size:.66rem;color:var(--dim);margin-top:3px}
+.cal-appt-del{width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,68,102,.5);background:transparent;color:#ff4466;cursor:pointer;font-weight:900;line-height:1;flex-shrink:0;font-size:.8rem;font-family:inherit}
+.cal-appt-del:active{transform:scale(.92)}
+.cal-add-form{background:var(--card2);border-top:1px solid rgba(0,245,255,.15);padding:10px 12px;display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.cal-add-form input{padding:9px 12px;background:rgba(0,0,0,.3);border:1px solid rgba(0,245,255,.2);border-radius:9px;color:var(--text);font-size:.82rem;outline:none;font-family:inherit;min-width:0}
+.cal-add-row{display:flex;gap:6px}
+.cal-add-row input{flex:1;min-width:0}
+.cal-add-form button{padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-weight:900;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:inherit}
+.appt-tile{background:linear-gradient(90deg,rgba(255,234,0,.15),rgba(255,107,0,.08));border:1px solid rgba(255,234,0,.4);border-radius:10px;padding:7px 10px;margin-top:6px;font-size:.78rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px}
+.appt-tile.done{opacity:.55;text-decoration:line-through;text-decoration-color:var(--green);border-color:rgba(0,255,136,.35)}
+
 body.light{--cyan:#0099b8;--pink:#d6009c;--purple:#8a1fd6;--green:#00a05a;--yellow:#b08000;--bg:#f5f0e8;--card:#fdfbf7;--card2:#f0ebe3;--text:#1a1a2e;--dim:#6a6a80;background-color:#f5f0e8;background-image:radial-gradient(circle at 15% 10%,rgba(210,180,255,.45) 0%,transparent 45%),radial-gradient(circle at 85% 15%,rgba(180,235,255,.45) 0%,transparent 45%),radial-gradient(circle at 50% 85%,rgba(255,200,235,.40) 0%,transparent 50%),radial-gradient(circle at 10% 95%,rgba(200,255,225,.35) 0%,transparent 45%),radial-gradient(circle at 90% 70%,rgba(255,235,180,.30) 0%,transparent 45%),linear-gradient(135deg,#faf7f2 0%,#f2ece3 50%,#faf7f2 100%);color:#1a1a2e}
 body.light .app{background:#fdfbf7;border-color:rgba(180,160,255,.35)}
 body.light header{background:linear-gradient(135deg,#efe6ff,#e6f5ff);border-bottom-color:rgba(140,120,220,.25)}
@@ -431,7 +494,12 @@ body.light .tab.active{color:#0088a8;background:rgba(0,180,220,.12);text-shadow:
 body.light .task{background:#ffffff;border-color:rgba(140,120,220,.18);box-shadow:0 2px 10px rgba(140,120,220,.06)}
 body.light .task-check{background:rgba(0,180,220,.08);border-color:rgba(0,180,220,.45)}
 body.light .task.photo-pending{background:linear-gradient(90deg,rgba(255,234,0,.15),#ffffff 60%)}
+body.light .task.appointment-task{background:linear-gradient(90deg,rgba(255,220,80,.22),#ffffff 60%);border-color:rgba(180,140,0,.5)}
+body.light .task.appointment-task .task-title{color:#8a6800}
+body.light .task.appointment-task.done{background:linear-gradient(90deg,rgba(0,180,120,.12),#ffffff 60%)}
+body.light .task.appointment-task.done .task-title{color:#1a1a2e}
 body.light .section-title{color:#c40088;text-shadow:none}
+body.light .section-title.appt-section{color:#8a6800;text-shadow:none}
 body.light .kid-badge{background:rgba(0,180,220,.12);border-color:rgba(0,180,220,.45);color:#0088a8}
 body.light .mail-badge{background:rgba(0,180,220,.12);border-color:rgba(0,180,220,.45);color:#0088a8}
 body.light .mail-badge .mail-count{background:#d6009c;border-color:#fdfbf7}
@@ -562,6 +630,13 @@ body.light .quote-label{color:#8a6800}
 body.light .message-item{background:#f5f0e8;border-left-color:#0088a8}
 body.light .message-item.unread{background:linear-gradient(90deg,rgba(214,0,156,.10),#f5f0e8 60%);border-left-color:#d6009c}
 body.light .message-meta .from{color:#0088a8}
+body.light .cal-overlay{background-color:#f5f0e8;background-image:radial-gradient(circle at 15% 10%,rgba(210,180,255,.45) 0%,transparent 45%),radial-gradient(circle at 85% 15%,rgba(180,235,255,.45) 0%,transparent 45%),linear-gradient(135deg,#faf7f2 0%,#f2ece3 50%,#faf7f2 100%)}
+body.light .cal-app{background:#fdfbf7;border-color:rgba(140,120,220,.3)}
+body.light .cal-month-nav,body.light .cal-weekdays,body.light .cal-grid,body.light .cal-add-form{background:#f5f0e8}
+body.light .cal-cell{background:rgba(255,255,255,.7)}
+body.light .cal-cell.selected{background:rgba(214,0,156,.1)}
+body.light .cal-appt{background:#ffffff;border-left-color:#0088a8}
+body.light .appt-tile{background:linear-gradient(90deg,rgba(255,220,80,.25),rgba(255,190,90,.15));border-color:rgba(180,140,0,.5)}
 </style>
 </head>
 <body>
@@ -743,7 +818,6 @@ body.light .message-meta .from{color:#0088a8}
 <div class="preset-row" id="dailyPresets"><button data-val="1">1 €</button><button data-val="2">2 €</button><button data-val="5">5 €</button><button data-val="10">10 €</button></div>
 <div class="setting-row"><label id="lblPointsPerTask">Punkte pro Aufgabe</label><div class="input-wrap"><input type="number" id="setPoints" min="1" step="1" value="10"></div></div>
 <div class="preset-row" id="pointsPresets"><button data-val="5">5</button><button data-val="10">10</button><button data-val="20">20</button><button data-val="50">50</button></div>
-<!-- NEU: Globaler Foto-Schalter -->
 <div class="setting-row" style="margin-top:10px; border-top:1px solid rgba(0,245,255,.1); padding-top:10px;">
     <label id="lblGlobalPhoto">Foto-Nachweis für alle Aufgaben</label>
     <input type="checkbox" id="setGlobalPhoto" style="width:22px;height:22px;accent-color:var(--cyan);cursor:pointer">
@@ -815,6 +889,36 @@ body.light .message-meta .from{color:#0088a8}
 <div class="sp-custom-list" id="spCustomList"></div>
 <button class="modal-close" id="spClearBtn" style="border-color:rgba(255,68,102,.5);color:#ff4466;margin-top:6px">Alle Einträge löschen</button>
 <button class="modal-close" id="spSettingsClose">Fertig</button>
+</div>
+</div>
+
+<!-- ===== TERMINKALENDER ===== -->
+<div class="cal-overlay" id="calOverlay">
+<div class="cal-app">
+<div class="sp-topbar">
+<div class="sp-title-wrap">
+<h2 id="calTitle">📅 Terminkalender</h2>
+<p id="calSubtitle">Termine verwalten &amp; abhaken</p>
+</div>
+<button class="sp-icon-btn sp-close" id="calCloseBtn" aria-label="Schließen">✕</button>
+</div>
+<div class="cal-month-nav">
+<button class="cal-nav-btn" id="calPrevMonth" type="button">‹</button>
+<div class="cal-month-label" id="calMonthLabel">—</div>
+<button class="cal-nav-btn" id="calNextMonth" type="button">›</button>
+</div>
+<div class="cal-weekdays" id="calWeekdays"></div>
+<div class="cal-grid" id="calGrid"></div>
+<div class="cal-day-header" id="calDayHeader">—</div>
+<div class="cal-day-list" id="calDayList"></div>
+<div class="cal-add-form">
+<input type="text" id="calNewTitle" placeholder="Neuer Termin..." maxlength="40" autocomplete="off">
+<div class="cal-add-row">
+<input type="time" id="calNewTime">
+<input type="text" id="calNewCat" placeholder="Kategorie" maxlength="15" value="Termin">
+</div>
+<button id="calAddBtn" type="button">+ Termin hinzufügen</button>
+</div>
 </div>
 </div>
 
@@ -946,8 +1050,8 @@ var T={
     pinMust6:'PIN muss genau 6 Ziffern haben.',pinMismatch:'PINs stimmen nicht überein.',pinWrongFull:'Falsche PIN.',
     kidsManage:'👶 Kinder verwalten',kidsMax:'Bis zu 5 Kindern pro Konto',kidName:'Name des Kindes',
     rewardPoints:'💰 Belohnung & Punkte',dailyMoney:'Tagesgeld',pointsPerTask:'Punkte pro Aufgabe',
-    globalPhotoLbl:'Foto-Nachweis für alle Aufgaben', // NEU
-    globalPhotoHint:'Wenn aktiviert, wird bei JEDER Aufgabe ein Foto verlangt.', // NEU
+    globalPhotoLbl:'Foto-Nachweis für alle Aufgaben',
+    globalPhotoHint:'Wenn aktiviert, wird bei JEDER Aufgabe ein Foto verlangt.',
     rewardsManage:'🎁 Belohnungen (nur dieses Kind)',rewardNew:'Belohnung (z.B. Freizeitpark)',points:'Punkte',
     addReward:'+ Belohnung hinzufügen',suggestionsFromKids:'💡 Vorschläge von Kindern',
     pendingRequests:'📥 Offene Anfragen',taskEditHint:'Aufgaben – nur für das aktive Kind',
@@ -1016,6 +1120,9 @@ var T={
     gameSub:'Knacke den 6-stelligen Code',gameProgress:'Fortschritt:',gameHint:'Hinweis ({0})',gameReset:'Reset',gameNew:'Neue Kombi',
     gameWin:'TRESOR GEÖFFNET!',gameLose:'ZEIT ABGELAUFEN!',gameWinMsg:'Erfolg! Der Tresor ist geknackt!',gameLoseMsg:'Der Code war:',
     gameAgain:'NOCHMAL',
+    calTitle:'Terminkalender',calSub:'Termine eintragen & abhaken',calTodaySection:'Termine heute',
+    calNoAppts:'Keine Termine an diesem Tag.',calAdded:'TERMIN HINZUGEFÜGT ✓',
+    calConfirmDelete:'Termin "{0}" löschen?',
     daysLong:['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],
     daysShort:['So','Mo','Di','Mi','Do','Fr','Sa'],
     months:['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember']
@@ -1056,8 +1163,8 @@ var T={
     pinMust6:'PIN must be exactly 6 digits.',pinMismatch:'PINs do not match.',pinWrongFull:'Wrong PIN.',
     kidsManage:'👶 Manage children',kidsMax:'Up to 5 children per account',kidName:'Child name',
     rewardPoints:'💰 Reward & points',dailyMoney:'Daily money',pointsPerTask:'Points per task',
-    globalPhotoLbl:'Photo proof for all tasks', // NEU
-    globalPhotoHint:'If activated, a photo is required for EVERY task.', // NEU
+    globalPhotoLbl:'Photo proof for all tasks',
+    globalPhotoHint:'If activated, a photo is required for EVERY task.',
     rewardsManage:'🎁 Rewards (only this child)',rewardNew:'Reward (e.g. Theme park)',points:'Points',
     addReward:'+ Add reward',suggestionsFromKids:'💡 Suggestions from children',
     pendingRequests:'📥 Pending requests',taskEditHint:'Tasks – only for the active child',
@@ -1126,6 +1233,9 @@ var T={
     gameSub:'Crack the 6-digit code',gameProgress:'Progress:',gameHint:'Hint ({0})',gameReset:'Reset',gameNew:'New combo',
     gameWin:'SAFE OPENED!',gameLose:'TIME UP!',gameWinMsg:'Success! The safe is cracked!',gameLoseMsg:'The code was:',
     gameAgain:'AGAIN',
+    calTitle:'Calendar',calSub:'Add & check appointments',calTodaySection:"Today's appointments",
+    calNoAppts:'No appointments on this day.',calAdded:'APPOINTMENT ADDED ✓',
+    calConfirmDelete:'Delete appointment "{0}"?',
     daysLong:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
     daysShort:['Su','Mo','Tu','We','Th','Fr','Sa'],
     months:['January','February','March','April','May','June','July','August','September','October','November','December']
@@ -1175,7 +1285,7 @@ Germany</p>
 <h4>3. Verarbeitete Daten</h4>
 <ul>
 <li><strong>Bei der Anmeldung:</strong> E-Mail-Adresse und Passwort (Passwort wird von Firebase verschlüsselt gespeichert)</li>
-<li><strong>Bei der Nutzung:</strong> Vornamen der Kinder, gewählte Avatare oder hochgeladene Bilder (Fotos für Aufgaben oder Belohnungen), Aufgabenlisten, Punkte, verdientes Geld, Belohnungen und Verlauf</li>
+<li><strong>Bei der Nutzung:</strong> Vornamen der Kinder, gewählte Avatare oder hochgeladene Bilder (Fotos für Aufgaben oder Belohnungen), Aufgabenlisten, Punkte, verdientes Geld, Belohnungen, Termine und Verlauf</li>
 <li><strong>Technisch:</strong> Gerätespezifische Einstellungen (Sprache, Design) werden lokal auf dem Gerät gespeichert</li>
 </ul>
 <h4>4. Rechtsgrundlage</h4>
@@ -1204,7 +1314,7 @@ Germany</p>
 <h4>3. Processed data</h4>
 <ul>
 <li><strong>On login:</strong> email address and password (password stored encrypted by Firebase)</li>
-<li><strong>On use:</strong> children's first names, selected avatars or uploaded images (photos for tasks or rewards), task lists, points, earned money, rewards and history</li>
+<li><strong>On use:</strong> children's first names, selected avatars or uploaded images (photos for tasks or rewards), task lists, points, earned money, rewards, appointments and history</li>
 <li><strong>Technical:</strong> device-specific settings (language, theme) stored locally on the device</li>
 </ul>
 <h4>4. Legal basis</h4>
@@ -1338,7 +1448,6 @@ function fmtEur(n){var s=String(n);if(s.indexOf('.')>-1)s=s.replace('.',',');ret
 function dayOfYear(d){d=d||new Date();var start=new Date(d.getFullYear(),0,0);var diff=d-start;return Math.floor(diff/86400000)}
 function getTodayQuote(){if(!QUOTES.length)return '';var idx=dayOfYear()%QUOTES.length;return QUOTES[idx]}
 
-/* Komprimiert eine Bilddatei auf maximale Größe und gibt base64 zurück */
 function compressImageFile(file, maxSize, quality, callback){
   if(!file){callback(null);return}
   if(!/^image\//.test(file.type)){callback(null);return}
@@ -1454,7 +1563,7 @@ function buildTasksForDay(templates){
 }
 function buildKidData(initLang){
   var templates=clone(DEFAULT_TEMPLATES);
-  return {tasks:buildTasksForDay(templates),today:todayKey(),points:0,totalPoints:0,level:1,earned:0,history:[],pointsToday:0,pendingRewards:[],rewardHistory:[],suggestedRewards:[],messages:[],language:(initLang==='en'?'en':'de'),stundenplan:defaultStundenplan(),taskTemplates:templates,rewards:[]};
+  return {tasks:buildTasksForDay(templates),today:todayKey(),points:0,totalPoints:0,level:1,earned:0,history:[],pointsToday:0,pendingRewards:[],rewardHistory:[],suggestedRewards:[],messages:[],language:(initLang==='en'?'en':'de'),stundenplan:defaultStundenplan(),taskTemplates:templates,rewards:[],appointments:[]};
 }
 function defaultAccount(){
   var id=genId('kid'),kids={};
@@ -1479,20 +1588,19 @@ function needsRepair(d){
     if(!Array.isArray(k.data.taskTemplates))return true;
     if(!Array.isArray(k.data.rewards))return true;
     if(!Array.isArray(k.data.messages))return true;
+    if(!Array.isArray(k.data.appointments))return true;
   }
   return false;
 }
 function processKidDay(kid){
   if(!kid||!kid.data)return;
   var d=kid.data;
-  
-  // NEU: Wenn taskTemplates leer ist, Standard-Aufgaben wiederherstellen
   if(!Array.isArray(d.taskTemplates) || d.taskTemplates.length === 0){
       d.taskTemplates = clone(DEFAULT_TEMPLATES);
   }
-  
   if(!Array.isArray(d.rewards))d.rewards=[];
   if(!Array.isArray(d.messages))d.messages=[];
+  if(!Array.isArray(d.appointments))d.appointments=[];
   if(d.today!==todayKey()){
     var allDone=true;
     if(d.tasks&&d.tasks.length){for(var i=0;i<d.tasks.length;i++){if(!d.tasks[i].done){allDone=false;break}}}else allDone=false;
@@ -1521,9 +1629,7 @@ function migrate(data){
     if(!data.settings||typeof data.settings!=='object')data.settings={};
     if(typeof data.settings.dailyReward!=='number'||data.settings.dailyReward<0)data.settings.dailyReward=DEFAULT_DAILY_REWARD;
     if(typeof data.settings.pointsPerTask!=='number'||data.settings.pointsPerTask<1)data.settings.pointsPerTask=DEFAULT_POINTS_PER_TASK;
-    // NEU: Migration für globalPhotoRequired
     if(typeof data.settings.globalPhotoRequired!=='boolean')data.settings.globalPhotoRequired=false;
-    
     var legacyLang=(data.settings.language==='en')?'en':'de';
     if(!data.parentSettings||typeof data.parentSettings!=='object')data.parentSettings={};
     if(data.parentSettings.language!=='de'&&data.parentSettings.language!=='en')data.parentSettings.language=legacyLang;
@@ -1551,6 +1657,8 @@ function migrate(data){
       if(!Array.isArray(kd.suggestedRewards))kd.suggestedRewards=[];
       if(!Array.isArray(kd.history))kd.history=[];
       if(!Array.isArray(kd.messages))kd.messages=[];
+      if(!Array.isArray(kd.appointments))kd.appointments=[];
+      for(var ax=0;ax<kd.appointments.length;ax++){if(typeof kd.appointments[ax].done!=='boolean')kd.appointments[ax].done=false;}
       if(kd.language!=='de'&&kd.language!=='en')kd.language=legacyLang;
       for(var j=0;j<kd.tasks.length;j++){
         var tk=kd.tasks[j];
@@ -1719,8 +1827,8 @@ function applyStaticTranslations(){
   setTxt('parentLangTitle',t('parentLangTitle'));setTxt('parentLangHint',t('parentLangHint'));
   setTxt('parentKidsTitle',t('kidsManage'));setPh('newKidName',t('kidName'));
   setTxt('parentSettingsTitle',t('rewardPoints'));setTxt('lblDailyMoney',t('dailyMoney'));setTxt('lblPointsPerTask',t('pointsPerTask'));
-  setTxt('lblGlobalPhoto',t('globalPhotoLbl')); // NEU: Übersetzung für Schalter
-  setTxt('globalPhotoHint',t('globalPhotoHint')); // NEU: Übersetzung für Hinweis
+  setTxt('lblGlobalPhoto',t('globalPhotoLbl'));
+  setTxt('globalPhotoHint',t('globalPhotoHint'));
   setTxt('parentRewardsTitle',t('rewardsManage'));setPh('newRewardTitle',t('rewardNew'));setPh('newRewardCost',t('points'));
   setTxt('addRewardBtn',t('addReward'));setTxt('parentSuggestTitle',t('suggestionsFromKids'));setTxt('parentPendingTitle',t('pendingRequests'));
   setTxt('parentTaskEditHint',t('taskEditHint'));setPh('newTaskTitle',t('newTask'));setPh('newTaskCat',t('category'));
@@ -1730,11 +1838,13 @@ function applyStaticTranslations(){
   setTxt('langTitle',t('langTitle'));setTxt('langHint',t('langHint'));setTxt('langClose',t('langClose'));
   setTxt('gameSubtitle',t('gameSub'));setTxt('gameReset',t('gameReset'));setTxt('gameNew',t('gameNew'));setTxt('gameResultBtn',t('gameAgain'));
   setTxt('kidSwitcherTitle',t('kidSwitcherTitle'));setTxt('parentActiveKidTitle',t('parentActiveKidTitle'));setTxt('parentActiveKidHint',t('parentActiveKidHint'));
+  setTxt('calTitle','📅 '+t('calTitle'));setTxt('calSubtitle',t('calSub'));
   refreshLoginLangPills();refreshParentLangOptions();
   if(typeof renderLegalContent==='function'&&legalModalEl&&legalModalEl.classList.contains('show'))renderLegalContent();
   if(typeof renderConsentContent==='function'&&consentModalEl&&consentModalEl.classList.contains('show'))renderConsentContent();
   if(typeof renderMessagesContent==='function'&&mailModalEl&&mailModalEl.classList.contains('show'))renderMessagesContent();
   if(typeof renderPhotoApprovals==='function'&&parentPanelEl&&parentPanelEl.style.display==='flex')renderPhotoApprovals();
+  if(typeof calRenderAll==='function'&&calOverlay&&calOverlay.classList.contains('show'))calRenderAll();
 }
 
 function formatAuthError(err){
@@ -1992,7 +2102,6 @@ if(kidSwitcherCloseEl)kidSwitcherCloseEl.addEventListener('click',closeKidSwitch
 var parentKidSwitchBtnEl=document.getElementById('parentKidSwitchBtn');
 if(parentKidSwitchBtnEl)parentKidSwitchBtnEl.addEventListener('click',function(){openKidSwitcher()});
 
-/* ===== Foto-Anzeige ===== */
 var photoViewerModal=document.getElementById('photoViewerModal');
 var photoViewerImg=document.getElementById('photoViewerImg');
 var photoViewerSub=document.getElementById('photoViewerSub');
@@ -2013,7 +2122,6 @@ function closePhotoViewer(){
 if(photoViewerCloseEl)photoViewerCloseEl.addEventListener('click',closePhotoViewer);
 if(photoViewerModal)photoViewerModal.addEventListener('click',function(ev){if(ev.target===photoViewerModal)closePhotoViewer()});
 
-/* ===== Postfach / Mitteilungen ===== */
 var mailModalEl=document.getElementById('mailModal');
 var mailBadgeEl=document.getElementById('mailBadge');
 var mailCountEl=document.getElementById('mailCount');
@@ -2094,7 +2202,6 @@ function deleteParentMessage(msgId){
   saveToFirebase();renderParentMessages();updateMailBadge();showToast(t('tMessageDeleted'));
 }
 
-/* ===== Foto-Bestätigungen (Eltern) ===== */
 function renderPhotoApprovals(){
   var list=document.getElementById('photoApprovalList');if(!list)return;
   if(!accountData){list.innerHTML='';return}
@@ -2170,7 +2277,6 @@ function rejectTaskPhoto(kidId,taskId){
   showToast(t('tPhotoRejected'));
 }
 
-/* ===== Aufgabe mit Foto-Nachweis (Kind) ===== */
 var taskPhotoInputEl=document.getElementById('taskPhotoInput');
 if(taskPhotoInputEl)taskPhotoInputEl.addEventListener('change',function(ev){
   var file=ev.target.files&&ev.target.files[0];
@@ -2193,7 +2299,6 @@ if(taskPhotoInputEl)taskPhotoInputEl.addEventListener('change',function(ev){
   });
 });
 
-/* ===== Belohnung mit Foto (Eltern) ===== */
 var rewardPhotoInputEl=document.getElementById('rewardPhotoInput');
 if(rewardPhotoInputEl)rewardPhotoInputEl.addEventListener('change',function(ev){
   var file=ev.target.files&&ev.target.files[0];
@@ -2419,30 +2524,22 @@ function renderTaskEditor(){
   var list=document.getElementById('taskEditList');if(!list)return;
   if(!accountData){list.innerHTML='';return}
   var k=getKid();if(!k||!k.data){list.innerHTML='';return}
-  
-  // NEU: Wenn taskTemplates leer ist, Standard-Aufgaben verwenden
   if(!Array.isArray(k.data.taskTemplates) || k.data.taskTemplates.length === 0){
       k.data.taskTemplates = clone(DEFAULT_TEMPLATES);
   }
-  
-  // Prüfen ob der globale Foto-Schalter aktiv ist
   var globalPhotoOn = false;
   if(accountData.settings && accountData.settings.globalPhotoRequired) globalPhotoOn = true;
-  
   var html='';
   for(var i=0;i<k.data.taskTemplates.length;i++){
     var tpl=k.data.taskTemplates[i];
     var isDisabled = globalPhotoOn ? ' disabled' : '';
     var toggleClass = globalPhotoOn ? ' disabled' : '';
-    // Absicherung für tpl.days
     var tplDays = Array.isArray(tpl.days) ? tpl.days : [1,2,3,4,5];
-    
     html+='<div class="task-edit" data-id="'+tpl.id+'">';
     html+='<div class="row"><input type="text" class="edit-title" value="'+escapeHtml(tpl.title)+'" maxlength="40"><button class="del" data-del="'+tpl.id+'">✕</button></div>';
     html+='<div class="row" style="justify-content:space-between">';
     html+='<input type="text" class="edit-cat" value="'+escapeHtml(tpl.cat)+'" maxlength="20" style="max-width:80px">';
     html+='<label style="font-size:.68rem;color:var(--dim);display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" class="edit-imp" '+(tpl.important?'checked':'')+'> '+t('important')+'</label>';
-    // NEU: Toggle Switch für Foto
     html+='<div style="display:flex;align-items:center;gap:6px;margin-left:auto">';
     html+='<span style="font-size:.68rem;color:'+(globalPhotoOn?'var(--dim)':'var(--cyan)')+';font-weight:800">📷</span>';
     html+='<label class="toggle-switch'+toggleClass+'">';
@@ -2464,7 +2561,6 @@ function renderTaskEditor(){
     el.querySelector('.edit-title').addEventListener('change',function(){var v=this.value.trim();if(!v){this.value=tmpl.title;return}tmpl.title=v;applyTemplateChanges();saveToFirebase();render()});
     el.querySelector('.edit-cat').addEventListener('change',function(){var v=this.value.trim();if(!v){this.value=tmpl.cat;return}tmpl.cat=v;applyTemplateChanges();saveToFirebase();render()});
     el.querySelector('.edit-imp').addEventListener('change',function(){tmpl.important=this.checked;applyTemplateChanges();saveToFirebase();render()});
-    // Event Listener für den Toggle Switch
     el.querySelector('.edit-photo').addEventListener('change',function(){tmpl.requiresPhoto=this.checked;applyTemplateChanges();saveToFirebase();render()});
     var dayBtns=el.querySelectorAll('.day-toggle');
     for(var j=0;j<dayBtns.length;j++)dayBtns[j].addEventListener('click',function(){
@@ -2499,11 +2595,8 @@ function refreshSettingsUI(){
   var dr=getDailyReward(),pp=getPointsPerTask();
   var drIn=document.getElementById('setDailyReward'),ppIn=document.getElementById('setPoints');
   if(drIn)drIn.value=dr;if(ppIn)ppIn.value=pp;
-  
-  // NEU: Globalen Foto-Schalter aktualisieren
   var gpIn=document.getElementById('setGlobalPhoto');
   if(gpIn)gpIn.checked=!!(accountData.settings && accountData.settings.globalPhotoRequired);
-
   var dps=document.querySelectorAll('#dailyPresets button');
   for(var i=0;i<dps.length;i++){var v=parseFloat(dps[i].getAttribute('data-val'));if(v===dr)dps[i].classList.add('active');else dps[i].classList.remove('active')}
   var pps=document.querySelectorAll('#pointsPresets button');
@@ -2525,19 +2618,17 @@ for(var i=0;i<dps.length;i++)dps[i].addEventListener('click',function(){saveSett
 var pps=document.querySelectorAll('#pointsPresets button');
 for(var i=0;i<pps.length;i++)pps[i].addEventListener('click',function(){saveSettings(null,parseInt(this.getAttribute('data-val'),10))});
 
-// NEU: Event-Listener für den globalen Foto-Schalter
 var gpEl=document.getElementById('setGlobalPhoto');
 if(gpEl)gpEl.addEventListener('change',function(){
   if(!accountData)return;
   if(!accountData.settings)accountData.settings={};
   accountData.settings.globalPhotoRequired=this.checked;
   saveToFirebase();
-  render(); // Aufgaben neu rendern, um das 📷-Symbol anzuzeigen
-  renderTaskEditor(); // Task-Editor neu laden, um die Schalter zu deaktivieren/aktivieren
+  render();
+  renderTaskEditor();
   showToast(t('tSettingSaved'));
 });
 
-/* ===== Belohnungs-Editor (mit Foto) ===== */
 function renderRewardEditor(){
   var list=document.getElementById('rewardEditList');if(!list)return;
   if(!accountData){list.innerHTML='';return}
@@ -2740,6 +2831,225 @@ if(spCustomList)spCustomList.addEventListener('click',function(ev){var btn=ev.ta
 var spClearBtn=document.getElementById('spClearBtn');
 if(spClearBtn)spClearBtn.addEventListener('click',function(){if(!confirm(t('spConfirmClear')))return;var sd=spGetData();sd.cells={};saveToFirebase();spRenderList();if(spSettingsModal)spSettingsModal.classList.remove('show')});
 
+/* ========================================================
+   TERMINKALENDER
+   ======================================================== */
+var calOverlay=document.getElementById('calOverlay');
+var calMonthLabel=document.getElementById('calMonthLabel');
+var calGrid=document.getElementById('calGrid');
+var calWeekdays=document.getElementById('calWeekdays');
+var calDayHeader=document.getElementById('calDayHeader');
+var calDayList=document.getElementById('calDayList');
+var calSelectedDate=null;
+var calViewMonth=null;
+
+function dateKeyPad(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function getAppointments(){var k=getKid();if(k&&k.data&&Array.isArray(k.data.appointments))return k.data.appointments;return[]}
+function getAppointmentsForDate(dk){
+  var out=[],a=getAppointments();
+  for(var i=0;i<a.length;i++)if(a[i].date===dk)out.push(a[i]);
+  out.sort(function(x,y){if(x.time&&y.time)return x.time.localeCompare(y.time);if(x.time)return -1;if(y.time)return 1;return 0});
+  return out;
+}
+function getTodayAppointments(){return getAppointmentsForDate(todayKey())}
+
+function calOpen(){
+  if(!accountData)return;
+  try{fabMenu.classList.remove('show')}catch(e){}
+  var today=new Date();
+  calViewMonth=new Date(today.getFullYear(),today.getMonth(),1);
+  calSelectedDate=todayKey();
+  if(calOverlay)calOverlay.classList.add('show');
+  calRenderAll();
+}
+function calClose(){if(calOverlay)calOverlay.classList.remove('show')}
+
+function calRenderAll(){calRenderWeekdays();calRenderMonth();calRenderDay()}
+
+function calRenderWeekdays(){
+  if(!calWeekdays)return;
+  var days=(getLang()==='en')?['Mo','Tu','We','Th','Fr','Sa','Su']:['Mo','Di','Mi','Do','Fr','Sa','So'];
+  var html='';
+  for(var i=0;i<7;i++)html+='<div class="cal-weekday">'+days[i]+'</div>';
+  calWeekdays.innerHTML=html;
+}
+
+function calRenderMonth(){
+  if(!calGrid||!calViewMonth)return;
+  var y=calViewMonth.getFullYear(),m=calViewMonth.getMonth();
+  var months=(getLang()==='en')?['January','February','March','April','May','June','July','August','September','October','November','December']:['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  if(calMonthLabel)calMonthLabel.textContent=months[m]+' '+y;
+
+  var firstDay=new Date(y,m,1);
+  var startWd=(firstDay.getDay()+6)%7;
+  var daysInMonth=new Date(y,m+1,0).getDate();
+  var today=dateKeyPad(new Date());
+  var html='';
+  for(var i=0;i<startWd;i++)html+='<div class="cal-cell empty"></div>';
+  for(var d=1;d<=daysInMonth;d++){
+    var dk=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var appts=getAppointmentsForDate(dk);
+    var cls='cal-cell';
+    if(dk===today)cls+=' today';
+    if(dk===calSelectedDate)cls+=' selected';
+    if(appts.length===1)cls+=' has-appt';
+    else if(appts.length>1)cls+=' has-appt has-appt-multi';
+    html+='<div class="'+cls+'" data-date="'+dk+'">'+d+'</div>';
+  }
+  calGrid.innerHTML=html;
+  var cells=calGrid.querySelectorAll('.cal-cell:not(.empty)');
+  for(var i=0;i<cells.length;i++)cells[i].addEventListener('click',function(){
+    calSelectedDate=this.getAttribute('data-date');
+    calRenderMonth();calRenderDay();
+  });
+}
+
+function calRenderDay(){
+  if(!calDayList||!calDayHeader)return;
+  var dk=calSelectedDate||todayKey();
+  var p=dk.split('-');
+  var dObj=new Date(parseInt(p[0],10),parseInt(p[1],10)-1,parseInt(p[2],10));
+  var wd=dObj.getDay();
+  var monthShort=(getLang()==='en')?['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][dObj.getMonth()]:['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][dObj.getMonth()];
+  calDayHeader.textContent='📅 '+dayLong(wd)+', '+dObj.getDate()+'. '+monthShort;
+
+  var appts=getAppointmentsForDate(dk);
+  if(!appts.length){calDayList.innerHTML='<div class="pending-empty">'+t('calNoAppts')+'</div>';return}
+  var html='';
+  for(var i=0;i<appts.length;i++){
+    var a=appts[i];
+    var doneCls=a.done?' done':'';
+    html+='<div class="cal-appt'+doneCls+'" data-id="'+a.id+'">'+
+      '<div class="cal-appt-check">✓</div>'+
+      '<div class="cal-appt-info">'+
+        '<div class="cal-appt-title">'+escapeHtml(a.title||'')+'</div>'+
+        '<div class="cal-appt-meta">'+(a.time?escapeHtml(a.time)+' · ':'')+escapeHtml(a.cat||'Termin')+(a.done?' · ✓ '+t('done'):'')+'</div>'+
+      '</div>'+
+      '<button class="cal-appt-del" data-del="'+a.id+'" type="button">✕</button>'+
+    '</div>';
+  }
+  calDayList.innerHTML=html;
+  var items=calDayList.querySelectorAll('.cal-appt');
+  for(var i=0;i<items.length;i++){(function(el){
+    var id=el.getAttribute('data-id');
+    el.querySelector('.cal-appt-check').addEventListener('click',function(ev){ev.stopPropagation();calToggleAppt(id)});
+    el.querySelector('.cal-appt-del').addEventListener('click',function(ev){ev.stopPropagation();calDeleteAppt(id)});
+  })(items[i])}
+}
+
+function calToggleAppt(id){
+  var k=getKid();if(!k||!k.data||!Array.isArray(k.data.appointments))return;
+  var a=null;for(var i=0;i<k.data.appointments.length;i++)if(k.data.appointments[i].id===id){a=k.data.appointments[i];break}
+  if(!a)return;
+  var pts=getPointsPerTask();
+  a.done=!a.done;
+  if(a.done){
+    k.data.points=(k.data.points||0)+pts;
+    k.data.totalPoints=(k.data.totalPoints||0)+pts;
+    k.data.pointsToday=(k.data.pointsToday||0)+pts;
+    k.data.level=calcLevel(k.data.totalPoints);
+    showToast(t('tPoints',pts));
+    fireConfetti(10);
+  }else{
+    k.data.points=Math.max(0,(k.data.points||0)-pts);
+    k.data.totalPoints=Math.max(0,(k.data.totalPoints||0)-pts);
+    k.data.pointsToday=Math.max(0,(k.data.pointsToday||0)-pts);
+    k.data.level=calcLevel(k.data.totalPoints);
+  }
+  saveToFirebase();
+  calRenderMonth();calRenderDay();render();
+}
+
+function calDeleteAppt(id){
+  var k=getKid();if(!k||!k.data||!Array.isArray(k.data.appointments))return;
+  var idx=-1;for(var i=0;i<k.data.appointments.length;i++)if(k.data.appointments[i].id===id){idx=i;break}
+  if(idx<0)return;
+  if(!confirm(t('calConfirmDelete',k.data.appointments[idx].title||'')))return;
+  k.data.appointments.splice(idx,1);
+  saveToFirebase();calRenderMonth();calRenderDay();render();showToast(t('tDeleted'));
+}
+
+function calAddAppt(){
+  var k=getKid();if(!k||!k.data)return;
+  var ti=document.getElementById('calNewTitle');
+  var tm=document.getElementById('calNewTime');
+  var ci=document.getElementById('calNewCat');
+  var title=ti?ti.value.trim():'';
+  if(!title){showToast(t('tTitleNeeded'));return}
+  if(!calSelectedDate)calSelectedDate=todayKey();
+  if(!Array.isArray(k.data.appointments))k.data.appointments=[];
+  k.data.appointments.push({
+    id:genId('apt'),
+    title:title,
+    date:calSelectedDate,
+    time:tm?tm.value:'',
+    cat:(ci?ci.value.trim():'')||'Termin',
+    done:false
+  });
+  if(ti)ti.value='';if(tm)tm.value='';if(ci)ci.value='Termin';
+  saveToFirebase();
+  calRenderMonth();calRenderDay();render();
+  showToast(t('calAdded'));
+  fireConfetti(10);
+}
+
+function calNavMonth(delta){
+  if(!calViewMonth)return;
+  calViewMonth=new Date(calViewMonth.getFullYear(),calViewMonth.getMonth()+delta,1);
+  calRenderMonth();
+}
+
+/* Termin als Aufgabe (Kachel im Heute-Tab, blinkt bis bestätigt) */
+function renderAppointmentAsTask(a){
+  var cls='task appointment-task';
+  if(a.done)cls+=' done';
+  var html='<div class="'+cls+'" data-appt-id="'+a.id+'">';
+  html+='<div class="task-check">&#10003;</div>';
+  html+='<div class="task-info"><div class="task-title">📅 '+escapeHtml(a.title)+'</div>';
+  html+='<div class="task-meta">'+(a.time?escapeHtml(a.time)+' · ':'')+escapeHtml(a.cat||'Termin')+'</div>';
+  html+='</div></div>';
+  return html;
+}
+function bindApptTaskClicks(){
+  var els=document.querySelectorAll('.task[data-appt-id]');
+  for(var i=0;i<els.length;i++)els[i].addEventListener('click',function(ev){
+    ev.preventDefault();
+    calToggleAppt(this.getAttribute('data-appt-id'));
+  });
+}
+
+/* Wochendaten Mo–So */
+function getCurrentWeekDates(){
+  var today=new Date();
+  var dow=today.getDay();
+  var diff=(dow===0?6:dow-1);
+  var monday=new Date(today);
+  monday.setDate(today.getDate()-diff);
+  var out=[];
+  for(var i=0;i<7;i++){
+    var d=new Date(monday);
+    d.setDate(monday.getDate()+i);
+    out.push(d);
+  }
+  return out;
+}
+
+/* Event Listener Kalender */
+var calCloseBtnEl=document.getElementById('calCloseBtn');
+if(calCloseBtnEl)calCloseBtnEl.addEventListener('click',calClose);
+if(calOverlay)calOverlay.addEventListener('click',function(ev){if(ev.target===calOverlay)calClose()});
+var calPrevMonthEl=document.getElementById('calPrevMonth');
+if(calPrevMonthEl)calPrevMonthEl.addEventListener('click',function(){calNavMonth(-1)});
+var calNextMonthEl=document.getElementById('calNextMonth');
+if(calNextMonthEl)calNextMonthEl.addEventListener('click',function(){calNavMonth(1)});
+var calAddBtnEl=document.getElementById('calAddBtn');
+if(calAddBtnEl)calAddBtnEl.addEventListener('click',calAddAppt);
+var calNewTitleEl=document.getElementById('calNewTitle');
+if(calNewTitleEl)calNewTitleEl.addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();calAddAppt()}});
+
+/* ========================================================
+   AUTH STATE
+   ======================================================== */
 onAuthStateChanged(auth,function(user){
   if(user){
     currentUser=user;
@@ -2753,7 +3063,7 @@ onAuthStateChanged(auth,function(user){
     pendingTaskPhotoId=null;pendingRewardPhotoId=null;newRewardPendingPhoto='';
     if(unsubscribeRef){unsubscribeRef();unsubscribeRef=null}
     try{localStorage.setItem('mylife_last_logout',Date.now())}catch(e){}
-    if(fabMenu)fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();spClose();closeLangModal();closeKidSwitcher();closeLegalModal();closeConsentModal();closeMailModal();closePhotoViewer();
+    if(fabMenu)fabMenu.classList.remove('show');closeKidEdit();closeParentFlow();spClose();calClose();closeLangModal();closeKidSwitcher();closeLegalModal();closeConsentModal();closeMailModal();closePhotoViewer();
     var ls=document.getElementById('loginScreen');if(ls)ls.style.display='flex';
     var ap=document.getElementById('app');if(ap)ap.style.display='none';
     var le=document.getElementById('loginEmail'),lp=document.getElementById('loginPassword'),lpin=document.getElementById('loginPin');
@@ -2773,19 +3083,37 @@ function renderHeader(){
 function renderStats(){var d=getKidData();if(!d)return;var el;el=document.getElementById('statLevel');if(el)el.textContent=d.level;el=document.getElementById('statPoints');if(el)el.textContent=d.points;el=document.getElementById('statMoney');if(el)el.textContent=fmtEur(d.earned||0)}
 function renderProgress(){var d=getKidData();if(!d)return;var total=d.tasks.length,done=0;for(var i=0;i<d.tasks.length;i++)if(d.tasks[i].done)done++;var f=document.getElementById('dayFill');if(f)f.style.width=(total>0?(done/total)*100:0)+'%';var txt=document.getElementById('dayText');if(txt)txt.textContent=t('tasksOf',done,total)}
 function renderBanner(){var d=getKidData();if(!d)return;var b=document.getElementById('euroBanner');if(!b)return;var allDone=d.tasks.length>0;for(var i=0;i<d.tasks.length;i++)if(!d.tasks[i].done){allDone=false;break}if(allDone){b.className='euro-banner earned';b.innerHTML=t('bannerDone',fmtEur(getDailyReward()))}else{b.className='euro-banner';b.innerHTML=t('bannerAll',fmtEur(getDailyReward()))}}
+
 function renderContent(){
   var d=getKidData();if(!d)return;
   var el=document.getElementById('content');if(!el)return;
   if(currentTab==='tasks'){
     var html='',daily=[],others=[];
     for(var i=0;i<d.tasks.length;i++){if(d.tasks[i].important)daily.push(d.tasks[i]);else others.push(d.tasks[i])}
-    html+='<div class="section-title">'+t('secDaily')+'</div>';
+
+    /* 1. Menükarten Schule & Kalender */
     html+='<div class="schule-card" id="schuleCard"><div class="schule-icon">🏫</div><div class="schule-info"><div class="schule-title">'+t('school')+'</div><div class="schule-sub">'+t('schoolSub')+'</div></div><div class="schule-arrow">›</div></div>';
+    html+='<div class="schule-card" id="calendarCard"><div class="schule-icon">📅</div><div class="schule-info"><div class="schule-title">'+t('calTitle')+'</div><div class="schule-sub">'+t('calSub')+'</div></div><div class="schule-arrow">›</div></div>';
+
+    /* 2. TERMINE HEUTE - ganz oben, blinken bis bestätigt */
+    var todayAppts=getTodayAppointments();
+    if(todayAppts.length){
+      html+='<div class="section-title appt-section">📅 '+t('calTodaySection')+'</div>';
+      for(var i=0;i<todayAppts.length;i++)html+=renderAppointmentAsTask(todayAppts[i]);
+    }
+
+    /* 3. Tägliche Aufgaben */
+    html+='<div class="section-title">'+t('secDaily')+'</div>';
     for(var i=0;i<daily.length;i++)html+=renderTask(daily[i]);
-    if(d.tasks.length===0)html+='<div class="empty" style="padding:20px 10px">'+t('noTasks')+'</div>';
+    if(d.tasks.length===0&&todayAppts.length===0)html+='<div class="empty" style="padding:20px 10px">'+t('noTasks')+'</div>';
+
+    /* 4. Zusätzliche Aufgaben */
     if(others.length){html+='<div class="section-title">'+t('secExtra')+'</div>';for(var i=0;i<others.length;i++)html+=renderTask(others[i])}
-    el.innerHTML=html;bindTaskClicks();
+
+    el.innerHTML=html;
+    bindTaskClicks();bindApptTaskClicks();
     var sc=document.getElementById('schuleCard');if(sc)sc.addEventListener('click',spOpen);
+    var cc=document.getElementById('calendarCard');if(cc)cc.addEventListener('click',calOpen);
   }else if(currentTab==='rewards'){renderRewardsView(el,d)}
   else if(currentTab==='money'){
     var h='';
@@ -2794,13 +3122,23 @@ function renderContent(){
     el.innerHTML='<div class="money-card"><div style="font-size:.68rem;color:var(--dim);letter-spacing:2px;">'+t('totalEarned')+'</div><div class="money-total">'+fmtEur(d.earned||0)+'</div><div class="money-sub">'+t('perDay',fmtEur(getDailyReward()))+'</div></div><div class="section-title">'+t('history')+'</div>'+h;
   }else if(currentTab==='week'){
     var today=currentWeekday(),out='';var tpl=getTemplates();
+    var weekDates=getCurrentWeekDates();
     for(var kk=0;kk<DAY_ORDER.length;kk++){
       var i=DAY_ORDER[kk],tasks=[];
       for(var j=0;j<tpl.length;j++)if(Array.isArray(tpl[j].days)&&tpl[j].days.indexOf(i)!==-1)tasks.push(tpl[j]);
       var lines='';
       if(tasks.length){for(var j=0;j<tasks.length;j++)lines+='<div class="task-line">'+escapeHtml(tasks[j].title)+'</div>'}
       else lines='<div class="task-line" style="opacity:.5">'+t('freeDay')+'</div>';
-      out+='<div class="week-day'+(i===today?' today':'')+'"><div class="day-title">'+dayLong(i)+(i===today?' - '+t('today'):'')+'</div>'+lines+'</div>';
+      var weekIdx=(i===0)?6:(i-1);
+      var dayDate=weekDates[weekIdx];
+      var dayAppts=getAppointmentsForDate(dateKeyPad(dayDate));
+      var apptsHtml='';
+      for(var a=0;a<dayAppts.length;a++){
+        var apt=dayAppts[a];
+        var aptCls='appt-tile'+(apt.done?' done':'');
+        apptsHtml+='<div class="'+aptCls+'">📅 '+escapeHtml(apt.title)+(apt.time?' <span style="opacity:.7;font-size:.72rem;font-weight:600">'+escapeHtml(apt.time)+'</span>':'')+'</div>';
+      }
+      out+='<div class="week-day'+(i===today?' today':'')+'"><div class="day-title">'+dayLong(i)+(i===today?' - '+t('today'):'')+'</div>'+lines+apptsHtml+'</div>';
     }
     el.innerHTML=out;
   }
@@ -2875,18 +3213,12 @@ function renderTask(tk){
   var cls='task';
   if(tk.pendingApproval)cls+=' photo-pending';
   else if(tk.done)cls+=' done';
-  
-  // NEU: Globalen Foto-Schalter prüfen
   var needsPhoto = tk.requiresPhoto || (accountData && accountData.settings && accountData.settings.globalPhotoRequired);
-  
   var html='<div class="'+cls+'" data-id="'+tk.id+'">';
   html+='<div class="task-check">&#10003;</div>';
   if(tk.photo&&tk.pendingApproval)html+='<img class="task-photo-thumb" data-photo-view="'+tk.id+'" src="'+tk.photo+'" alt="">';
   html+='<div class="task-info"><div class="task-title">'+escapeHtml(tk.title);
-  
-  // NEU: needsPhoto anstelle von tk.requiresPhoto verwenden
   if(needsPhoto&&!tk.done)html+=' <span class="task-photo-required-tag">📷</span>';
-  
   html+='</div><div class="task-meta">'+escapeHtml(tk.cat)+'</div>';
   if(tk.pendingApproval)html+='<div class="task-photo-badge">📸 '+t('tPhotoPendingShort')+'</div>';
   html+='</div></div>';
@@ -2914,20 +3246,13 @@ function toggleTask(id){
   var pts=getPointsPerTask(),task=null;
   for(var i=0;i<d.tasks.length;i++)if(d.tasks[i].id===id){task=d.tasks[i];break}
   if(!task)return;
-  
-  /* Wenn Aufgabe auf Bestätigung wartet: nicht änderbar */
   if(task.pendingApproval){showToast(t('tPhotoPendingShort'));return}
-  
-  // NEU: Globalen Foto-Schalter prüfen
   var needsPhoto = task.requiresPhoto || (accountData && accountData.settings && accountData.settings.globalPhotoRequired);
-
-  /* Wenn Foto erforderlich und noch nicht erledigt: Foto-Aufnahme starten */
-  if(needsPhoto && !task.done){ // NEU: needsPhoto verwenden
+  if(needsPhoto && !task.done){
     pendingTaskPhotoId=task.id;
     if(taskPhotoInputEl)taskPhotoInputEl.click();
     return;
   }
-  
   var wasAll=true;
   for(var i=0;i<d.tasks.length;i++)if(!d.tasks[i].done){wasAll=false;break}
   task.done=!task.done;
