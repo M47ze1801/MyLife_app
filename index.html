@@ -2848,7 +2848,7 @@ function getAppointmentsForDate(dk){
   out.sort(function(x,y){if(x.time&&y.time)return x.time.localeCompare(y.time);if(x.time)return -1;if(y.time)return 1;return 0});
   return out;
 }
-function getTodayAppointments(){return getAppointmentsForDate(todayKey())}
+function getTodayAppointments(){return getAppointmentsForDate(dateKeyPad(new Date()))}
 
 function calOpen(){
   if(!accountData)return;
