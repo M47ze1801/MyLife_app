@@ -62,8 +62,6 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .content{padding:14px;flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .section-title{font-size:.65rem;font-weight:800;color:var(--pink);text-transform:uppercase;letter-spacing:2px;margin:12px 0 10px 6px;text-shadow:0 0 10px rgba(255,0,229,.6)}
 .section-title:first-child{margin-top:0}
-.section-title.appt-section{color:var(--yellow);text-shadow:0 0 10px rgba(255,234,0,.6);animation:apptTitlePulse 1.6s ease-in-out infinite}
-@keyframes apptTitlePulse{0%,100%{opacity:1}50%{opacity:.65}}
 .task{background:var(--card2);border-radius:16px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:14px;border:1px solid rgba(0,245,255,.12);position:relative;overflow:hidden;cursor:pointer}
 .task::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--cyan),var(--purple));box-shadow:0 0 15px var(--cyan)}
 .task.done{opacity:.55;border-color:rgba(0,255,136,.3)}
@@ -82,7 +80,7 @@ header .date{font-size:.7rem;opacity:.55;margin-top:4px;color:var(--dim);letter-
 .task-photo-thumb{width:36px;height:36px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid rgba(0,245,255,.3);cursor:pointer}
 .task-photo-required-tag{font-size:.6rem;color:var(--cyan);font-weight:800;letter-spacing:1px;padding:1px 6px;border:1px solid rgba(0,245,255,.4);border-radius:8px;background:rgba(0,245,255,.08);flex-shrink:0}
 
-/* ===== TERMIN-AUFGABEN (im Heute-Tab, oben, blinken bis bestätigt) ===== */
+/* ===== TERMIN-AUFGABEN (in Täglich, blinken bis bestätigt) ===== */
 .task.appointment-task{border-color:rgba(255,234,0,.5);background:linear-gradient(90deg,rgba(255,234,0,.14),var(--card2) 60%)}
 .task.appointment-task::before{background:linear-gradient(180deg,var(--yellow),var(--pink));box-shadow:0 0 15px var(--yellow)}
 .task.appointment-task.done{opacity:.55;border-color:rgba(0,255,136,.3);background:linear-gradient(90deg,rgba(0,255,136,.08),var(--card2) 60%)}
@@ -499,7 +497,6 @@ body.light .task.appointment-task .task-title{color:#8a6800}
 body.light .task.appointment-task.done{background:linear-gradient(90deg,rgba(0,180,120,.12),#ffffff 60%)}
 body.light .task.appointment-task.done .task-title{color:#1a1a2e}
 body.light .section-title{color:#c40088;text-shadow:none}
-body.light .section-title.appt-section{color:#8a6800;text-shadow:none}
 body.light .kid-badge{background:rgba(0,180,220,.12);border-color:rgba(0,180,220,.45);color:#0088a8}
 body.light .mail-badge{background:rgba(0,180,220,.12);border-color:rgba(0,180,220,.45);color:#0088a8}
 body.light .mail-badge .mail-count{background:#d6009c;border-color:#fdfbf7}
@@ -1120,7 +1117,7 @@ var T={
     gameSub:'Knacke den 6-stelligen Code',gameProgress:'Fortschritt:',gameHint:'Hinweis ({0})',gameReset:'Reset',gameNew:'Neue Kombi',
     gameWin:'TRESOR GEÖFFNET!',gameLose:'ZEIT ABGELAUFEN!',gameWinMsg:'Erfolg! Der Tresor ist geknackt!',gameLoseMsg:'Der Code war:',
     gameAgain:'NOCHMAL',
-    calTitle:'Terminkalender',calSub:'Termine eintragen & abhaken',calTodaySection:'Termine heute',
+    calTitle:'Terminkalender',calSub:'Termine eintragen & abhaken',
     calNoAppts:'Keine Termine an diesem Tag.',calAdded:'TERMIN HINZUGEFÜGT ✓',
     calConfirmDelete:'Termin "{0}" löschen?',
     daysLong:['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],
@@ -1233,7 +1230,7 @@ var T={
     gameSub:'Crack the 6-digit code',gameProgress:'Progress:',gameHint:'Hint ({0})',gameReset:'Reset',gameNew:'New combo',
     gameWin:'SAFE OPENED!',gameLose:'TIME UP!',gameWinMsg:'Success! The safe is cracked!',gameLoseMsg:'The code was:',
     gameAgain:'AGAIN',
-    calTitle:'Calendar',calSub:'Add & check appointments',calTodaySection:"Today's appointments",
+    calTitle:'Calendar',calSub:'Add & check appointments',
     calNoAppts:'No appointments on this day.',calAdded:'APPOINTMENT ADDED ✓',
     calConfirmDelete:'Delete appointment "{0}"?',
     daysLong:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
@@ -2999,7 +2996,7 @@ function calNavMonth(delta){
   calRenderMonth();
 }
 
-/* Termin als Aufgabe (Kachel im Heute-Tab, blinkt bis bestätigt) */
+/* Termin als Aufgabe (Kachel in Täglich, blinkt bis bestätigt) */
 function renderAppointmentAsTask(a){
   var cls='task appointment-task';
   if(a.done)cls+=' done';
@@ -3095,19 +3092,14 @@ function renderContent(){
     html+='<div class="schule-card" id="schuleCard"><div class="schule-icon">🏫</div><div class="schule-info"><div class="schule-title">'+t('school')+'</div><div class="schule-sub">'+t('schoolSub')+'</div></div><div class="schule-arrow">›</div></div>';
     html+='<div class="schule-card" id="calendarCard"><div class="schule-icon">📅</div><div class="schule-info"><div class="schule-title">'+t('calTitle')+'</div><div class="schule-sub">'+t('calSub')+'</div></div><div class="schule-arrow">›</div></div>';
 
-    /* 2. TERMINE HEUTE - ganz oben, blinken bis bestätigt */
-    var todayAppts=getTodayAppointments();
-    if(todayAppts.length){
-      html+='<div class="section-title appt-section">📅 '+t('calTodaySection')+'</div>';
-      for(var i=0;i<todayAppts.length;i++)html+=renderAppointmentAsTask(todayAppts[i]);
-    }
-
-    /* 3. Tägliche Aufgaben */
+    /* 2. TÄGLICH: Termine heute + tägliche Aufgaben gemischt (Termine zuerst, blinken) */
     html+='<div class="section-title">'+t('secDaily')+'</div>';
+    var todayAppts=getTodayAppointments();
+    for(var i=0;i<todayAppts.length;i++)html+=renderAppointmentAsTask(todayAppts[i]);
     for(var i=0;i<daily.length;i++)html+=renderTask(daily[i]);
     if(d.tasks.length===0&&todayAppts.length===0)html+='<div class="empty" style="padding:20px 10px">'+t('noTasks')+'</div>';
 
-    /* 4. Zusätzliche Aufgaben */
+    /* 3. Zusätzliche Aufgaben */
     if(others.length){html+='<div class="section-title">'+t('secExtra')+'</div>';for(var i=0;i<others.length;i++)html+=renderTask(others[i])}
 
     el.innerHTML=html;
